@@ -1,0 +1,104 @@
+{% comment %} 
+    HTTrack-style section that matches the design from index.html
+{% endcomment %}
+
+<div class="httrack-content">
+  <h1 align="center">{{ section.settings.main_title | default: 'Index of locally available sites:' }}</h1>
+
+  <table
+    border="0"
+    width="100%"
+    cellspacing="1"
+    cellpadding="0">
+    <tr>
+      <td class="tblRegular">
+        &middot;
+        <a href="{{ section.settings.site_url | default: '#' }}">
+          {{ section.settings.site_title | default: "GetSupp: India's Best and Authentic Supplements Online Store" }}
+        </a>
+      </td>
+    </tr>
+  </table>
+
+  <br>
+  <br>
+  <br>
+
+  <h6 align="right">
+    <i>{{ section.settings.footer_text | default: "Mirror and index made by HTTrack Website Copier [XR&CO'2008]" }}</i>
+  </h6>
+</div>
+
+{% stylesheet %}
+  .httrack-content {
+    width: 100%;
+  }
+
+  .httrack-content h1 {
+    margin: 0;
+    font-weight: bold;
+    font-size: 2em;
+    text-align: center;
+  }
+
+  .httrack-content h6 {
+    margin: 0;
+    font-size: 0.8em;
+    text-align: right;
+    font-style: italic;
+  }
+
+  .httrack-content table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .httrack-content .tblRegular td {
+    padding: 6px;
+    border: 2px solid #99c;
+    background-color: #ccd;
+  }
+
+  .httrack-content a {
+    text-decoration: underline;
+    color: #00f;
+  }
+
+  .httrack-content a:hover {
+    color: #c00;
+  }
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "HTTrack Style Content",
+    "settings": [
+      {
+        "type": "text",
+        "id": "main_title",
+        "label": "Main Title",
+        "default": "Index of locally available sites:"
+      }, {
+        "type": "text",
+        "id": "site_title",
+        "label": "Site Title",
+        "default": "GetSupp: India's Best and Authentic Supplements Online Store"
+      }, {
+        "type": "url",
+        "id": "site_url",
+        "label": "Site URL"
+      }, {
+        "type": "text",
+        "id": "footer_text",
+        "label": "Footer Text",
+        "default": "Mirror and index made by HTTrack Website Copier [XR&CO'2008]"
+      }
+    ],
+    "presets": [
+      {
+        "name": "HTTrack Style Content",
+        "category": "Custom"
+      }
+    ]
+  }
+{% endschema %}

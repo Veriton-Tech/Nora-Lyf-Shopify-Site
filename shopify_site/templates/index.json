@@ -10,8 +10,13 @@
 {
   "sections": {
     "main": {
-      "type": "hello-world",
-      "settings": {}
+      "type": "httrack-style",
+      "settings": {
+        "main_title": "Index of locally available sites:",
+        "site_title": "GetSupp: India's Best and Authentic Supplements Online Store",
+        "site_url": "https://www.getsupp.com",
+        "footer_text": "Mirror and index made by HTTrack Website Copier [XR&CO'2008]"
+      }
     }
   },
   "order": [
