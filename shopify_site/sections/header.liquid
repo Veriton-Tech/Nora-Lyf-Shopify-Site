@@ -83,7 +83,7 @@
 
         <!-- Cart -->
         <div class="getsupp-cart">
-          <a href="{{ routes.cart_url }}">
+          <a id="cart-icon-bubble" href="{{ routes.cart_url }}">
             <svg
               width="20"
               height="20"
@@ -118,7 +118,7 @@
         <!-- Account -->
         {% if shop.customer_accounts_enabled %}
           <div class="getsupp-account">
-            <a href="{{ routes.account_url }}">
+            <a href="{% if customer %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}">
               <svg
                 width="20"
                 height="20"
@@ -917,51 +917,126 @@
   }
 
   .getsupp-banner {
-    background: #24BAAD;
-    padding: 8px 0;
+    background: linear-gradient(135deg, #24BAAD 0%, #1ea89a 50%, #0d9488 100%);
+    padding: 12px 0;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: bannerPulse 6s ease-in-out infinite;
+  }
+
+  @keyframes bannerPulse {
+    0,
+    100% {
+      background: linear-gradient(135deg, #24BAAD 0%, #1ea89a 50%, #0d9488 100%);
+    }
+    50% {
+      background: linear-gradient(135deg, #1ea89a 0%, #24BAAD 50%, #1ea89a 100%);
+    }
+  }
+
+  .getsupp-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 3s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      left: -100%;
+    }
+    100% {
+      left: 100%;
+    }
   }
 
   .getsupp-banner-content {
-    max-width: 1180px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    position: relative;
+    z-index: 2;
   }
 
   .getsupp-banner-text {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 16px;
+    gap: 24px;
     flex-wrap: wrap;
   }
 
   .getsupp-banner-title {
-    font-weight: bold;
-    font-size: 12px;
-    color: #000000;
+    font-weight: 800;
+    font-size: 16px;
+    color: white;
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  }
+
+  @keyframes bounce {
+    0,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-3px);
+    }
+    60% {
+      transform: translateY(-2px);
+    }
   }
 
   .getsupp-banner-timer {
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background-color: #5DC9FF;
-    color: #FFFFFF;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-banner-timer:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
   }
 
   .getsupp-banner-timer span {
-    font-size: 12px;
-    font-weight: bold;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
   }
+
   #getsupp-offer-timer {
-    background-color: #1EA7FF;
-    color: #FFFFFF;
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-weight: 700;
+    background: #ffffff;
+    color: #0b7285;
+    padding: 4px 10px;
+    border-radius: 14px;
+    font-weight: 800;
+    text-shadow: none;
+    font-family: ui-monospace
+    , SFMono-Regular
+    , Menlo
+    , Monaco
+    , Consolas
+    , "Liberation Mono"
+    , "Courier New"
+    , monospace;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(36, 186, 173, 0.25);
   }
 
   .getsupp-main-header {
@@ -1112,9 +1187,12 @@
 
   /* Navigation Styles */
   .getsupp-navigation {
-    background: rgba(240, 240, 240, 0.5);
-    border-top: 1px solid #e0e0e0;
+    background: rgba(255, 255, 255, 0.6);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
     position: relative;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
   }
 
   .getsupp-nav-container {
@@ -1155,19 +1233,38 @@
     padding: 16px 24px;
     font-size: 15px;
     font-weight: 500;
-    color: #333;
+    color: #223;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
     letter-spacing: 0.02em;
     line-height: 1.4;
+    position: relative;
   }
 
   .getsupp-nav-link:hover {
-    color: #24BAAD;
-    background-color: rgba(36, 186, 173, 0.05);
+    color: #0b7285;
+    background-color: rgba(36, 186, 173, 0.06);
     transform: translateY(-1px);
+  }
+
+  .getsupp-nav-link::after {
+    content: '';
+    position: absolute;
+    left: 24px;
+    right: 24px;
+    bottom: 10px;
+    height: 2px;
+    background: linear-gradient(90deg, #24BAAD, #1ea89a);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.25s ease;
+    border-radius: 2px;
+  }
+
+  .getsupp-nav-link:hover::after {
+    transform: scaleX(1);
   }
 
   /* Mega Menu Styles */
@@ -1272,78 +1369,150 @@
     outline: none;
   }
 
-  /* Inline Hero below navigation */
+  /* Enhanced Inline Hero below navigation */
   .getsupp-hero-inline {
-    background: #fbf4ef;
-    padding: 48px 0 28px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e3f2fd 50%, #f0fdfc 100%);
+    padding: 80px 0 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .getsupp-hero-inline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%2324BAAD" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="%2324BAAD" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="%2324BAAD" opacity="0.05"/><circle cx="10" cy="60" r="0.5" fill="%2324BAAD" opacity="0.05"/><circle cx="90" cy="40" r="0.5" fill="%2324BAAD" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
   }
   .getsupp-hero-inline__container {
-    max-width: 1180px;
+    max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px;
     text-align: center;
+    position: relative;
+    z-index: 2;
   }
   .getsupp-hero-inline__icon {
     display: flex;
     justify-content: center;
-    margin-bottom: 12px;
+    margin-bottom: 24px;
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
   }
   .getsupp-hero-inline__title {
-    font-size: 40px;
+    font-size: 48px;
     line-height: 1.2;
     font-weight: 800;
-    margin: 0 0 8px;
+    margin: 0 0 16px;
+    background: linear-gradient(135deg, #24BAAD 0%, #1ea89a 50%, #0d9488 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fadeInUp 0.8s ease-out;
+  }
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
   .getsupp-hero-inline__links {
     display: flex;
-    gap: 24px;
+    gap: 32px;
     justify-content: center;
+    margin-bottom: 32px;
     flex-wrap: wrap;
-    margin: 8px 0 12px;
   }
   .getsupp-hero-inline__link {
-    color: #0b7285;
+    color: #24BAAD;
     text-decoration: none;
-    font-weight: 700;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-  }
-  .getsupp-hero-inline__link:hover {
-    color: #086977;
-  }
-  .getsupp-hero-inline__subtitle {
-    margin: 8px 0 20px;
-    font-size: 18px;
-  }
-  .getsupp-hero-inline__search {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
+    font-weight: 600;
+    font-size: 16px;
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #ffffff;
-    border-radius: 16px;
-    border: 1px solid #e5e5e5;
-    height: 72px;
+    transition: all 0.3s ease;
+    padding: 12px 20px;
+    border-radius: 25px;
+    background: rgba(36, 186, 173, 0.1);
+    border: 2px solid transparent;
+  }
+  .getsupp-hero-inline__link:hover {
+    color: white;
+    background: #24BAAD;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(36, 186, 173, 0.3);
+  }
+  .getsupp-hero-inline__subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 40px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+  }
+  .getsupp-hero-inline__search {
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+    animation: fadeInUp 0.8s ease-out 0.4s both;
   }
   .getsupp-hero-inline__search input {
-    flex: 1;
-    height: 100%;
-    border: 0;
+    width: 100%;
+    padding: 20px 24px;
+    border: 2px solid #e5e5e5;
+    border-radius: 50px;
+    font-size: 16px;
     outline: none;
-    padding: 0 20px;
-    font-size: 18px;
+    transition: all 0.3s ease;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+  .getsupp-hero-inline__search input:focus {
+    border-color: #24BAAD;
+    box-shadow: 0 0 0 4px rgba(36, 186, 173, 0.1)
+    , 0 8px 30px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+  .getsupp-hero-inline__search input::placeholder {
+    color: #999;
+    font-weight: 400;
   }
   .getsupp-hero-inline__search button {
-    background: none;
-    border: 0;
-    width: 48px;
-    height: 48px;
-    display: grid;
-    place-items: center;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: linear-gradient(135deg, #24BAAD 0%, #1ea89a 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
     cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(36, 186, 173, 0.3);
+  }
+  .getsupp-hero-inline__search button:hover {
+    background: linear-gradient(135deg, #1ea89a 0%, #0d9488 100%);
+    transform: translateY(-50%) scale(1.05);
+    box-shadow: 0 6px 20px rgba(36, 186, 173, 0.4);
   }
   @media (max-width: 768px) {
     .getsupp-hero-inline {

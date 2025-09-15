@@ -1,0 +1,413 @@
+{% comment %} 
+  GetSupp Testimonials Section 
+  Displays customer testimonials with ratings and photos
+{% endcomment %}
+
+<div class="getsupp-testimonials">
+  <div class="getsupp-testimonials-container">
+    <div class="getsupp-testimonials-header">
+      <h2 class="getsupp-testimonials-title">{{ section.settings.title | default: "What Our Customers Say" }}</h2>
+      <p class="getsupp-testimonials-description">{{ section.settings.description | default: "Join thousands of satisfied customers who trust GetSupp for their health needs" }}</p>
+    </div>
+
+    <div class="getsupp-testimonials-grid">
+      {% for block in section.blocks %}
+        <div class="getsupp-testimonial-card" {{ block.shopify_attributes }}>
+          <div class="getsupp-testimonial-content">
+            <div class="getsupp-testimonial-rating">
+              {% for i in (1..5) %}
+                <span class="getsupp-star">★</span>
+              {% endfor %}
+            </div>
+            <p class="getsupp-testimonial-text">"{{ block.settings.testimonial_text | default: 'Amazing products and fast delivery. Highly recommended!' }}"</p>
+          </div>
+          <div class="getsupp-testimonial-author">
+            <div class="getsupp-testimonial-avatar">
+              {% if block.settings.customer_photo %}
+                <img
+                  src="{{ block.settings.customer_photo | img_url: '60x60' }}"
+                  alt="{{ block.settings.customer_name }}"
+                  class="getsupp-avatar-img">
+              {% else %}
+                <div class="getsupp-avatar-placeholder">
+                  {{ block.settings.customer_name | slice: 0 }}
+                </div>
+              {% endif %}
+            </div>
+            <div class="getsupp-testimonial-info">
+              <h4 class="getsupp-customer-name">{{ block.settings.customer_name | default: "Sarah Johnson" }}</h4>
+              <p class="getsupp-customer-location">{{ block.settings.customer_location | default: "Mumbai, India" }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.settings.show_stats %}
+      <div class="getsupp-testimonials-stats">
+        <div class="getsupp-stat-item">
+          <div class="getsupp-stat-number">{{ section.settings.stat1_number | default: "50K+" }}</div>
+          <div class="getsupp-stat-label">{{ section.settings.stat1_label | default: "Happy Customers" }}</div>
+        </div>
+        <div class="getsupp-stat-item">
+          <div class="getsupp-stat-number">{{ section.settings.stat2_number | default: "4.8" }}</div>
+          <div class="getsupp-stat-label">{{ section.settings.stat2_label | default: "Average Rating" }}</div>
+        </div>
+        <div class="getsupp-stat-item">
+          <div class="getsupp-stat-number">{{ section.settings.stat3_number | default: "99%" }}</div>
+          <div class="getsupp-stat-label">{{ section.settings.stat3_label | default: "Satisfaction Rate" }}</div>
+        </div>
+        <div class="getsupp-stat-item">
+          <div class="getsupp-stat-number">{{ section.settings.stat4_number | default: "24/7" }}</div>
+          <div class="getsupp-stat-label">{{ section.settings.stat4_label | default: "Customer Support" }}</div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .getsupp-testimonials {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .getsupp-testimonials::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="%2324BAAD" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23dots)"/></svg>');
+    opacity: 0.5;
+  }
+
+  .getsupp-testimonials-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .getsupp-testimonials-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .getsupp-testimonials-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 16px;
+    font-family: 'Inter'
+    , sans-serif;
+  }
+
+  .getsupp-testimonials-description {
+    font-size: 18px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .getsupp-testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+  }
+
+  .getsupp-testimonial-card {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .getsupp-testimonial-card::before {
+    content: '"';
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 60px;
+    color: #24BAAD;
+    opacity: 0.1;
+    font-family: serif;
+  }
+
+  .getsupp-testimonial-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(36, 186, 173, 0.15);
+    border-color: #24BAAD;
+  }
+
+  .getsupp-testimonial-content {
+    margin-bottom: 24px;
+  }
+
+  .getsupp-testimonial-rating {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+  }
+
+  .getsupp-star {
+    color: #ffd700;
+    font-size: 18px;
+  }
+
+  .getsupp-testimonial-text {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    font-style: italic;
+  }
+
+  .getsupp-testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .getsupp-testimonial-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .getsupp-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .getsupp-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #24BAAD 0%, #1ea89a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: 600;
+  }
+
+  .getsupp-testimonial-info {
+    flex: 1;
+  }
+
+  .getsupp-customer-name {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 4px;
+  }
+
+  .getsupp-customer-location {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+  }
+
+  .getsupp-testimonials-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    text-align: center;
+  }
+
+  .getsupp-stat-item {
+    padding: 20px;
+  }
+
+  .getsupp-stat-number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #24BAAD;
+    margin-bottom: 8px;
+    font-family: 'Inter'
+    , sans-serif;
+  }
+
+  .getsupp-stat-label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .getsupp-testimonials {
+      padding: 60px 0;
+    }
+
+    .getsupp-testimonials-title {
+      font-size: 28px;
+    }
+
+    .getsupp-testimonials-description {
+      font-size: 16px;
+    }
+
+    .getsupp-testimonials-grid {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .getsupp-testimonial-card {
+      padding: 24px;
+    }
+
+    .getsupp-testimonials-stats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .getsupp-testimonials-stats {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "GetSupp Testimonials",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "What Our Customers Say"
+      },
+      {
+        "type": "textarea",
+        "id": "description",
+        "label": "Description",
+        "default": "Join thousands of satisfied customers who trust GetSupp for their health needs"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_stats",
+        "label": "Show statistics",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "stat1_number",
+        "label": "Statistic 1 Number",
+        "default": "50K+"
+      }, {
+        "type": "text",
+        "id": "stat1_label",
+        "label": "Statistic 1 Label",
+        "default": "Happy Customers"
+      }, {
+        "type": "text",
+        "id": "stat2_number",
+        "label": "Statistic 2 Number",
+        "default": "4.8"
+      }, {
+        "type": "text",
+        "id": "stat2_label",
+        "label": "Statistic 2 Label",
+        "default": "Average Rating"
+      }, {
+        "type": "text",
+        "id": "stat3_number",
+        "label": "Statistic 3 Number",
+        "default": "99%"
+      }, {
+        "type": "text",
+        "id": "stat3_label",
+        "label": "Statistic 3 Label",
+        "default": "Satisfaction Rate"
+      }, {
+        "type": "text",
+        "id": "stat4_number",
+        "label": "Statistic 4 Number",
+        "default": "24/7"
+      }, {
+        "type": "text",
+        "id": "stat4_label",
+        "label": "Statistic 4 Label",
+        "default": "Customer Support"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "testimonial",
+        "name": "Testimonial",
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "testimonial_text",
+            "label": "Testimonial Text",
+            "default": "Amazing products and fast delivery. Highly recommended!"
+          }, {
+            "type": "text",
+            "id": "customer_name",
+            "label": "Customer Name",
+            "default": "Sarah Johnson"
+          }, {
+            "type": "text",
+            "id": "customer_location",
+            "label": "Customer Location",
+            "default": "Mumbai, India"
+          }, {
+            "type": "image_picker",
+            "id": "customer_photo",
+            "label": "Customer Photo"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "GetSupp Testimonials",
+        "blocks": [
+          {
+            "type": "testimonial",
+            "settings": {
+              "testimonial_text": "GetSupp has been a game-changer for my health journey. The quality of supplements is outstanding and delivery is always on time.",
+              "customer_name": "Priya Sharma",
+              "customer_location": "Delhi, India"
+            }
+          }, {
+            "type": "testimonial",
+            "settings": {
+              "testimonial_text": "I've been ordering from GetSupp for over 2 years. Their customer service is excellent and products are always authentic.",
+              "customer_name": "Rajesh Kumar",
+              "customer_location": "Bangalore, India"
+            }
+          }, {
+            "type": "testimonial",
+            "settings": {
+              "testimonial_text": "The best online store for health supplements. Great variety, competitive prices, and fast shipping. Highly recommended!",
+              "customer_name": "Anita Patel",
+              "customer_location": "Pune, India"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

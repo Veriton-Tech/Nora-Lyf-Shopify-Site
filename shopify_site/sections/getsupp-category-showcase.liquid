@@ -1,5 +1,5 @@
-{% comment %}
-  GetSupp Category Showcase Section
+{% comment %} 
+  GetSupp Category Showcase Section 
   Displays product categories in a grid layout
 {% endcomment %}
 
@@ -9,19 +9,37 @@
       <h2 class="getsupp-category-title">{{ section.settings.title | default: "Shop by Health Concerns" }}</h2>
       <p class="getsupp-category-description">{{ section.settings.description | default: "Find the right supplements for your specific health needs" }}</p>
     </div>
-    
+
     <div class="getsupp-category-grid">
       {% for block in section.blocks %}
         <div class="getsupp-category-card" {{ block.shopify_attributes }}>
           <a href="{{ block.settings.category_url | default: '#' }}" class="getsupp-category-link">
             <div class="getsupp-category-icon">
               {% if block.settings.category_icon %}
-                <img src="{{ block.settings.category_icon | img_url: '80x80' }}" alt="{{ block.settings.category_name }}" class="getsupp-category-img">
+                <img
+                  src="{{ block.settings.category_icon | img_url: '80x80' }}"
+                  alt="{{ block.settings.category_name }}"
+                  class="getsupp-category-img">
               {% else %}
                 <div class="getsupp-category-placeholder">
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="10" stroke="#24BAAD" stroke-width="2"/>
-                    <path d="M12 6v6l4 2" stroke="#24BAAD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg
+                    width="40"
+                    height="40"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="#24BAAD"
+                      stroke-width="2" />
+                    <path
+                      d="M12 6v6l4 2"
+                      stroke="#24BAAD"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
                   </svg>
                 </div>
               {% endif %}
@@ -38,13 +56,28 @@
 {% stylesheet %}
   .getsupp-category-showcase {
     padding: 80px 0;
-    background: white;
+    background: linear-gradient(135deg, #f0fdfc 0%, #ffffff 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .getsupp-category-showcase::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="circles" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="2" fill="%2324BAAD" opacity="0.1"/><circle cx="40" cy="40" r="1.5" fill="%2324BAAD" opacity="0.05"/></pattern></defs><rect width="100" height="100" fill="url(%23circles)"/></svg>');
+    opacity: 0.4;
   }
 
   .getsupp-category-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    position: relative;
+    z-index: 2;
   }
 
   .getsupp-category-header {
@@ -57,7 +90,8 @@
     font-weight: 700;
     color: #333;
     margin-bottom: 16px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter'
+    , sans-serif;
   }
 
   .getsupp-category-description {
@@ -136,7 +170,8 @@
     font-weight: 600;
     color: #333;
     margin-bottom: 8px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter'
+    , sans-serif;
   }
 
   .getsupp-category-count {
@@ -178,114 +213,107 @@
 {% endstylesheet %}
 
 {% schema %}
-{
-  "name": "GetSupp Categories",
-  "tag": "section",
-  "class": "section",
-  "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "Shop by Health Concerns"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Description",
-      "default": "Find the right supplements for your specific health needs"
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-1"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "category",
-      "name": "Category",
-      "settings": [
-        {
-          "type": "text",
-          "id": "category_name",
-          "label": "Category Name",
-          "default": "Health & Wellness"
-        },
-        {
-          "type": "url",
-          "id": "category_url",
-          "label": "Category URL"
-        },
-        {
-          "type": "image_picker",
-          "id": "category_icon",
-          "label": "Category Icon"
-        },
-        {
-          "type": "text",
-          "id": "product_count",
-          "label": "Product Count",
-          "default": "50+"
-        }
-      ]
-    }
-  ],
-  "presets": [
-    {
-      "name": "GetSupp Categories",
-      "blocks": [
-        {
-          "type": "category",
-          "settings": {
-            "category_name": "Health & Wellness",
-            "category_url": "/collections/health-wellness",
-            "product_count": "150+"
+  {
+    "name": "GetSupp Categories",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Shop by Health Concerns"
+      }, {
+        "type": "textarea",
+        "id": "description",
+        "label": "Description",
+        "default": "Find the right supplements for your specific health needs"
+      }, {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "default": "scheme-1"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "category",
+        "name": "Category",
+        "settings": [
+          {
+            "type": "text",
+            "id": "category_name",
+            "label": "Category Name",
+            "default": "Health & Wellness"
+          }, {
+            "type": "url",
+            "id": "category_url",
+            "label": "Category URL"
+          }, {
+            "type": "image_picker",
+            "id": "category_icon",
+            "label": "Category Icon"
+          }, {
+            "type": "text",
+            "id": "product_count",
+            "label": "Product Count",
+            "default": "50+"
           }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "category_name": "Herbal & Ayurveda",
-            "category_url": "/collections/herbal-ayurveda",
-            "product_count": "200+"
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "GetSupp Categories",
+        "blocks": [
+          {
+            "type": "category",
+            "settings": {
+              "category_name": "Health & Wellness",
+              "category_url": "/collections/health-wellness",
+              "product_count": "150+"
+            }
+          },
+          {
+            "type": "category",
+            "settings": {
+              "category_name": "Herbal & Ayurveda",
+              "category_url": "/collections/herbal-ayurveda",
+              "product_count": "200+"
+            }
+          },
+          {
+            "type": "category",
+            "settings": {
+              "category_name": "Vitamins & Supplements",
+              "category_url": "/collections/vitamins-supplements",
+              "product_count": "300+"
+            }
+          },
+          {
+            "type": "category",
+            "settings": {
+              "category_name": "Health Foods",
+              "category_url": "/collections/health-foods",
+              "product_count": "100+"
+            }
+          }, {
+            "type": "category",
+            "settings": {
+              "category_name": "Sports Nutrition",
+              "category_url": "/collections/sports-nutrition",
+              "product_count": "80+"
+            }
+          }, {
+            "type": "category",
+            "settings": {
+              "category_name": "Brands",
+              "category_url": "/collections/brands",
+              "product_count": "50+"
+            }
           }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "category_name": "Vitamins & Supplements",
-            "category_url": "/collections/vitamins-supplements",
-            "product_count": "300+"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "category_name": "Health Foods",
-            "category_url": "/collections/health-foods",
-            "product_count": "100+"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "category_name": "Sports Nutrition",
-            "category_url": "/collections/sports-nutrition",
-            "product_count": "80+"
-          }
-        },
-        {
-          "type": "category",
-          "settings": {
-            "category_name": "Brands",
-            "category_url": "/collections/brands",
-            "product_count": "50+"
-          }
-        }
-      ]
-    }
-  ]
-}
+        ]
+      }
+    ]
+  }
 {% endschema %}

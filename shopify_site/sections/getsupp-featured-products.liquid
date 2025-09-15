@@ -1,5 +1,5 @@
-{% comment %}
-  GetSupp Featured Products Section
+{% comment %} 
+  GetSupp Featured Products Section 
   Displays featured products in a grid layout
 {% endcomment %}
 
@@ -12,19 +12,37 @@
       <h2 class="getsupp-featured-title">{{ section.settings.title | default: "Featured Products" }}</h2>
       <p class="getsupp-featured-description">{{ section.settings.description | default: "Discover our most popular and trusted supplements" }}</p>
     </div>
-    
+
     <div class="getsupp-featured-grid">
       {% for product in collection.products limit: products_to_show %}
         <div class="getsupp-product-card">
           <a href="{{ product.url }}" class="getsupp-product-link">
             <div class="getsupp-product-image">
               {% if product.featured_image %}
-                <img src="{{ product.featured_image | img_url: '300x300' }}" alt="{{ product.title }}" class="getsupp-product-img">
+                <img
+                  src="{{ product.featured_image | img_url: '300x300' }}"
+                  alt="{{ product.title }}"
+                  class="getsupp-product-img">
               {% else %}
                 <div class="getsupp-product-placeholder">
-                  <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="#24BAAD" stroke-width="2"/>
-                    <path d="M9 9h6v6H9z" stroke="#24BAAD" stroke-width="2"/>
+                  <svg
+                    width="60"
+                    height="60"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <rect
+                      x="3"
+                      y="3"
+                      width="18"
+                      height="18"
+                      rx="2"
+                      stroke="#24BAAD"
+                      stroke-width="2" />
+                    <path
+                      d="M9 9h6v6H9z"
+                      stroke="#24BAAD"
+                      stroke-width="2" />
                   </svg>
                 </div>
               {% endif %}
@@ -60,11 +78,28 @@
             </div>
           </a>
           {% if product.available %}
-            <form action="/cart/add" method="post" enctype="multipart/form-data" class="getsupp-product-form">
-              <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <form
+              action="/cart/add"
+              method="post"
+              enctype="multipart/form-data"
+              class="getsupp-product-form">
+              <input
+                type="hidden"
+                name="id"
+                value="{{ product.selected_or_first_available_variant.id }}">
               <button type="submit" class="getsupp-add-to-cart">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round" />
                 </svg>
                 Add to Cart
               </button>
@@ -73,13 +108,23 @@
         </div>
       {% endfor %}
     </div>
-    
+
     {% if section.settings.show_view_all and collection.url %}
       <div class="getsupp-featured-footer">
         <a href="{{ collection.url }}" class="getsupp-view-all-btn">
           {{ section.settings.view_all_text | default: "View All Products" }}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M5 12h14m-7-7l7 7-7 7"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
           </svg>
         </a>
       </div>
@@ -90,13 +135,28 @@
 {% stylesheet %}
   .getsupp-featured-products {
     padding: 80px 0;
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .getsupp-featured-products::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hexagons" width="30" height="30" patternUnits="userSpaceOnUse"><polygon points="15, 5 25, 10 25, 20 15, 25 5, 20 5, 10" fill="none" stroke="%2324BAAD" stroke-width="0.5" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23hexagons)"/></svg>');
+    opacity: 0.3;
   }
 
   .getsupp-featured-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    position: relative;
+    z-index: 2;
   }
 
   .getsupp-featured-header {
@@ -109,7 +169,8 @@
     font-weight: 700;
     color: #333;
     margin-bottom: 16px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter'
+    , sans-serif;
   }
 
   .getsupp-featured-description {
@@ -198,7 +259,8 @@
     color: #333;
     margin-bottom: 8px;
     line-height: 1.4;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter'
+    , sans-serif;
   }
 
   .getsupp-product-vendor {
@@ -334,60 +396,57 @@
 {% endstylesheet %}
 
 {% schema %}
-{
-  "name": "GetSupp Featured",
-  "tag": "section",
-  "class": "section",
-  "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "Featured Products"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Description",
-      "default": "Discover our most popular and trusted supplements"
-    },
-    {
-      "type": "collection",
-      "id": "collection",
-      "label": "Collection"
-    },
-    {
-      "type": "range",
-      "id": "products_to_show",
-      "label": "Products to show",
-      "min": 4,
-      "max": 16,
-      "step": 2,
-      "default": 8
-    },
-    {
-      "type": "checkbox",
-      "id": "show_view_all",
-      "label": "Show 'View All' button",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "view_all_text",
-      "label": "View All button text",
-      "default": "View All Products"
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-1"
-    }
-  ],
-  "presets": [
-    {
-      "name": "GetSupp Featured"
-    }
-  ]
-}
+  {
+    "name": "GetSupp Featured",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Featured Products"
+      },
+      {
+        "type": "textarea",
+        "id": "description",
+        "label": "Description",
+        "default": "Discover our most popular and trusted supplements"
+      },
+      {
+        "type": "collection",
+        "id": "collection",
+        "label": "Collection"
+      },
+      {
+        "type": "range",
+        "id": "products_to_show",
+        "label": "Products to show",
+        "min": 4,
+        "max": 16,
+        "step": 2,
+        "default": 8
+      }, {
+        "type": "checkbox",
+        "id": "show_view_all",
+        "label": "Show 'View All' button",
+        "default": true
+      }, {
+        "type": "text",
+        "id": "view_all_text",
+        "label": "View All button text",
+        "default": "View All Products"
+      }, {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "default": "scheme-1"
+      }
+    ],
+    "presets": [
+      {
+        "name": "GetSupp Featured"
+      }
+    ]
+  }
 {% endschema %}
