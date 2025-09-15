@@ -1,17 +1,5 @@
 {
   "sections": {
-    "getsupp_hero_banner": {
-      "type": "getsupp-hero-banner",
-      "settings": {
-        "title": "India's Best and Authentic Supplements Online Store",
-        "description": "Shop for the best vitamins, ayurvedic, herbal & protein supplements online in India at best prices. We are India's most trusted online health supplement store.",
-        "cta_text": "Shop Now",
-        "cta_url": "/collections/all",
-        "secondary_cta_text": "Learn More",
-        "secondary_cta_url": "/pages/about-us",
-        "color_scheme": "getsupp-light"
-      }
-    },
     "getsupp_category_showcase": {
       "type": "getsupp-category-showcase",
       "settings": {
@@ -92,7 +80,6 @@
     }
   },
   "order": [
-    "getsupp_hero_banner",
     "getsupp_category_showcase",
     "getsupp_featured_products"
   ]

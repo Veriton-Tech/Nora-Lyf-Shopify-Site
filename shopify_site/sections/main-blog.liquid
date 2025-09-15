@@ -1,24 +1,231 @@
-<section class="page-width">
-  <h1>{{ blog.title | escape }}</h1>
-  <div>
-    {% for article in blog.articles %}
-      <article>
-        <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
-        <div>{{ article.excerpt | strip_html }}</div>
-      </article>
-    {% endfor %}
-  </div>
+<section class="page-width blog-grid blog-grid--{{ section.id }}" style="--padding-top: {{ section.settings.padding_top | default: 36 }}px; --padding-bottom: {{ section.settings.padding_bottom | default: 36 }}px;">
+  <h1>{{ section.settings.custom_title | default: blog.title | escape }}</h1>
+  {% if section.settings.show_description and blog.metafields.custom.description != blank %}
+    <div class="blog-grid__description">{{ blog.metafields.custom.description }}</div>
+  {% endif %}
+
+  {% paginate blog.articles by section.settings.articles_per_page | default: 12 %}
+    {% if blog.articles_count == 0 %}
+      <div class="blog-empty">
+        <p>{{ section.settings.empty_message | default: 'No articles yet. Check back soon for health tips and guides.' }}</p>
+      </div>
+    {% endif %}
+    <div class="blog-grid__list">
+      {% for article in blog.articles %}
+        <article class="blog-card">
+          {% if section.settings.show_image and article.image %}
+            <a
+              class="blog-card__image"
+              href="{{ article.url }}"
+              aria-label="{{ article.title | escape }}">
+              {{ article.image | image_url: width: 800 | image_tag: loading: 'lazy', alt: article.title }}
+            </a>
+          {% endif %}
+
+          <div class="blog-card__content">
+            <h2 class="blog-card__title">
+              <a href="{{ article.url }}">{{ article.title }}</a>
+            </h2>
+
+            {% assign date = article.published_at | time_tag: format: 'date' %}
+            {% if section.settings.show_date or section.settings.show_author %}
+              <div class="blog-card__meta">
+                {% if section.settings.show_date %}
+                  <span class="blog-card__date">{{ date }}</span>
+                {% endif %}
+                {% if section.settings.show_author and article.author %}
+                  <span class="blog-card__sep">•</span>
+                  <span class="blog-card__author">{{ article.author }}</span>
+                {% endif %}
+              </div>
+            {% endif %}
+
+            {% if section.settings.show_excerpt %}
+              <p class="blog-card__excerpt">{{ article.excerpt_or_content | strip_html | truncate: section.settings.excerpt_length | default: 140 }}</p>
+            {% endif %}
+
+            <a class="blog-card__readmore" href="{{ article.url }}">Read more</a>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+      <nav class="blog-pagination">{{ paginate | default_pagination }}</nav>
+    {% endif %}
+  {% endpaginate %}
+
+  <style>
+    .blog-grid--{{ section.id }} {
+      padding-top: var(--padding-top);
+      padding-bottom: var(--padding-bottom);
+    }
+    .blog-grid__list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+    @media (min-width: 600px) {
+      .blog-grid__list {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 992px) {
+      .blog-grid__list {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .blog-card {
+      display: flex;
+      flex-direction: column;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      height: 100%;
+      transition: box-shadow 0.2s ease;
+    }
+    .blog-card:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    }
+    .blog-card__image img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .blog-card__content {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .blog-card__title {
+      font-size: 18px;
+      line-height: 1.3;
+      margin: 0;
+    }
+    .blog-card__title a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .blog-card__meta {
+      color: #667085;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .blog-card__excerpt {
+      color: #475467;
+      margin: 0;
+    }
+    .blog-card__readmore {
+      margin-top: auto;
+      font-weight: 600;
+      color: #0a7;
+      text-decoration: none;
+    }
+    .blog-card__readmore:hover {
+      text-decoration: underline;
+    }
+    .blog-pagination {
+      margin-top: 24px;
+      display: flex;
+      justify-content: center;
+    }
+    .blog-empty {
+      margin: 16px 0 32px;
+      color: #667085;
+      background: #f8fafc;
+      border: 1px dashed #e5e7eb;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+    .blog-grid__description {
+      margin: 8px 0 16px;
+      color: #475467;
+    }
+  </style>
 </section>
 
 {% schema %}
-{
-  "name": "Blog (main)",
-  "settings": [],
-  "blocks": [],
-  "tag": "section"
-}
+  {
+    "name": "Blog (main)",
+    "settings": [
+      {
+        "type": "text",
+        "id": "custom_title",
+        "label": "Custom title (optional)",
+        "default": "Health Blog"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_description",
+        "label": "Show blog description (metafield)",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "empty_message",
+        "label": "Empty state message",
+        "default": "No articles yet. Check back soon for health tips and guides."
+      },
+      {
+        "type": "range",
+        "id": "articles_per_page",
+        "label": "Articles per page",
+        "min": 3,
+        "max": 24,
+        "step": 1,
+        "default": 12
+      }, {
+        "type": "checkbox",
+        "id": "show_image",
+        "label": "Show featured image",
+        "default": true
+      }, {
+        "type": "checkbox",
+        "id": "show_date",
+        "label": "Show publish date",
+        "default": true
+      }, {
+        "type": "checkbox",
+        "id": "show_author",
+        "label": "Show author",
+        "default": false
+      }, {
+        "type": "checkbox",
+        "id": "show_excerpt",
+        "label": "Show excerpt",
+        "default": true
+      }, {
+        "type": "range",
+        "id": "excerpt_length",
+        "label": "Excerpt length (chars)",
+        "min": 60,
+        "max": 300,
+        "step": 10,
+        "default": 140
+      }, {
+        "type": "range",
+        "id": "padding_top",
+        "label": "Top padding",
+        "min": 0,
+        "max": 80,
+        "step": 4,
+        "default": 36
+      }, {
+        "type": "range",
+        "id": "padding_bottom",
+        "label": "Bottom padding",
+        "min": 0,
+        "max": 80,
+        "step": 4,
+        "default": 36
+      }
+    ],
+    "blocks": [],
+    "tag": "section"
+  }
 {% endschema %}
-
-
-
-

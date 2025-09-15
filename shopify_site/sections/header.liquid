@@ -53,40 +53,6 @@
         </a>
       </div>
 
-      <!-- Search Bar -->
-      <div class="getsupp-search">
-        <form
-          action="{{ routes.search_url }}"
-          method="get"
-          class="getsupp-search-form">
-          <input
-            type="search"
-            name="q"
-            placeholder="Search for supplements & health concerns..."
-            class="getsupp-search-input">
-          <button type="submit" class="getsupp-search-button">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <circle
-                cx="11"
-                cy="11"
-                r="8"
-                stroke="currentColor"
-                stroke-width="2" />
-              <path
-                d="m21 21-4.35-4.35"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round" />
-            </svg>
-          </button>
-        </form>
-      </div>
 
       <!-- Right Icons -->
       <div class="getsupp-header-icons">
@@ -791,11 +757,105 @@
       </li>
 
       <li class="getsupp-nav-item">
-        <a href="/blogs/health" class="getsupp-nav-link">Health Blog</a>
+        <a href="/blogs/news" class="getsupp-nav-link">Health Blog</a>
       </li>
     </ul>
   </div>
 </nav>
+
+{% if section.settings.show_hero_inline %}
+  <div class="getsupp-hero-inline">
+    <div class="getsupp-hero-inline__container">
+      <div class="getsupp-hero-inline__icon">
+        <svg
+          width="120"
+          height="120"
+          viewBox="0 0 120 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M60 10L100 30V60C100 85 60 110 60 110S20 85 20 60V30L60 10Z" fill="#24BAAD" />
+          <path
+            d="M45 55L52 62L75 39"
+            stroke="white"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </div>
+      <h1 class="getsupp-hero-inline__title">{{ section.settings.hero_title | default: "Transform your Health with Getsupp" }}</h1>
+      <div class="getsupp-hero-inline__links">
+        <a class="getsupp-hero-inline__link" href="{{ section.settings.hero_link1_url | default: routes.collections_url }}">{{ section.settings.hero_link1_text | default: 'Right Products' }}
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"><path
+              d="M5 12H19M19 12L12 5M19 12L12 19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" /></svg>
+        </a>
+        <a class="getsupp-hero-inline__link" href="{{ section.settings.hero_link2_url | default: routes.root_url }}">{{ section.settings.hero_link2_text | default: 'Expert Guidance' }}
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"><path
+              d="M5 12H19M19 12L12 5M19 12L12 19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" /></svg>
+        </a>
+        <a class="getsupp-hero-inline__link" href="{{ section.settings.hero_link3_url | default: routes.root_url }}">{{ section.settings.hero_link3_text | default: 'Right Results' }}
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"><path
+              d="M5 12H19M19 12L12 5M19 12L12 19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" /></svg>
+        </a>
+      </div>
+      <p class="getsupp-hero-inline__subtitle">{{ section.settings.hero_subtitle | default: 'Shop 100% genuine health products from more than 300+ brands' }}</p>
+      <form
+        action="{{ routes.search_url }}"
+        method="get"
+        class="getsupp-hero-inline__search">
+        <input
+          type="search"
+          name="q"
+          placeholder="{{ section.settings.hero_search_placeholder | default: 'Search for supplements & health concerns...' }}"
+          aria-label="Search" />
+        <button type="submit" aria-label="Search">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"><circle
+              cx="11"
+              cy="11"
+              r="8"
+              stroke="currentColor"
+              stroke-width="2" /><path
+              d="m21 21-4.35-4.35"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" /></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+{% endif %}
 
 {% javascript %}
   (function() {
@@ -916,7 +976,7 @@
     height: 60px;
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 12px;
   }
 
   .getsupp-mobile-menu {
@@ -942,8 +1002,7 @@
   }
 
   .getsupp-search {
-    flex: 1;
-    max-width: 650px;
+    display: none;
   }
 
   .getsupp-search-form {
@@ -986,6 +1045,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-left: auto;
   }
 
   .getsupp-mobile-search {
@@ -1049,6 +1109,7 @@
   .getsupp-navigation {
     background: rgba(240, 240, 240, 0.5);
     border-top: 1px solid #e0e0e0;
+    position: relative;
   }
 
   .getsupp-nav-container {
@@ -1069,7 +1130,7 @@
   }
 
   .getsupp-nav-item {
-    position: relative;
+    position: static;
     display: flex;
     align-items: center;
   }
@@ -1107,7 +1168,7 @@
   /* Mega Menu Styles */
   .getsupp-mega-menu {
     position: absolute;
-    top: 45px;
+    top: 60px;
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
@@ -1117,6 +1178,10 @@
   }
 
   .getsupp-nav-item:hover .getsupp-mega-menu {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .getsupp-mega-menu:hover {
     opacity: 1;
     pointer-events: auto;
   }
@@ -1202,6 +1267,94 @@
     outline: none;
   }
 
+  /* Inline Hero below navigation */
+  .getsupp-hero-inline {
+    background: #fbf4ef;
+    padding: 48px 0 28px;
+  }
+  .getsupp-hero-inline__container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+    text-align: center;
+  }
+  .getsupp-hero-inline__icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+  .getsupp-hero-inline__title {
+    font-size: 40px;
+    line-height: 1.2;
+    font-weight: 800;
+    margin: 0 0 8px;
+  }
+  .getsupp-hero-inline__links {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 8px 0 12px;
+  }
+  .getsupp-hero-inline__link {
+    color: #0b7285;
+    text-decoration: none;
+    font-weight: 700;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .getsupp-hero-inline__link:hover {
+    color: #086977;
+  }
+  .getsupp-hero-inline__subtitle {
+    margin: 8px 0 20px;
+    font-size: 18px;
+  }
+  .getsupp-hero-inline__search {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #e5e5e5;
+    height: 72px;
+  }
+  .getsupp-hero-inline__search input {
+    flex: 1;
+    height: 100%;
+    border: 0;
+    outline: none;
+    padding: 0 20px;
+    font-size: 18px;
+  }
+  .getsupp-hero-inline__search button {
+    background: none;
+    border: 0;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+  @media (max-width: 768px) {
+    .getsupp-hero-inline {
+      padding: 36px 0 20px;
+    }
+    .getsupp-hero-inline__title {
+      font-size: 28px;
+    }
+    .getsupp-hero-inline__search {
+      height: 56px;
+    }
+    .getsupp-hero-inline__search input {
+      font-size: 16px;
+    }
+  }
+
   /* Mobile Responsive */
   @media (max-width: 1024px) {
     .getsupp-search {
@@ -1237,19 +1390,69 @@
         "id": "banner_text",
         "label": "Banner text",
         "default": "Freedom Sale | 50% Price drop + Extra 8% Off"
-      }, {
+      },
+      {
         "type": "text",
         "id": "offer_end_time",
         "label": "Offer end time (ISO, e.g. 2025-09-20T18:30:00+05:30)",
         "default": "2025-12-31T23:59:59Z"
-      }, {
+      },
+      {
         "type": "image_picker",
         "id": "banner_background_image",
         "label": "Banner repeating background image"
-      }, {
+      },
+      {
         "type": "link_list",
         "id": "menu",
         "label": "t:labels.menu"
+      }, {
+        "type": "checkbox",
+        "id": "show_hero_inline",
+        "label": "Show inline hero below navigation",
+        "default": true
+      }, {
+        "type": "text",
+        "id": "hero_title",
+        "label": "Hero title",
+        "default": "Transform your Health with Getsupp"
+      }, {
+        "type": "textarea",
+        "id": "hero_subtitle",
+        "label": "Hero subtitle",
+        "default": "Shop 100% genuine health products from more than 300+ brands"
+      }, {
+        "type": "text",
+        "id": "hero_link1_text",
+        "label": "Link 1 text",
+        "default": "Right Products"
+      }, {
+        "type": "url",
+        "id": "hero_link1_url",
+        "label": "Link 1 URL"
+      }, {
+        "type": "text",
+        "id": "hero_link2_text",
+        "label": "Link 2 text",
+        "default": "Expert Guidance"
+      }, {
+        "type": "url",
+        "id": "hero_link2_url",
+        "label": "Link 2 URL"
+      }, {
+        "type": "text",
+        "id": "hero_link3_text",
+        "label": "Link 3 text",
+        "default": "Right Results"
+      }, {
+        "type": "url",
+        "id": "hero_link3_url",
+        "label": "Link 3 URL"
+      }, {
+        "type": "text",
+        "id": "hero_search_placeholder",
+        "label": "Search placeholder",
+        "default": "Search for supplements & health concerns..."
       }
     ]
   }
