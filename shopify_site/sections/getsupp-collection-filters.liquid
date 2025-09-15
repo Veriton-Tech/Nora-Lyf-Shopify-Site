@@ -1,0 +1,446 @@
+{% comment %}
+  GetSupp Collection Filters Section
+  Displays filters and sorting options
+{% endcomment %}
+
+<div class="getsupp-collection-filters">
+  <div class="getsupp-collection-container">
+    <div class="getsupp-filters-bar">
+      <div class="getsupp-filters-left">
+        {% if section.settings.show_filters %}
+          <button class="getsupp-filter-toggle" id="filter-toggle">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 6h18M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Filters
+          </button>
+        {% endif %}
+        <div class="getsupp-results-count">
+          {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
+        </div>
+      </div>
+      
+      {% if section.settings.show_sort %}
+        <div class="getsupp-sort-dropdown">
+          <select class="getsupp-sort-select" id="sort-select">
+            <option value="manual">Featured</option>
+            <option value="best-selling">Best Selling</option>
+            <option value="title-ascending">A-Z</option>
+            <option value="title-descending">Z-A</option>
+            <option value="price-ascending">Price: Low to High</option>
+            <option value="price-descending">Price: High to Low</option>
+            <option value="created-ascending">Oldest to Newest</option>
+            <option value="created-descending">Newest to Oldest</option>
+          </select>
+        </div>
+      {% endif %}
+    </div>
+    
+    {% if section.settings.show_filters %}
+      <div class="getsupp-filters-panel" id="filters-panel">
+        <div class="getsupp-filters-content">
+          <div class="getsupp-filters-header">
+            <h3>Filters</h3>
+            <button class="getsupp-filters-close" id="filters-close">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          
+          <div class="getsupp-filters-body">
+            {% for filter in collection.filters %}
+              <div class="getsupp-filter-group">
+                <h4 class="getsupp-filter-title">{{ filter.label }}</h4>
+                
+                {% case filter.type %}
+                  {% when 'list' %}
+                    <div class="getsupp-filter-options">
+                      {% for value in filter.values %}
+                        <label class="getsupp-filter-option">
+                          <input type="checkbox" 
+                                 name="{{ filter.param_name }}" 
+                                 value="{{ value.value }}"
+                                 {% if value.active %}checked{% endif %}
+                                 {% if value.count == 0 and value.active == false %}disabled{% endif %}>
+                          <span class="getsupp-filter-checkbox"></span>
+                          <span class="getsupp-filter-label">{{ value.label }}</span>
+                          <span class="getsupp-filter-count">({{ value.count }})</span>
+                        </label>
+                      {% endfor %}
+                    </div>
+                  {% when 'price_range' %}
+                    <div class="getsupp-price-range">
+                      <div class="getsupp-price-inputs">
+                        <input type="number" 
+                               name="{{ filter.min_value.param_name }}" 
+                               value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
+                               placeholder="Min"
+                               class="getsupp-price-input">
+                        <span class="getsupp-price-separator">to</span>
+                        <input type="number" 
+                               name="{{ filter.max_value.param_name }}" 
+                               value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
+                               placeholder="Max"
+                               class="getsupp-price-input">
+                      </div>
+                    </div>
+                {% endcase %}
+              </div>
+            {% endfor %}
+          </div>
+          
+          <div class="getsupp-filters-footer">
+            <button class="getsupp-clear-filters" id="clear-filters">Clear All</button>
+            <button class="getsupp-apply-filters" id="apply-filters">Apply Filters</button>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .getsupp-collection-filters {
+    background: white;
+    border-bottom: 1px solid #e9ecef;
+    margin-bottom: 40px;
+  }
+
+  .getsupp-collection-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .getsupp-filters-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+  }
+
+  .getsupp-filters-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .getsupp-filter-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #24BAAD;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-filter-toggle:hover {
+    background: #1ea89a;
+  }
+
+  .getsupp-results-count {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .getsupp-sort-dropdown {
+    position: relative;
+  }
+
+  .getsupp-sort-select {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    min-width: 200px;
+  }
+
+  .getsupp-filters-panel {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    transition: left 0.3s ease;
+  }
+
+  .getsupp-filters-panel.active {
+    left: 0;
+  }
+
+  .getsupp-filters-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 100%;
+    background: white;
+    overflow-y: auto;
+    padding: 0;
+  }
+
+  .getsupp-filters-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .getsupp-filters-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+
+  .getsupp-filters-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background 0.3s ease;
+  }
+
+  .getsupp-filters-close:hover {
+    background: #f8f9fa;
+  }
+
+  .getsupp-filters-body {
+    padding: 20px;
+  }
+
+  .getsupp-filter-group {
+    margin-bottom: 30px;
+  }
+
+  .getsupp-filter-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  .getsupp-filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .getsupp-filter-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+
+  .getsupp-filter-option input[type="checkbox"] {
+    display: none;
+  }
+
+  .getsupp-filter-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-filter-option input[type="checkbox"]:checked + .getsupp-filter-checkbox {
+    background: #24BAAD;
+    border-color: #24BAAD;
+  }
+
+  .getsupp-filter-option input[type="checkbox"]:checked + .getsupp-filter-checkbox::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .getsupp-filter-label {
+    font-size: 14px;
+    color: #333;
+  }
+
+  .getsupp-filter-count {
+    font-size: 12px;
+    color: #666;
+    margin-left: auto;
+  }
+
+  .getsupp-price-range {
+    margin-top: 16px;
+  }
+
+  .getsupp-price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .getsupp-price-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .getsupp-price-separator {
+    font-size: 14px;
+    color: #666;
+  }
+
+  .getsupp-filters-footer {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid #e9ecef;
+    padding: 20px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .getsupp-clear-filters {
+    flex: 1;
+    background: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-clear-filters:hover {
+    background: #f8f9fa;
+  }
+
+  .getsupp-apply-filters {
+    flex: 1;
+    background: #24BAAD;
+    color: white;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-apply-filters:hover {
+    background: #1ea89a;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .getsupp-filters-content {
+      width: 100%;
+    }
+
+    .getsupp-filters-bar {
+      flex-direction: column;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .getsupp-filters-left {
+      justify-content: space-between;
+    }
+
+    .getsupp-sort-select {
+      min-width: auto;
+      width: 100%;
+    }
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterToggle = document.getElementById('filter-toggle');
+    const filtersPanel = document.getElementById('filters-panel');
+    const filtersClose = document.getElementById('filters-close');
+    const clearFilters = document.getElementById('clear-filters');
+    const applyFilters = document.getElementById('apply-filters');
+
+    if (filterToggle && filtersPanel) {
+      filterToggle.addEventListener('click', function() {
+        filtersPanel.classList.add('active');
+      });
+    }
+
+    if (filtersClose && filtersPanel) {
+      filtersClose.addEventListener('click', function() {
+        filtersPanel.classList.remove('active');
+      });
+    }
+
+    if (clearFilters) {
+      clearFilters.addEventListener('click', function() {
+        const checkboxes = document.querySelectorAll('.getsupp-filter-option input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+          checkbox.checked = false;
+        });
+      });
+    }
+
+    if (applyFilters) {
+      applyFilters.addEventListener('click', function() {
+        // Apply filters logic here
+        filtersPanel.classList.remove('active');
+      });
+    }
+  });
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "GetSupp Filters",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_filters",
+      "label": "Show filters",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sort",
+      "label": "Show sort options",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "GetSupp Filters"
+    }
+  ]
+}
+{% endschema %}

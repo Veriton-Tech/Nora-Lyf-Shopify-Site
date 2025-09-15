@@ -1,0 +1,247 @@
+{% comment %}
+  GetSupp Hero Banner Section
+  Displays a prominent banner with title, description, and CTA button
+{% endcomment %}
+
+<div class="getsupp-hero-banner">
+  <div class="getsupp-hero-container">
+    <div class="getsupp-hero-content">
+      <h1 class="getsupp-hero-title">{{ section.settings.title | default: "India's Best and Authentic Supplements Online Store" }}</h1>
+      <p class="getsupp-hero-description">{{ section.settings.description | default: "Shop for the best vitamins, ayurvedic, herbal & protein supplements online in India at best prices. We are India's most trusted online health supplement store." }}</p>
+      <div class="getsupp-hero-actions">
+        <a href="{{ section.settings.cta_url | default: '/collections/all' }}" class="getsupp-hero-btn getsupp-hero-btn-primary">
+          {{ section.settings.cta_text | default: "Shop Now" }}
+        </a>
+        <a href="{{ section.settings.secondary_cta_url | default: '/pages/about-us' }}" class="getsupp-hero-btn getsupp-hero-btn-secondary">
+          {{ section.settings.secondary_cta_text | default: "Learn More" }}
+        </a>
+      </div>
+    </div>
+    <div class="getsupp-hero-image">
+      {% if section.settings.hero_image %}
+        <img src="{{ section.settings.hero_image | img_url: '800x600' }}" alt="{{ section.settings.title }}" class="getsupp-hero-img">
+      {% else %}
+        <div class="getsupp-hero-placeholder">
+          <svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="400" height="300" fill="#f0fdfc"/>
+            <circle cx="200" cy="150" r="80" fill="#24BAAD" opacity="0.1"/>
+            <path d="M160 120h80v60h-80z" fill="#24BAAD" opacity="0.2"/>
+            <text x="200" y="200" text-anchor="middle" fill="#24BAAD" font-family="Arial, sans-serif" font-size="16">Hero Image</text>
+          </svg>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .getsupp-hero-banner {
+    background: linear-gradient(135deg, #f0fdfc 0%, #e6fffe 100%);
+    padding: 80px 0;
+    margin-bottom: 60px;
+  }
+
+  .getsupp-hero-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .getsupp-hero-content {
+    max-width: 500px;
+  }
+
+  .getsupp-hero-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: #333;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .getsupp-hero-description {
+    font-size: 18px;
+    color: #666;
+    line-height: 1.6;
+    margin-bottom: 30px;
+  }
+
+  .getsupp-hero-actions {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  .getsupp-hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .getsupp-hero-btn-primary {
+    background: #24BAAD;
+    color: white;
+  }
+
+  .getsupp-hero-btn-primary:hover {
+    background: #1ea89a;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(36, 186, 173, 0.3);
+  }
+
+  .getsupp-hero-btn-secondary {
+    background: transparent;
+    color: #24BAAD;
+    border-color: #24BAAD;
+  }
+
+  .getsupp-hero-btn-secondary:hover {
+    background: #24BAAD;
+    color: white;
+    transform: translateY(-2px);
+  }
+
+  .getsupp-hero-image {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .getsupp-hero-img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .getsupp-hero-placeholder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 400px;
+    height: 300px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .getsupp-hero-banner {
+      padding: 60px 0;
+    }
+
+    .getsupp-hero-container {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      text-align: center;
+    }
+
+    .getsupp-hero-title {
+      font-size: 36px;
+    }
+
+    .getsupp-hero-description {
+      font-size: 16px;
+    }
+
+    .getsupp-hero-actions {
+      justify-content: center;
+    }
+
+    .getsupp-hero-btn {
+      padding: 14px 28px;
+      font-size: 15px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .getsupp-hero-title {
+      font-size: 28px;
+    }
+
+    .getsupp-hero-actions {
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .getsupp-hero-btn {
+      width: 100%;
+      max-width: 280px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GetSupp Hero",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "India's Best and Authentic Supplements Online Store"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Shop for the best vitamins, ayurvedic, herbal & protein supplements online in India at best prices. We are India's most trusted online health supplement store."
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "Primary CTA Text",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "cta_url",
+      "label": "Primary CTA URL",
+      "default": "/collections/all"
+    },
+    {
+      "type": "text",
+      "id": "secondary_cta_text",
+      "label": "Secondary CTA Text",
+      "default": "Learn More"
+    },
+    {
+      "type": "url",
+      "id": "secondary_cta_url",
+      "label": "Secondary CTA URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "hero_image",
+      "label": "Hero Image"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "GetSupp Hero"
+    }
+  ]
+}
+{% endschema %}

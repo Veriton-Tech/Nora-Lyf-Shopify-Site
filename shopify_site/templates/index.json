@@ -1,25 +1,99 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
-    "main": {
-      "type": "httrack-style",
+    "getsupp_hero_banner": {
+      "type": "getsupp-hero-banner",
       "settings": {
-        "main_title": "Index of locally available sites:",
-        "site_title": "GetSupp: India's Best and Authentic Supplements Online Store",
-        "site_url": "https://www.getsupp.com",
-        "footer_text": "Mirror and index made by HTTrack Website Copier [XR&CO'2008]"
+        "title": "India's Best and Authentic Supplements Online Store",
+        "description": "Shop for the best vitamins, ayurvedic, herbal & protein supplements online in India at best prices. We are India's most trusted online health supplement store.",
+        "cta_text": "Shop Now",
+        "cta_url": "/collections/all",
+        "secondary_cta_text": "Learn More",
+        "secondary_cta_url": "/pages/about-us",
+        "color_scheme": "scheme-1"
+      }
+    },
+    "getsupp_category_showcase": {
+      "type": "getsupp-category-showcase",
+      "settings": {
+        "title": "Shop by Health Concerns",
+        "description": "Find the right supplements for your specific health needs",
+        "color_scheme": "scheme-1"
+      },
+      "blocks": {
+        "health_wellness": {
+          "type": "category",
+          "settings": {
+            "category_name": "Health & Wellness",
+            "category_url": "/collections/health-wellness",
+            "product_count": "150+"
+          }
+        },
+        "herbal_ayurveda": {
+          "type": "category",
+          "settings": {
+            "category_name": "Herbal & Ayurveda",
+            "category_url": "/collections/herbal-ayurveda",
+            "product_count": "200+"
+          }
+        },
+        "vitamins_supplements": {
+          "type": "category",
+          "settings": {
+            "category_name": "Vitamins & Supplements",
+            "category_url": "/collections/vitamins-supplements",
+            "product_count": "300+"
+          }
+        },
+        "health_foods": {
+          "type": "category",
+          "settings": {
+            "category_name": "Health Foods",
+            "category_url": "/collections/health-foods",
+            "product_count": "100+"
+          }
+        },
+        "sports_nutrition": {
+          "type": "category",
+          "settings": {
+            "category_name": "Sports Nutrition",
+            "category_url": "/collections/sports-nutrition",
+            "product_count": "80+"
+          }
+        },
+        "brands": {
+          "type": "category",
+          "settings": {
+            "category_name": "Brands",
+            "category_url": "/collections/brands",
+            "product_count": "50+"
+          }
+        }
+      },
+      "block_order": [
+        "health_wellness",
+        "herbal_ayurveda",
+        "vitamins_supplements",
+        "health_foods",
+        "sports_nutrition",
+        "brands"
+      ]
+    },
+    "getsupp_featured_products": {
+      "type": "getsupp-featured-products",
+      "settings": {
+        "title": "Featured Products",
+        "description": "Discover our most popular and trusted supplements",
+        "collection": "all",
+        "products_to_show": 8,
+        "show_view_all": true,
+        "view_all_text": "View All Products",
+        "color_scheme": "scheme-1"
       }
     }
   },
   "order": [
-    "main"
+    "getsupp_hero_banner",
+    "getsupp_category_showcase",
+    "getsupp_featured_products"
   ]
 }

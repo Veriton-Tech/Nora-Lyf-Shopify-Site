@@ -1,0 +1,171 @@
+{% comment %}
+  GetSupp Collection Header Section
+  Displays collection title, description, and image
+{% endcomment %}
+
+<div class="getsupp-collection-header">
+  <div class="getsupp-collection-container">
+    {% if section.settings.show_collection_image and collection.image %}
+      <div class="getsupp-collection-hero">
+        <img src="{{ collection.image | img_url: '1200x400' }}" alt="{{ collection.title }}" class="getsupp-collection-hero-img">
+        <div class="getsupp-collection-hero-overlay">
+          <div class="getsupp-collection-hero-content">
+            <h1 class="getsupp-collection-title">{{ collection.title }}</h1>
+            {% if section.settings.show_collection_description and collection.description != blank %}
+              <div class="getsupp-collection-description">
+                {{ collection.description }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="getsupp-collection-simple">
+        <h1 class="getsupp-collection-title">{{ collection.title }}</h1>
+        {% if section.settings.show_collection_description and collection.description != blank %}
+          <div class="getsupp-collection-description">
+            {{ collection.description }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% stylesheet %}
+  .getsupp-collection-header {
+    margin-bottom: 40px;
+  }
+
+  .getsupp-collection-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .getsupp-collection-hero {
+    position: relative;
+    height: 300px;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+
+  .getsupp-collection-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .getsupp-collection-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(36, 186, 173, 0.8) 0%, rgba(30, 168, 154, 0.8) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .getsupp-collection-hero-content {
+    text-align: center;
+    color: white;
+    max-width: 600px;
+    padding: 0 20px;
+  }
+
+  .getsupp-collection-title {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .getsupp-collection-description {
+    font-size: 18px;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+
+  .getsupp-collection-simple {
+    text-align: center;
+    padding: 60px 0;
+    background: #f8f9fa;
+    border-radius: 16px;
+    margin-bottom: 40px;
+  }
+
+  .getsupp-collection-simple .getsupp-collection-title {
+    color: #333;
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .getsupp-collection-simple .getsupp-collection-description {
+    color: #666;
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .getsupp-collection-hero {
+      height: 200px;
+    }
+
+    .getsupp-collection-title {
+      font-size: 32px;
+    }
+
+    .getsupp-collection-description {
+      font-size: 16px;
+    }
+
+    .getsupp-collection-simple {
+      padding: 40px 20px;
+    }
+
+    .getsupp-collection-simple .getsupp-collection-title {
+      font-size: 28px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GetSupp Header",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "Show collection description",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_image",
+      "label": "Show collection image",
+      "default": true
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "GetSupp Header"
+    }
+  ]
+}
+{% endschema %}

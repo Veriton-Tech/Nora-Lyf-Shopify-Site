@@ -1,0 +1,291 @@
+{% comment %}
+  GetSupp Category Showcase Section
+  Displays product categories in a grid layout
+{% endcomment %}
+
+<div class="getsupp-category-showcase">
+  <div class="getsupp-category-container">
+    <div class="getsupp-category-header">
+      <h2 class="getsupp-category-title">{{ section.settings.title | default: "Shop by Health Concerns" }}</h2>
+      <p class="getsupp-category-description">{{ section.settings.description | default: "Find the right supplements for your specific health needs" }}</p>
+    </div>
+    
+    <div class="getsupp-category-grid">
+      {% for block in section.blocks %}
+        <div class="getsupp-category-card" {{ block.shopify_attributes }}>
+          <a href="{{ block.settings.category_url | default: '#' }}" class="getsupp-category-link">
+            <div class="getsupp-category-icon">
+              {% if block.settings.category_icon %}
+                <img src="{{ block.settings.category_icon | img_url: '80x80' }}" alt="{{ block.settings.category_name }}" class="getsupp-category-img">
+              {% else %}
+                <div class="getsupp-category-placeholder">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="10" stroke="#24BAAD" stroke-width="2"/>
+                    <path d="M12 6v6l4 2" stroke="#24BAAD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </div>
+              {% endif %}
+            </div>
+            <h3 class="getsupp-category-name">{{ block.settings.category_name | default: "Category" }}</h3>
+            <p class="getsupp-category-count">{{ block.settings.product_count | default: "50+" }} Products</p>
+          </a>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+  .getsupp-category-showcase {
+    padding: 80px 0;
+    background: white;
+  }
+
+  .getsupp-category-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .getsupp-category-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .getsupp-category-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 16px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .getsupp-category-description {
+    font-size: 18px;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .getsupp-category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+  }
+
+  .getsupp-category-card {
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+  }
+
+  .getsupp-category-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(36, 186, 173, 0.15);
+    border-color: #24BAAD;
+  }
+
+  .getsupp-category-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .getsupp-category-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0fdfc;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-category-card:hover .getsupp-category-icon {
+    background: #24BAAD;
+    transform: scale(1.1);
+  }
+
+  .getsupp-category-img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+  }
+
+  .getsupp-category-placeholder {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .getsupp-category-card:hover .getsupp-category-placeholder svg {
+    stroke: white;
+  }
+
+  .getsupp-category-name {
+    font-size: 20px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .getsupp-category-count {
+    font-size: 14px;
+    color: #24BAAD;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .getsupp-category-showcase {
+      padding: 60px 0;
+    }
+
+    .getsupp-category-title {
+      font-size: 28px;
+    }
+
+    .getsupp-category-description {
+      font-size: 16px;
+    }
+
+    .getsupp-category-grid {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .getsupp-category-card {
+      padding: 24px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .getsupp-category-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "GetSupp Categories",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Shop by Health Concerns"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Find the right supplements for your specific health needs"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category_name",
+          "label": "Category Name",
+          "default": "Health & Wellness"
+        },
+        {
+          "type": "url",
+          "id": "category_url",
+          "label": "Category URL"
+        },
+        {
+          "type": "image_picker",
+          "id": "category_icon",
+          "label": "Category Icon"
+        },
+        {
+          "type": "text",
+          "id": "product_count",
+          "label": "Product Count",
+          "default": "50+"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "GetSupp Categories",
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "Health & Wellness",
+            "category_url": "/collections/health-wellness",
+            "product_count": "150+"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "Herbal & Ayurveda",
+            "category_url": "/collections/herbal-ayurveda",
+            "product_count": "200+"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "Vitamins & Supplements",
+            "category_url": "/collections/vitamins-supplements",
+            "product_count": "300+"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "Health Foods",
+            "category_url": "/collections/health-foods",
+            "product_count": "100+"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "Sports Nutrition",
+            "category_url": "/collections/sports-nutrition",
+            "product_count": "80+"
+          }
+        },
+        {
+          "type": "category",
+          "settings": {
+            "category_name": "Brands",
+            "category_url": "/collections/brands",
+            "product_count": "50+"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

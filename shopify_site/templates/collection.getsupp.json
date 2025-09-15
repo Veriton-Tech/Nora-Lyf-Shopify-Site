@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "getsupp_collection_header": {
+      "type": "getsupp-collection-header",
+      "settings": {
+        "show_collection_description": true,
+        "show_collection_image": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "getsupp_collection_filters": {
+      "type": "getsupp-collection-filters",
+      "settings": {
+        "show_filters": true,
+        "show_sort": true,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "getsupp_collection_products": {
+      "type": "getsupp-collection-products",
+      "settings": {
+        "products_per_page": 24,
+        "show_vendor": true,
+        "show_rating": true,
+        "show_quick_add": true,
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "getsupp_collection_header",
+    "getsupp_collection_filters",
+    "getsupp_collection_products"
+  ]
+}
