@@ -1,12 +1,13 @@
 <!-- GetSupp Style Header -->
 <div class="getsupp-header">
   <!-- Top Banner -->
-  <div class="getsupp-banner" style="background:#24BAAD;background-image:url('{{ 'freedom-sale-banner.png' | asset_url }}');background-repeat:repeat-x;background-size:contain;background-position:center">
+  <div class="getsupp-banner" style="background:#24BAAD;{% if section.settings.banner_background_image != blank %}background-image:url('{{ section.settings.banner_background_image | image_url }}');background-repeat:repeat-x;background-size:contain;background-position:center{% endif %}">
     <div class="getsupp-banner-content">
       <div class="getsupp-banner-text">
-        <div class="getsupp-banner-title">Freedom Sale | 50% Price drop + Extra 8% Off</div>
-        <div class="getsupp-banner-timer">
+        <div class="getsupp-banner-title">{{ section.settings.banner_text | default: 'Freedom Sale | 50% Price drop + Extra 8% Off' }}</div>
+        <div class="getsupp-banner-timer" data-endtime="{{ section.settings.offer_end_time }}">
           <span>Offer ends in</span>
+          <span id="getsupp-offer-timer">--h : --m : --s</span>
         </div>
       </div>
     </div>
@@ -17,15 +18,30 @@
     <div class="getsupp-header-container">
       <!-- Mobile Menu Button -->
       <button class="getsupp-mobile-menu" aria-label="Toggle mobile menu">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M3 12H21M3 6H21M3 18H21"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
         </svg>
       </button>
 
       <!-- Logo -->
       <div class="getsupp-logo">
         <a href="{{ routes.root_url }}">
-          <svg width="155" height="23" viewBox="0 0 138 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            width="155"
+            height="23"
+            viewBox="0 0 138 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
             <path d="M8.85294 20C7.14706 20 5.62745 19.6275 4.29412 18.8824C2.96078 18.1373 1.91176 17.0196 1.14706 15.5294C0.382353 14.0392 0 12.2157 0 10.0588C0 7.94118 0.392157 6.13725 1.17647 4.64706C1.98039 3.13725 3.12745 1.9902 4.61765 1.20588C6.10784 0.401961 7.87255 0 9.91177 0C12.2059 0 14.049 0.411765 15.4412 1.23529C16.8529 2.05882 17.9412 3.36274 18.7059 5.14706L13.1176 7.23529C12.9216 6.27451 12.549 5.59804 12 5.20588C11.451 4.79412 10.7647 4.58824 9.94118 4.58824C9.09804 4.58824 8.39216 4.79412 7.82353 5.20588C7.27451 5.59804 6.86275 6.19608 6.58824 7C6.31373 7.80392 6.17647 8.80392 6.17647 10C6.17647 11.2941 6.32353 12.3529 6.61765 13.1765C6.93137 14 7.40196 14.6078 8.02941 15C8.65686 15.3725 9.43137 15.5588 10.3529 15.5588C10.8235 15.5588 11.2549 15.5098 11.6471 15.4118C12.0392 15.2941 12.3824 15.1275 12.6765 14.9118C12.9902 14.6961 13.2255 14.4314 13.3824 14.1176C13.5392 13.7843 13.6176 13.402 13.6176 12.9706V12.8235H9.79412V8.97059H18.6765V19.7059H14.6471L14.1765 14.7941L15.1176 15.7353C14.7647 17.1078 14.0588 18.1667 13 18.9118C11.9412 19.6373 10.5588 20 8.85294 20Z" fill="#24BAAD"></path>
             <path d="M21.9612 19.7059V0.294117H37.6082V4.79412H27.9612V7.94118H35.667V12.1176H27.9612V15.2059H37.9906V19.7059H21.9612Z" fill="#24BAAD"></path>
             <path d="M57.6944 0.294117V4.79412H51.5179V19.7059H45.5179V4.79412H39.2826V0.294117H57.6944Z" fill="#24BAAD"></path>
@@ -39,16 +55,34 @@
 
       <!-- Search Bar -->
       <div class="getsupp-search">
-        <form action="{{ routes.search_url }}" method="get" class="getsupp-search-form">
+        <form
+          action="{{ routes.search_url }}"
+          method="get"
+          class="getsupp-search-form">
           <input
             type="search"
             name="q"
             placeholder="Search for supplements & health concerns..."
             class="getsupp-search-input">
           <button type="submit" class="getsupp-search-button">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-              <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <circle
+                cx="11"
+                cy="11"
+                r="8"
+                stroke="currentColor"
+                stroke-width="2" />
+              <path
+                d="m21 21-4.35-4.35"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
             </svg>
           </button>
         </form>
@@ -59,9 +93,24 @@
         <!-- Mobile Search -->
         <div class="getsupp-mobile-search">
           <a href="{{ routes.search_url }}">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
-              <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <circle
+                cx="11"
+                cy="11"
+                r="8"
+                stroke="currentColor"
+                stroke-width="2" />
+              <path
+                d="m21 21-4.35-4.35"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
             </svg>
           </a>
         </div>
@@ -69,10 +118,30 @@
         <!-- Cart -->
         <div class="getsupp-cart">
           <a href="{{ routes.cart_url }}">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path
+                d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+              <path
+                d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
             </svg>
             {% if cart.item_count > 0 %}
               <span class="getsupp-cart-count">{{ cart.item_count }}</span>
@@ -84,9 +153,24 @@
         {% if shop.customer_accounts_enabled %}
           <div class="getsupp-account">
             <a href="{{ routes.account_url }}">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round" />
+                <circle
+                  cx="12"
+                  cy="7"
+                  r="4"
+                  stroke="currentColor"
+                  stroke-width="2" />
               </svg>
             </a>
           </div>
@@ -107,102 +191,229 @@
             <div class="getsupp-mega-column">
               <h3 class="getsupp-mega-title">Skin Care</h3>
               <ul class="getsupp-mega-links">
-                <li><a href="/collections/acne-supplements">Acne</a></li>
-                <li><a href="/collections/oily-skin-supplements">Oily skin</a></li>
-                <li><a href="/collections/dry-skin-supplements">Dry skin</a></li>
-                <li><a href="/collections/psoriasis-supplements">Psoriasis</a></li>
-                <li><a href="/collections/aging-supplements">Aging</a></li>
-                <li><a href="/collections/pigmentation-supplements">Pigmentation</a></li>
+                <li>
+                  <a href="/collections/acne-supplements">Acne</a>
+                </li>
+                <li>
+                  <a href="/collections/oily-skin-supplements">Oily skin</a>
+                </li>
+                <li>
+                  <a href="/collections/dry-skin-supplements">Dry skin</a>
+                </li>
+                <li>
+                  <a href="/collections/psoriasis-supplements">Psoriasis</a>
+                </li>
+                <li>
+                  <a href="/collections/aging-supplements">Aging</a>
+                </li>
+                <li>
+                  <a href="/collections/pigmentation-supplements">Pigmentation</a>
+                </li>
               </ul>
             </div>
             <div class="getsupp-mega-column">
               <h3 class="getsupp-mega-title">Hair Health</h3>
               <ul class="getsupp-mega-links">
-                <li><a href="/collections/hair-loss-supplements">Hair loss</a></li>
-                <li><a href="/collections/premature-greying-supplements">Premature greying</a></li>
-                <li><a href="/collections/dry-hair-supplements">Dry hair</a></li>
-                <li><a href="/collections/dandruff-supplements">Dandruff</a></li>
-                <li><a href="/collections/oily-itchy-scalp-supplements">Oily/ itchy scalp</a></li>
+                <li>
+                  <a href="/collections/hair-loss-supplements">Hair loss</a>
+                </li>
+                <li>
+                  <a href="/collections/premature-greying-supplements">Premature greying</a>
+                </li>
+                <li>
+                  <a href="/collections/dry-hair-supplements">Dry hair</a>
+                </li>
+                <li>
+                  <a href="/collections/dandruff-supplements">Dandruff</a>
+                </li>
+                <li>
+                  <a href="/collections/oily-itchy-scalp-supplements">Oily/ itchy scalp</a>
+                </li>
               </ul>
             </div>
             <div class="getsupp-mega-column">
               <h3 class="getsupp-mega-title">Gut health</h3>
               <ul class="getsupp-mega-links">
-                <li><a href="/collections/bloating-gas-supplements">Bloating & Gas</a></li>
-                <li><a href="/collections/acidity-supplements">Acidity</a></li>
-                <li><a href="/collections/constipation-supplements">Constipation</a></li>
-                <li><a href="/collections/liver-problems-supplements">Liver problems</a></li>
-                <li><a href="/collections/irritable-bowel-syndrome-ibs-supplements">Irritable bowel syndrome (IBS)</a></li>
-                <li><a href="/collections/indigestion-supplements">Indigestion</a></li>
+                <li>
+                  <a href="/collections/bloating-gas-supplements">Bloating & Gas</a>
+                </li>
+                <li>
+                  <a href="/collections/acidity-supplements">Acidity</a>
+                </li>
+                <li>
+                  <a href="/collections/constipation-supplements">Constipation</a>
+                </li>
+                <li>
+                  <a href="/collections/liver-problems-supplements">Liver problems</a>
+                </li>
+                <li>
+                  <a href="/collections/irritable-bowel-syndrome-ibs-supplements">Irritable bowel syndrome (IBS)</a>
+                </li>
+                <li>
+                  <a href="/collections/indigestion-supplements">Indigestion</a>
+                </li>
               </ul>
             </div>
             <div class="getsupp-mega-column">
               <h3 class="getsupp-mega-title">Women Health</h3>
               <ul class="getsupp-mega-links">
-                <li><a href="/collections/pcod-supplements">PCOD</a></li>
-                <li><a href="/collections/uti-supplements">UTI</a></li>
-                <li><a href="/collections/menopause-supplements">Menopause</a></li>
-                <li><a href="/collections/post-pregnancy-supplements">Post pregnancy</a></li>
-                <li><a href="/collections/pre-pregnancy-care-supplements">Pre-pregnancy care</a></li>
-                <li><a href="/collections/pregnancy-supplements">Pregnancy</a></li>
-                <li><a href="/collections/breastfeeding-supplements">Breastfeeding</a></li>
+                <li>
+                  <a href="/collections/pcod-supplements">PCOD</a>
+                </li>
+                <li>
+                  <a href="/collections/uti-supplements">UTI</a>
+                </li>
+                <li>
+                  <a href="/collections/menopause-supplements">Menopause</a>
+                </li>
+                <li>
+                  <a href="/collections/post-pregnancy-supplements">Post pregnancy</a>
+                </li>
+                <li>
+                  <a href="/collections/pre-pregnancy-care-supplements">Pre-pregnancy care</a>
+                </li>
+                <li>
+                  <a href="/collections/pregnancy-supplements">Pregnancy</a>
+                </li>
+                <li>
+                  <a href="/collections/breastfeeding-supplements">Breastfeeding</a>
+                </li>
               </ul>
             </div>
             <div class="getsupp-mega-column">
               <h3 class="getsupp-mega-title">Daily Wellness</h3>
               <ul class="getsupp-mega-links">
-                <li><a href="/collections/low-immunity-supplements">Low immunity</a></li>
-                <li><a href="/collections/body-pains-supplements">Body pains</a></li>
-                <li><a href="/collections/stress-supplements">Stress</a></li>
-                <li><a href="/collections/lung-health-supplements">Lung health</a></li>
-                <li><a href="/collections/weakness-tiredness-supplements">Weakness & Tiredness</a></li>
-                <li><a href="/collections/hypertension-supplements">Hypertension</a></li>
-                <li><a href="/collections/high-cholesterol-levels-supplements">High cholesterol levels</a></li>
-                <li><a href="/collections/disturbed-sleep-supplements">Disturbed sleep</a></li>
-                <li><a href="/collections/nutritional-deficiencies-supplements">Nutritional deficiencies</a></li>
-                <li><a href="/collections/manage-sugar-level-supplements">Manage Sugar Level</a></li>
+                <li>
+                  <a href="/collections/low-immunity-supplements">Low immunity</a>
+                </li>
+                <li>
+                  <a href="/collections/body-pains-supplements">Body pains</a>
+                </li>
+                <li>
+                  <a href="/collections/stress-supplements">Stress</a>
+                </li>
+                <li>
+                  <a href="/collections/lung-health-supplements">Lung health</a>
+                </li>
+                <li>
+                  <a href="/collections/weakness-tiredness-supplements">Weakness & Tiredness</a>
+                </li>
+                <li>
+                  <a href="/collections/hypertension-supplements">Hypertension</a>
+                </li>
+                <li>
+                  <a href="/collections/high-cholesterol-levels-supplements">High cholesterol levels</a>
+                </li>
+                <li>
+                  <a href="/collections/disturbed-sleep-supplements">Disturbed sleep</a>
+                </li>
+                <li>
+                  <a href="/collections/nutritional-deficiencies-supplements">Nutritional deficiencies</a>
+                </li>
+                <li>
+                  <a href="/collections/manage-sugar-level-supplements">Manage Sugar Level</a>
+                </li>
               </ul>
             </div>
             <div class="getsupp-mega-column">
               <h3 class="getsupp-mega-title">Other concerns</h3>
               <ul class="getsupp-mega-links">
-                <li><a href="/collections/diabetes-supplements">Diabetes</a></li>
-                <li><a href="/collections/nausea-supplements">Nausea</a></li>
-                <li><a href="/collections/osteoporosis-supplements">Osteoporosis</a></li>
-                <li><a href="/collections/hypothyroidism-supplements">Hypothyroidism</a></li>
-                <li><a href="/collections/kidney-stones-supplements">Kidney stones</a></li>
+                <li>
+                  <a href="/collections/diabetes-supplements">Diabetes</a>
+                </li>
+                <li>
+                  <a href="/collections/nausea-supplements">Nausea</a>
+                </li>
+                <li>
+                  <a href="/collections/osteoporosis-supplements">Osteoporosis</a>
+                </li>
+                <li>
+                  <a href="/collections/hypothyroidism-supplements">Hypothyroidism</a>
+                </li>
+                <li>
+                  <a href="/collections/kidney-stones-supplements">Kidney stones</a>
+                </li>
               </ul>
             </div>
           </div>
         </div>
       </li>
-      
+
       <li class="getsupp-nav-item">
         <a href="/collections/herbal-ayurveda" class="getsupp-nav-link">Herbal & Ayurveda</a>
       </li>
-      
+
       <li class="getsupp-nav-item">
         <a href="/collections/vitamins-supplements" class="getsupp-nav-link">Vitamins & Supplements</a>
       </li>
-      
+
       <li class="getsupp-nav-item">
         <a href="/collections/health-foods" class="getsupp-nav-link">Health Foods</a>
       </li>
-      
+
       <li class="getsupp-nav-item">
         <a href="/collections/sports-nutrition" class="getsupp-nav-link">Sports Nutrition</a>
       </li>
-      
+
       <li class="getsupp-nav-item">
         <a href="/collections/brands" class="getsupp-nav-link">Brands</a>
       </li>
-      
+
       <li class="getsupp-nav-item">
         <a href="/blogs/health" class="getsupp-nav-link">Health Blog</a>
       </li>
     </ul>
   </div>
 </nav>
+
+{% javascript %}
+  (function() {
+    try {
+      var timerContainer = document.querySelector('.getsupp-banner-timer');
+      if (! timerContainer) return;
+      
+
+
+      var endAttr = timerContainer.getAttribute('data-endtime');
+      if (! endAttr || endAttr.trim() === '') return;
+      
+
+
+      var endTime = new Date(endAttr).getTime();
+      if (isNaN(endTime)) return;
+      
+
+
+      var el = document.getElementById('getsupp-offer-timer');
+      if (! el) return;
+      
+
+
+      function pad(n) {
+        return n < 10
+          ? '0' + n
+          : '' + n;
+      }
+      function tick() {
+        var now = Date.now();
+        var diff = Math.max(0, endTime - now);
+        var totalSeconds = Math.floor(diff / 1000);
+        var hours = Math.floor(totalSeconds / 3600);
+        var minutes = Math.floor((totalSeconds % 3600) / 60);
+        var seconds = totalSeconds % 60;
+        el.textContent = pad(hours) + 'h : ' + pad(minutes) + 'm : ' + pad(seconds) + 's';
+        if (diff <= 0) 
+          clearInterval(intervalId);
+        
+
+
+      }
+      tick();
+      var intervalId = setInterval(tick, 1000);
+    } catch (e) { // no-op
+    }
+  })();
+{% endjavascript %}
 
 {% stylesheet %}
   /* GetSupp Header Styles */
@@ -211,7 +422,7 @@
     top: 0;
     z-index: 30;
     background: #f8f9fa;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .getsupp-banner {
@@ -253,6 +464,13 @@
   .getsupp-banner-timer span {
     font-size: 12px;
     font-weight: bold;
+  }
+  #getsupp-offer-timer {
+    background-color: #1EA7FF;
+    color: #FFFFFF;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 700;
   }
 
   .getsupp-main-header {
@@ -460,7 +678,7 @@
     width: 780px;
     background: white;
     border-radius: 8px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     border: 1px solid #e5e5e5;
     min-height: 320px;
     overflow: auto;
@@ -478,7 +696,7 @@
     background: #eaf1f3;
     padding: 4px 8px;
     border-radius: 4px;
-    margin: 0 0 8px 0;
+    margin: 0 0 8px;
     border-left: 3px solid #24BAAD;
   }
 
@@ -520,11 +738,11 @@
     .getsupp-search {
       display: none;
     }
-    
+
     .getsupp-mobile-search {
       display: block;
     }
-    
+
     .getsupp-navigation {
       display: none;
     }
@@ -534,7 +752,7 @@
     .getsupp-mobile-menu {
       display: none;
     }
-    
+
     .getsupp-mobile-search {
       display: none;
     }
@@ -546,6 +764,20 @@
     "name": "t:general.header",
     "settings": [
       {
+        "type": "text",
+        "id": "banner_text",
+        "label": "Banner text",
+        "default": "Freedom Sale | 50% Price drop + Extra 8% Off"
+      }, {
+        "type": "text",
+        "id": "offer_end_time",
+        "label": "Offer end time (ISO, e.g. 2025-09-20T18:30:00+05:30)",
+        "default": "2025-12-31T23:59:59Z"
+      }, {
+        "type": "image_picker",
+        "id": "banner_background_image",
+        "label": "Banner repeating background image"
+      }, {
         "type": "link_list",
         "id": "menu",
         "label": "t:labels.menu"
