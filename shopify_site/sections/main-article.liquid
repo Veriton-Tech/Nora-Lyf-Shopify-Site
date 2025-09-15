@@ -1,0 +1,19 @@
+<section class="page-width">
+  <article>
+    <h1>{{ article.title | escape }}</h1>
+    <div>{{ article.content }}</div>
+  </article>
+</section>
+
+{% schema %}
+{
+  "name": "Article (main)",
+  "settings": [],
+  "blocks": [],
+  "tag": "section"
+}
+{% endschema %}
+
+
+
+

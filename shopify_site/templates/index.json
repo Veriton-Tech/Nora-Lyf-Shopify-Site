@@ -9,7 +9,7 @@
         "cta_url": "/collections/all",
         "secondary_cta_text": "Learn More",
         "secondary_cta_url": "/pages/about-us",
-        "color_scheme": "scheme-1"
+        "color_scheme": "getsupp-light"
       }
     },
     "getsupp_category_showcase": {
@@ -17,7 +17,7 @@
       "settings": {
         "title": "Shop by Health Concerns",
         "description": "Find the right supplements for your specific health needs",
-        "color_scheme": "scheme-1"
+        "color_scheme": "getsupp-light"
       },
       "blocks": {
         "health_wellness": {
@@ -87,7 +87,7 @@
         "products_to_show": 8,
         "show_view_all": true,
         "view_all_text": "View All Products",
-        "color_scheme": "scheme-1"
+        "color_scheme": "getsupp-light"
       }
     }
   },

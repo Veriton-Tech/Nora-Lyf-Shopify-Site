@@ -275,6 +275,11 @@
       "subtext": "404"
     }
   },
+  "404": {
+    "title": "Page not found",
+    "not_found": "The page you were looking for does not exist.",
+    "back_to_shopping": "Back to shopping"
+  },
   "sections": {
     "announcements": {
       "previous_announcement": "Previous announcement",
@@ -538,3 +543,4 @@
     }
   }
 }
+

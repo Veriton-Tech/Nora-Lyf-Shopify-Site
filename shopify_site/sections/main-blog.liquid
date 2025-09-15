@@ -1,0 +1,24 @@
+<section class="page-width">
+  <h1>{{ blog.title | escape }}</h1>
+  <div>
+    {% for article in blog.articles %}
+      <article>
+        <h2><a href="{{ article.url }}">{{ article.title }}</a></h2>
+        <div>{{ article.excerpt | strip_html }}</div>
+      </article>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Blog (main)",
+  "settings": [],
+  "blocks": [],
+  "tag": "section"
+}
+{% endschema %}
+
+
+
+
