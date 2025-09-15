@@ -859,17 +859,20 @@
 
 {% javascript %}
   (function() {
-    try {
-      // Set CSS var to keep dropdown just under header/navigation
+    try { // Set CSS var to keep dropdown just under header/navigation
       var nav = document.querySelector('.getsupp-navigation');
       function updateNavBottom() {
-        var rect = nav ? nav.getBoundingClientRect() : null;
-        var bottom = rect ? Math.max(0, Math.floor(rect.bottom)) : 100;
+        var rect = nav
+          ? nav.getBoundingClientRect()
+          : null;
+        var bottom = rect
+          ? Math.max(0, Math.floor(rect.bottom))
+          : 100;
         document.documentElement.style.setProperty('--getsupp-nav-bottom', bottom + 'px');
       }
       updateNavBottom();
       window.addEventListener('resize', updateNavBottom);
-      window.addEventListener('scroll', updateNavBottom, { passive: true });
+      window.addEventListener('scroll', updateNavBottom, {passive: true});
 
       var timerContainer = document.querySelector('.getsupp-banner-timer');
       if (! timerContainer) return;
