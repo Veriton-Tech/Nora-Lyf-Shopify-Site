@@ -860,6 +860,17 @@
 {% javascript %}
   (function() {
     try {
+      // Set CSS var to keep dropdown just under header/navigation
+      var nav = document.querySelector('.getsupp-navigation');
+      function updateNavBottom() {
+        var rect = nav ? nav.getBoundingClientRect() : null;
+        var bottom = rect ? Math.max(0, Math.floor(rect.bottom)) : 100;
+        document.documentElement.style.setProperty('--getsupp-nav-bottom', bottom + 'px');
+      }
+      updateNavBottom();
+      window.addEventListener('resize', updateNavBottom);
+      window.addEventListener('scroll', updateNavBottom, { passive: true });
+
       var timerContainer = document.querySelector('.getsupp-banner-timer');
       if (! timerContainer) return;
       
@@ -1192,6 +1203,7 @@
     backdrop-filter: blur(10px);
     border-top: 1px solid rgba(0, 0, 0, 0.06);
     position: relative;
+    z-index: 2000;
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
   }
 
@@ -1213,7 +1225,7 @@
   }
 
   .getsupp-nav-item {
-    position: static;
+    position: relative;
     display: flex;
     align-items: center;
   }
@@ -1269,18 +1281,21 @@
 
   /* Mega Menu Styles */
   .getsupp-mega-menu {
-    position: absolute;
-    top: 60px;
+    position: fixed;
+    top: var(--getsupp-nav-bottom, 100px);
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: opacity 0.3s;
-    z-index: 50;
+    transition: opacity 0.2s ease
+    , visibility 0.2s ease;
+    z-index: 3000;
   }
 
   .getsupp-nav-item:hover .getsupp-mega-menu {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
   }
   .getsupp-mega-menu:hover {
