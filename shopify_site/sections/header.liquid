@@ -616,14 +616,14 @@
 
   /* Navigation Styles */
   .getsupp-navigation {
-    background: #f0f0f0;
-    background-opacity: 0.5;
+    background: rgba(240, 240, 240, 0.5);
+    border-top: 1px solid #e0e0e0;
   }
 
   .getsupp-nav-container {
     max-width: 1180px;
     margin: 0 auto;
-    padding: 0 16px;
+    padding: 0 24px;
   }
 
   .getsupp-nav-list {
@@ -632,26 +632,45 @@
     margin: 0;
     padding: 0;
     overflow: visible;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
   }
 
   .getsupp-nav-item {
     position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .getsupp-nav-item:not(:last-child)::after {
+    content: '';
+    width: 1px;
+    height: 20px;
+    background-color: #d0d0d0;
+    margin: 0 8px;
+    opacity: 0.6;
   }
 
   .getsupp-nav-link {
     display: flex;
     align-items: center;
-    padding: 11px 20px;
-    font-size: 16px;
+    padding: 16px 24px;
+    font-size: 15px;
     font-weight: 500;
-    color: #000;
+    color: #333;
     text-decoration: none;
     cursor: pointer;
-    transition: color 0.2s;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+    line-height: 1.4;
   }
 
   .getsupp-nav-link:hover {
     color: #24BAAD;
+    background-color: rgba(36, 186, 173, 0.05);
+    transform: translateY(-1px);
   }
 
   /* Mega Menu Styles */
