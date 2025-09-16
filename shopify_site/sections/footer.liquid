@@ -11,7 +11,9 @@
             <img
               src="{{ 'logo.svg' | asset_url }}"
               alt="GetSupp Logo"
-              class="getsupp-logo-img">
+              class="getsupp-logo-img"
+              width="200"
+              height="50">
           </div>
           <div class="getsupp-footer-nav">
             <a href="/pages/contact-us" class="getsupp-nav-link">Contact Us</a>
@@ -111,27 +113,41 @@
 {% stylesheet %}
   /* ====== GetSupp Footer ====== */
   .getsupp-footer {
-    background: #24BAAD;
+    background: linear-gradient(135deg, #24BAAD 0%, #1a9b8e 100%);
     margin-top: 60px;
     font-family: 'Inter'
     , sans-serif;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .getsupp-footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
   }
 
   .getsupp-footer-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px;
+    position: relative;
+    z-index: 1;
   }
 
   .getsupp-footer-content {
-    padding: 40px 0 96px;
+    padding: 50px 0 100px;
   }
 
   /* Main Footer Layout */
   .getsupp-footer-main {
     display: grid;
     grid-template-columns: 2fr 1fr;
-    gap: 32px;
+    gap: 40px;
     align-items: start;
   }
 
@@ -139,58 +155,92 @@
   .getsupp-footer-left {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 24px;
   }
 
   /* Logo */
   .getsupp-footer-logo {
-    margin-bottom: 8px;
+    margin-bottom: 12px;
+    transition: transform 0.3s ease;
+  }
+
+  .getsupp-footer-logo:hover {
+    transform: scale(1.02);
   }
 
   .getsupp-logo-img {
     width: 200px;
     height: 50px;
     object-fit: contain;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
   }
 
   /* Navigation Links */
   .getsupp-footer-nav {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 12px;
     align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 16px 20px;
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .getsupp-nav-link {
-    color: #FFFFFF;
-    text-decoration: none;
+  .getsupp-footer .getsupp-nav-link {
+    color: #FFFFFF !important;
+    text-decoration: none !important;
     font-size: 14px;
     font-weight: 500;
     line-height: 1.75;
-    transition: color 0.3s ease;
+    transition: all 0.3s ease;
     white-space: nowrap;
-    padding: 0 8px;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 12px;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
   }
 
-  .getsupp-nav-link:last-child {
-    border-right: none;
+  .getsupp-footer .getsupp-nav-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
   }
 
-  .getsupp-nav-link:hover {
-    color: #E8F4FD;
+  .getsupp-footer .getsupp-nav-link:hover::before {
+    left: 100%;
+  }
+
+  .getsupp-footer .getsupp-nav-link:hover {
+    color: #E8F4FD !important;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
   }
 
   /* Copyright */
   .getsupp-footer-copyright {
-    margin-top: 8px;
+    margin-top: 12px;
+    padding: 16px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .getsupp-footer-copyright p {
     font-size: 14px;
     color: #FFFFFF;
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.6;
+    opacity: 0.9;
+  }
+
+  .getsupp-footer-copyright strong {
+    font-weight: 600;
+    color: #E8F4FD;
   }
 
   /* Right Section: Social Media */
@@ -198,54 +248,90 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
   .getsupp-social-title {
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     color: #FFFFFF;
-    margin: 0 0 16px;
+    margin: 0 0 20px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .getsupp-social-icons {
     display: flex;
-    gap: 12px;
+    gap: 16px;
     justify-content: flex-start;
   }
 
   .getsupp-social-link {
     display: flex;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     align-items: center;
     justify-content: center;
     background: #FFFFFF;
     color: #24BAAD;
     border-radius: 50%;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .getsupp-social-link::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(36, 186, 173, 0.1);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+  }
+
+  .getsupp-social-link:hover::before {
+    width: 100%;
+    height: 100%;
   }
 
   .getsupp-social-link:hover {
     background: #E8F4FD;
-    transform: translateY(-2px);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
   }
 
   .getsupp-social-link svg {
-    width: 20px;
-    height: 20px;
+    width: 22px;
+    height: 22px;
     fill: currentColor;
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
+  }
+
+  .getsupp-social-link:hover svg {
+    transform: scale(1.1);
   }
 
   /* Mobile Responsive */
   @media (max-width: 1024px) {
     .getsupp-footer-main {
       grid-template-columns: 1fr;
-      gap: 24px;
+      gap: 32px;
     }
 
     .getsupp-footer-right {
       align-items: center;
+      text-align: center;
     }
 
     .getsupp-social-icons {
@@ -255,11 +341,61 @@
 
   @media (max-width: 768px) {
     .getsupp-footer-container {
+      padding: 0 20px;
+    }
+
+    .getsupp-footer-content {
+      padding: 40px 0 80px;
+    }
+
+    .getsupp-logo-img {
+      width: 180px;
+      height: 45px;
+    }
+
+    .getsupp-footer-nav {
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 14px 16px;
+      gap: 8px;
+    }
+
+    .getsupp-footer .getsupp-nav-link {
+      font-size: 13px;
+      padding: 6px 10px;
+      color: #FFFFFF !important;
+    }
+
+    .getsupp-footer-copyright {
+      text-align: center;
+    }
+
+    .getsupp-footer-copyright p {
+      font-size: 13px;
+    }
+
+    .getsupp-social-title {
+      font-size: 16px;
+    }
+
+    .getsupp-social-link {
+      width: 40px;
+      height: 40px;
+    }
+
+    .getsupp-social-link svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .getsupp-footer-container {
       padding: 0 16px;
     }
 
     .getsupp-footer-content {
-      padding: 32px 0 64px;
+      padding: 32px 0 60px;
     }
 
     .getsupp-logo-img {
@@ -268,17 +404,17 @@
     }
 
     .getsupp-footer-nav {
-      justify-content: center;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px;
     }
 
-    .getsupp-nav-link {
+    .getsupp-footer .getsupp-nav-link {
       font-size: 12px;
-      padding: 0 4px;
-    }
-
-    .getsupp-footer-copyright {
+      padding: 8px 12px;
       text-align: center;
+      width: 100%;
+      color: #FFFFFF !important;
     }
 
     .getsupp-footer-copyright p {
@@ -297,23 +433,6 @@
     .getsupp-social-link svg {
       width: 18px;
       height: 18px;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .getsupp-footer-nav {
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .getsupp-nav-link {
-      border-right: none;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 4px 0;
-    }
-
-    .getsupp-nav-link:last-child {
-      border-bottom: none;
     }
   }
 {% endstylesheet %}
