@@ -1,0 +1,403 @@
+<!-- Contact Page Section -->
+<div class="getsupp-contact-page">
+  <div class="getsupp-contact-container">
+    <div class="getsupp-contact-header">
+      <h1 class="getsupp-contact-title">{{ section.settings.title | default: 'Contact Us - GetSupp' }}</h1>
+    </div>
+
+    <div class="getsupp-contact-content">
+      <div class="getsupp-contact-info">
+        <p class="getsupp-contact-intro">{{ section.settings.intro_text | default: 'You can contact GetSupp at:' }}</p>
+
+        <ul class="getsupp-contact-list">
+          <li class="getsupp-contact-item">
+            <strong>Email:</strong>
+            <a href="mailto:{{ section.settings.email | default: 'support@getsupp.in' }}" class="getsupp-contact-link">{{ section.settings.email | default: 'support@getsupp.in' }}</a>
+          </li>
+          <li class="getsupp-contact-item">
+            <strong>Timings:</strong>
+            {{ section.settings.timings | default: 'Monday to Friday 10 AM to 7 PM' }}
+          </li>
+          <li class="getsupp-contact-item">
+            <strong>Address:</strong>
+            {{ section.settings.address | default: '1145, 3rd floor, Club Road, 22nd Cross Rd, Sector 2, HSR Layout, Bangalore, 560102' }}
+          </li>
+        </ul>
+      </div>
+
+      <!-- Contact Form Section -->
+      <div class="getsupp-contact-form-section">
+        <h2 class="getsupp-form-title">{{ section.settings.form_title | default: 'Send us a Message' }}</h2>
+
+        {% form 'contact' %}
+          {% if form.posted_successfully? %}
+            <div class="getsupp-form-success">
+              <p>{{ section.settings.success_message | default: "Thank you for your message. We'll get back to you soon!" }}</p>
+            </div>
+          {% endif %}
+
+          {% if form.errors %}
+            <div class="getsupp-form-errors">
+              <h3>Please correct the following errors:</h3>
+              <ul>
+                {% for field in form.errors %}
+                  <li>{{ field | capitalize }}: {{ form.errors[field] }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          {% endif %}
+
+          <div class="getsupp-form-group">
+            <label for="ContactFormName" class="getsupp-form-label">Name *</label>
+            <input
+              type="text"
+              id="ContactFormName"
+              name="contact[name]"
+              class="getsupp-form-input"
+              value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+              required>
+          </div>
+
+          <div class="getsupp-form-group">
+            <label for="ContactFormEmail" class="getsupp-form-label">Email *</label>
+            <input
+              type="email"
+              id="ContactFormEmail"
+              name="contact[email]"
+              class="getsupp-form-input"
+              value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+              required>
+          </div>
+
+          <div class="getsupp-form-group">
+            <label for="ContactFormPhone" class="getsupp-form-label">Phone</label>
+            <input
+              type="tel"
+              id="ContactFormPhone"
+              name="contact[phone]"
+              class="getsupp-form-input"
+              value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}">
+          </div>
+
+          <div class="getsupp-form-group">
+            <label for="ContactFormMessage" class="getsupp-form-label">Message *</label>
+            <textarea
+              id="ContactFormMessage"
+              name="contact[body]"
+              class="getsupp-form-textarea"
+              rows="6"
+              required>
+              {% if form.body %}
+                {{ form.body }}{% endif %}
+            </textarea>
+          </div>
+
+          <div class="getsupp-form-submit">
+            <button type="submit" class="getsupp-form-button">
+              <span>{{ section.settings.button_text | default: 'Send Message' }}</span>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M2 21L23 12L2 3V10L17 12L2 14V21Z"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </button>
+          </div>
+        {% endform %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .getsupp-contact-page {
+    background: #f8f9fa;
+    min-height: 100vh;
+    padding: 40px 0;
+  }
+
+  .getsupp-contact-container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .getsupp-contact-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .getsupp-contact-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #24BAAD;
+    margin: 0;
+  }
+
+  .getsupp-contact-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .getsupp-contact-info {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .getsupp-contact-intro {
+    font-size: 1.1rem;
+    color: #333;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+
+  .getsupp-contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .getsupp-contact-item {
+    margin-bottom: 25px;
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .getsupp-contact-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .getsupp-contact-item strong {
+    color: #24BAAD;
+    font-weight: 600;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .getsupp-contact-link {
+    color: #24BAAD;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+  }
+
+  .getsupp-contact-link:hover {
+    color: #1ea89a;
+    text-decoration: underline;
+  }
+
+  .getsupp-contact-form-section {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  .getsupp-form-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .getsupp-form-group {
+    margin-bottom: 25px;
+  }
+
+  .getsupp-form-label {
+    display: block;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    font-size: 0.95rem;
+  }
+
+  .getsupp-form-input,
+  .getsupp-form-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e8f4f3;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    background: #fafafa;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+  }
+
+  .getsupp-form-input:focus,
+  .getsupp-form-textarea:focus {
+    outline: none;
+    border-color: #24BAAD;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(36, 186, 173, 0.1);
+  }
+
+  .getsupp-form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    font-family: inherit;
+  }
+
+  .getsupp-form-submit {
+    text-align: center;
+    margin-top: 30px;
+  }
+
+  .getsupp-form-button {
+    background: linear-gradient(135deg, #24BAAD 0%, #1ea89a 100%);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 15px rgba(36, 186, 173, 0.3);
+  }
+
+  .getsupp-form-button:hover {
+    background: linear-gradient(135deg, #1ea89a 0%, #24BAAD 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(36, 186, 173, 0.4);
+  }
+
+  .getsupp-form-button:active {
+    transform: translateY(0);
+  }
+
+  .getsupp-form-success {
+    background: #d4edda;
+    color: #155724;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px solid #c3e6cb;
+  }
+
+  .getsupp-form-errors {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px solid #f5c6cb;
+  }
+
+  .getsupp-form-errors h3 {
+    margin: 0 0 10px;
+    font-size: 1rem;
+  }
+
+  .getsupp-form-errors ul {
+    margin: 0;
+    padding-left: 20px;
+  }
+
+  .getsupp-form-errors li {
+    margin-bottom: 5px;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .getsupp-contact-content {
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+
+    .getsupp-contact-title {
+      font-size: 1.5rem;
+    }
+
+    .getsupp-contact-info,
+    .getsupp-contact-form-section {
+      padding: 25px;
+    }
+
+    .getsupp-contact-item {
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .getsupp-contact-item strong {
+      min-width: auto;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Contact Page",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Page Title",
+        "default": "Contact Us - GetSupp"
+      },
+      {
+        "type": "text",
+        "id": "intro_text",
+        "label": "Introduction Text",
+        "default": "You can contact GetSupp at:"
+      },
+      {
+        "type": "text",
+        "id": "email",
+        "label": "Contact Email",
+        "default": "support@getsupp.in"
+      },
+      {
+        "type": "text",
+        "id": "timings",
+        "label": "Business Hours",
+        "default": "Monday to Friday 10 AM to 7 PM"
+      }, {
+        "type": "textarea",
+        "id": "address",
+        "label": "Business Address",
+        "default": "1145, 3rd floor, Club Road, 22nd Cross Rd, Sector 2, HSR Layout, Bangalore, 560102"
+      }, {
+        "type": "text",
+        "id": "form_title",
+        "label": "Contact Form Title",
+        "default": "Send us a Message"
+      }, {
+        "type": "text",
+        "id": "button_text",
+        "label": "Submit Button Text",
+        "default": "Send Message"
+      }, {
+        "type": "text",
+        "id": "success_message",
+        "label": "Success Message",
+        "default": "Thank you for your message. We'll get back to you soon!"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Contact Page"
+      }
+    ]
+  }
+{% endschema %}

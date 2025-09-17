@@ -1,20 +1,22 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "sections": {
     "main": {
-      "type": "page",
-      "settings": {}
+      "type": "contact-page",
+      "settings": {
+        "title": "Contact Us - GetSupp",
+        "intro_text": "You can contact GetSupp at:",
+        "email": "support@getsupp.in",
+        "timings": "Monday to Friday 10 AM to 7 PM",
+        "address": "1145, 3rd floor, Club Road, 22nd Cross Rd, Sector 2, HSR Layout, Bangalore, 560102",
+        "form_title": "Send us a Message",
+        "button_text": "Send Message",
+        "success_message": "Thank you for your message. We'll get back to you soon!"
+      }
     }
   },
   "order": [
     "main"
   ]
 }
+
+

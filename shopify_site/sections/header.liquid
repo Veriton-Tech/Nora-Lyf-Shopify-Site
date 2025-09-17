@@ -16,24 +16,7 @@
   <!-- Main Header -->
   <div class="getsupp-main-header">
     <div class="getsupp-header-container">
-      <!-- Mobile Menu Button -->
-      <button class="getsupp-mobile-menu" aria-label="Toggle mobile menu">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M3 12H21M3 6H21M3 18H21"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </button>
-
-      <!-- Logo -->
+      <!-- Logo - Leftmost Position -->
       <div class="getsupp-logo">
         <a href="{{ routes.root_url }}">
           <svg
@@ -53,6 +36,22 @@
         </a>
       </div>
 
+      <!-- Mobile Menu Button -->
+      <button class="getsupp-mobile-menu" aria-label="Toggle mobile menu">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M3 12H21M3 6H21M3 18H21"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
 
       <!-- Right Icons -->
       <div class="getsupp-header-icons">
@@ -141,6 +140,7 @@
             </a>
           </div>
         {% endif %}
+
       </div>
     </div>
   </div>
@@ -1068,6 +1068,11 @@
     gap: 12px;
   }
 
+  .getsupp-logo {
+    order: -10;
+    /* Ensure logo is absolutely leftmost */
+  }
+
   .getsupp-mobile-menu {
     display: block;
     background: none;
@@ -1084,6 +1089,8 @@
 
   .getsupp-logo {
     flex-shrink: 0;
+    order: -2;
+    /* Ensure logo is leftmost, even before mobile menu */
   }
 
   .getsupp-logo a {
@@ -1188,6 +1195,7 @@
     font-weight: bold;
   }
 
+
   .getsupp-account a {
     display: block;
     padding: 8px;
@@ -1285,7 +1293,7 @@
   /* Mega Menu Styles */
   .getsupp-mega-menu {
     position: fixed;
-    top: var(--getsupp-nav-bottom, 100px);
+    top: calc(var(--getsupp-nav-bottom, 100px) - 20px);
     left: 50%;
     transform: translateX(-50%);
     opacity: 0;

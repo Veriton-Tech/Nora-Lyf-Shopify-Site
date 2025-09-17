@@ -1,6 +1,6 @@
 {% comment %} 
-  GetSupp Featured Products Section 
-  Displays featured products in a grid layout
+    GetSupp Featured Products Section 
+    Displays featured products in a grid layout
 {% endcomment %}
 
 {% assign collection = collections[section.settings.collection] | default: collections.all %}
@@ -22,7 +22,9 @@
                 <img
                   src="{{ product.featured_image | img_url: '300x300' }}"
                   alt="{{ product.title }}"
-                  class="getsupp-product-img">
+                  class="getsupp-product-img"
+                  width="300"
+                  height="300">
               {% else %}
                 <div class="getsupp-product-placeholder">
                   <svg

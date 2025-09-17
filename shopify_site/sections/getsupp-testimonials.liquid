@@ -1,6 +1,6 @@
 {% comment %} 
-  GetSupp Testimonials Section 
-  Displays customer testimonials with ratings and photos
+      GetSupp Testimonials Section 
+      Displays customer testimonials with ratings and photos
 {% endcomment %}
 
 <div class="getsupp-testimonials">
@@ -27,7 +27,9 @@
                 <img
                   src="{{ block.settings.customer_photo | img_url: '60x60' }}"
                   alt="{{ block.settings.customer_name }}"
-                  class="getsupp-avatar-img">
+                  class="getsupp-avatar-img"
+                  width="60"
+                  height="60">
               {% else %}
                 <div class="getsupp-avatar-placeholder">
                   {{ block.settings.customer_name | slice: 0 }}
@@ -411,5 +413,3 @@
     ]
   }
 {% endschema %}
-
-
