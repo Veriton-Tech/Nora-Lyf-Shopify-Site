@@ -1292,10 +1292,12 @@
 
   /* Mega Menu Styles */
   .getsupp-mega-menu {
-    position: fixed;
-    top: calc(var(--getsupp-nav-bottom, 100px) - 20px);
+    position: absolute;
+    top: calc(100% + 6px);
     left: 50%;
     transform: translateX(-50%);
+    width: min(95vw, 780px);
+    max-width: calc(100vw - 40px);
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -1311,6 +1313,7 @@
   }
   .getsupp-mega-menu:hover {
     opacity: 1;
+    visibility: visible;
     pointer-events: auto;
   }
 
@@ -1319,13 +1322,15 @@
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
     padding: 16px;
-    width: 780px;
+    width: 100%;
     background: white;
     border-radius: 8px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     border: 1px solid #e5e5e5;
     min-height: 320px;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    box-sizing: border-box;
   }
 
   .getsupp-mega-column {
@@ -1553,6 +1558,44 @@
     .getsupp-hero-inline__search input {
       font-size: 16px;
     }
+  }
+
+  /* Adjust mega menu positioning for smaller screens */
+  @media (max-width: 1200px) {
+    .getsupp-mega-menu {
+      left: 0;
+      transform: none;
+      width: min(100vw, 780px);
+    }
+
+    .getsupp-nav-item:last-child .getsupp-mega-menu {
+      left: auto;
+      right: 0;
+    }
+  }
+
+  /* Force left alignment for first few tabs to prevent clipping */
+  .getsupp-nav-item:nth-child(1) .getsupp-mega-menu,
+  .getsupp-nav-item:nth-child(2) .getsupp-mega-menu {
+    left: 0 !important;
+    transform: none !important;
+  }
+
+  /* Force right alignment for last few tabs */
+  .getsupp-nav-item:nth-last-child(1) .getsupp-mega-menu,
+  .getsupp-nav-item:nth-last-child(2) .getsupp-mega-menu {
+    left: auto !important;
+    right: 0 !important;
+    transform: none !important;
+  }
+
+  /* Override for middle tabs to use centered positioning */
+  .getsupp-nav-item:nth-child(3) .getsupp-mega-menu,
+  .getsupp-nav-item:nth-child(4) .getsupp-mega-menu,
+  .getsupp-nav-item:nth-child(5) .getsupp-mega-menu,
+  .getsupp-nav-item:nth-child(6) .getsupp-mega-menu {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
   }
 
   /* Mobile Responsive */
