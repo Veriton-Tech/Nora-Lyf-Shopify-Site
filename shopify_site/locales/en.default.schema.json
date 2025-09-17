@@ -373,7 +373,19 @@
     }
   },
   "general": {
-    "404": "404"
+    "404": "404",
+    "page": "Page",
+    "search": "Search",
+    "product": "Product",
+    "password": "Password",
+    "header": "Header",
+    "cart": "Cart",
+    "collections_grid": "Collections grid",
+    "blog": "Blog",
+    "collection": "Collection",
+    "article": "Article",
+    "custom_section": "Custom section",
+    "footer": "Footer"
   },
   "sections": {
     "all": {
