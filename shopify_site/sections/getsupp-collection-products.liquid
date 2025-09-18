@@ -5,25 +5,47 @@
 
 <div class="getsupp-collection-products">
   <div class="getsupp-collection-container">
-    {% if collection.products.size > 0 %}
+    {%- liquid
+      assign collection_handle = collection.handle
+      assign has_products = false
+      if collection.products.size > 0
+        assign has_products = true
+      endif
+    -%}
+
+    {% if has_products %}
       <div class="getsupp-products-grid">
         {% for product in collection.products %}
           <div class="getsupp-product-card">
             <a href="{{ product.url }}" class="getsupp-product-link">
               <div class="getsupp-product-image">
                 {% if product.featured_image %}
-                  <img 
-                    src="{{ product.featured_image | img_url: '300x300' }}" 
-                    alt="{{ product.title }}"  
+                  <img
+                    src="{{ product.featured_image | img_url: '300x300' }}"
+                    alt="{{ product.title }}"
                     class="getsupp-product-img"
                     width="300"
-                    height="300"
-                  >
+                    height="300">
                 {% else %}
                   <div class="getsupp-product-placeholder">
-                    <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#24BAAD" stroke-width="2"/>
-                      <path d="M9 9h6v6H9z" stroke="#24BAAD" stroke-width="2"/>
+                    <svg
+                      width="60"
+                      height="60"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <rect
+                        x="3"
+                        y="3"
+                        width="18"
+                        height="18"
+                        rx="2"
+                        stroke="#24BAAD"
+                        stroke-width="2" />
+                      <path
+                        d="M9 9h6v6H9z"
+                        stroke="#24BAAD"
+                        stroke-width="2" />
                     </svg>
                   </div>
                 {% endif %}
@@ -41,10 +63,10 @@
                 <h3 class="getsupp-product-title">{{ product.title }}</h3>
                 <div class="getsupp-product-price">
                   {% if product.compare_at_price > product.price %}
-                    <span class="getsupp-price-compare">{{ product.compare_at_price | money }}</span>
-                    <span class="getsupp-price-current">{{ product.price | money }}</span>
+                    <span class="getsupp-price-compare">₹{{ product.compare_at_price | money_without_currency }}</span>
+                    <span class="getsupp-price-current">₹{{ product.price | money_without_currency }}</span>
                   {% else %}
-                    <span class="getsupp-price-current">{{ product.price | money }}</span>
+                    <span class="getsupp-price-current">₹{{ product.price | money_without_currency }}</span>
                   {% endif %}
                 </div>
                 {% if section.settings.show_rating %}
@@ -62,11 +84,28 @@
               </div>
             </a>
             {% if product.available and section.settings.show_quick_add %}
-              <form action="/cart/add" method="post" enctype="multipart/form-data" class="getsupp-product-form">
-                <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+              <form
+                action="/cart/add"
+                method="post"
+                enctype="multipart/form-data"
+                class="getsupp-product-form">
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ product.selected_or_first_available_variant.id }}">
                 <button type="submit" class="getsupp-add-to-cart">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m0 0h8"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
                   </svg>
                   Add to Cart
                 </button>
@@ -75,18 +114,28 @@
           </div>
         {% endfor %}
       </div>
-      
+
       {% if paginate.pages > 1 %}
         <div class="getsupp-pagination">
           {% if paginate.previous %}
             <a href="{{ paginate.previous.url }}" class="getsupp-pagination-btn getsupp-pagination-prev">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M15 18l-6-6 6-6"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round" />
               </svg>
               Previous
             </a>
           {% endif %}
-          
+
           <div class="getsupp-pagination-pages">
             {% for part in paginate.parts %}
               {% if part.is_link %}
@@ -96,29 +145,60 @@
               {% endif %}
             {% endfor %}
           </div>
-          
+
           {% if paginate.next %}
             <a href="{{ paginate.next.url }}" class="getsupp-pagination-btn getsupp-pagination-next">
               Next
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9 18l6-6-6-6"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round" />
               </svg>
             </a>
           {% endif %}
         </div>
       {% endif %}
     {% else %}
-      <div class="getsupp-empty-collection">
-        <div class="getsupp-empty-content">
-          <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="3" y="3" width="18" height="18" rx="2" stroke="#24BAAD" stroke-width="2"/>
-            <path d="M9 9h6v6H9z" stroke="#24BAAD" stroke-width="2"/>
-          </svg>
-          <h3>No products found</h3>
-          <p>We couldn't find any products in this collection.</p>
-          <a href="/collections/all" class="getsupp-empty-btn">Browse All Products</a>
+      {%- comment -%} Try to filter products by category if collection is empty {%- endcomment -%}
+      {% if collection_handle %}
+        {% render 'category-products',  category: collection_handle,  limit: section.settings.products_per_page | default: 24, show_vendor: section.settings.show_vendor | default: false, show_rating: section.settings.show_rating | default: false
+        %}
+      {% else %}
+        <div class="getsupp-empty-collection">
+          <div class="getsupp-empty-content">
+            <svg
+              width="80"
+              height="80"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <rect
+                x="3"
+                y="3"
+                width="18"
+                height="18"
+                rx="2"
+                stroke="#24BAAD"
+                stroke-width="2" />
+              <path
+                d="M9 9h6v6H9z"
+                stroke="#24BAAD"
+                stroke-width="2" />
+            </svg>
+            <h3>No products found</h3>
+            <p>We couldn't find any products in this collection.</p>
+            <a href="/collections/all" class="getsupp-empty-btn">Browse All Products</a>
+          </div>
         </div>
-      </div>
+      {% endif %}
     {% endif %}
   </div>
 </div>
@@ -232,7 +312,8 @@
     color: #333;
     margin-bottom: 12px;
     line-height: 1.4;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter'
+    , sans-serif;
   }
 
   .getsupp-product-price {
@@ -433,49 +514,48 @@
 {% endstylesheet %}
 
 {% schema %}
-{
-  "name": "GetSupp Products",
-  "tag": "section",
-  "class": "section",
-  "settings": [
-    {
-      "type": "range",
-      "id": "products_per_page",
-      "label": "Products per page",
-      "min": 12,
-      "max": 48,
-      "step": 12,
-      "default": 24
-    },
-    {
-      "type": "checkbox",
-      "id": "show_vendor",
-      "label": "Show vendor",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_rating",
-      "label": "Show rating",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_quick_add",
-      "label": "Show quick add to cart",
-      "default": true
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-1"
-    }
-  ],
-  "presets": [
-    {
-      "name": "GetSupp Products"
-    }
-  ]
-}
+  {
+    "name": "GetSupp Products",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "range",
+        "id": "products_per_page",
+        "label": "Products per page",
+        "min": 12,
+        "max": 48,
+        "step": 12,
+        "default": 24
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "label": "Show vendor",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_rating",
+        "label": "Show rating",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "show_quick_add",
+        "label": "Show quick add to cart",
+        "default": true
+      }, {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "default": "scheme-1"
+      }
+    ],
+    "presets": [
+      {
+        "name": "GetSupp Products"
+      }
+    ]
+  }
 {% endschema %}

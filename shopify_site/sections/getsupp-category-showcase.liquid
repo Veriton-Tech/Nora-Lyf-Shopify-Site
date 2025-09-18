@@ -1,6 +1,6 @@
 {% comment %} 
-        GetSupp Category Showcase Section 
-        Displays product categories in a grid layout
+                    GetSupp Category Showcase Section 
+                    Displays product categories in a grid layout
 {% endcomment %}
 
 <div class="getsupp-category-showcase">
@@ -13,7 +13,7 @@
     <div class="getsupp-category-grid">
       {% for block in section.blocks %}
         <div class="getsupp-category-card" {{ block.shopify_attributes }}>
-          <a href="{{ block.settings.category_url | default: '#' }}" class="getsupp-category-link">
+          <a href="{{ block.settings.category_url | default: '/collections' }}" class="getsupp-category-link">
             <div class="getsupp-category-icon">
               {% if block.settings.category_icon %}
                 <img
@@ -48,7 +48,17 @@
               {% endif %}
             </div>
             <h3 class="getsupp-category-name">{{ block.settings.category_name | default: "Category" }}</h3>
-            <p class="getsupp-category-count">{{ block.settings.product_count | default: "50+" }} Products</p>
+            <p class="getsupp-category-count">
+              {%- liquid
+                assign collection_handle = block.settings.category_url | remove: '/collections/' | remove: '/'
+                assign collection = collections[collection_handle]
+                if collection and collection.products_count and collection.products_count != blank and collection.products_count != 0
+                  echo collection.products_count | append: ' Products'
+                else
+                  echo block.settings.product_count | default: "50+" | append: ' Products'
+                endif
+              -%}
+            </p>
           </a>
         </div>
       {% endfor %}

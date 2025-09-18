@@ -188,6 +188,17 @@ class CartItems extends HTMLElement {
               section.selector
             );
           });
+          
+          // Update cart count bubble in header
+          const cartCountBubble = document.getElementById('cart-count-bubble');
+          if (cartCountBubble) {
+            if (parsedState.item_count > 0) {
+              cartCountBubble.textContent = parsedState.item_count;
+              cartCountBubble.style.display = 'block';
+            } else {
+              cartCountBubble.style.display = 'none';
+            }
+          }
           const updatedValue = parsedState.items[line - 1] ? parsedState.items[line - 1].quantity : undefined;
           let message = '';
           if (items.length === parsedState.items.length && updatedValue !== parseInt(quantityElement.value)) {

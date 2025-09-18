@@ -1,6 +1,6 @@
 {% comment %} 
-    GetSupp Featured Products Section 
-    Displays featured products in a grid layout
+        GetSupp Featured Products Section 
+        Displays featured products in a grid layout
 {% endcomment %}
 
 {% assign collection = collections[section.settings.collection] | default: collections.all %}
@@ -57,10 +57,10 @@
               <p class="getsupp-product-vendor">{{ product.vendor }}</p>
               <div class="getsupp-product-price">
                 {% if product.compare_at_price > product.price %}
-                  <span class="getsupp-price-compare">{{ product.compare_at_price | money }}</span>
-                  <span class="getsupp-price-current">{{ product.price | money }}</span>
+                  <span class="getsupp-price-compare">₹{{ product.compare_at_price | money_without_currency }}</span>
+                  <span class="getsupp-price-current">₹{{ product.price | money_without_currency }}</span>
                 {% else %}
-                  <span class="getsupp-price-current">{{ product.price | money }}</span>
+                  <span class="getsupp-price-current">₹{{ product.price | money_without_currency }}</span>
                 {% endif %}
               </div>
               {% if product.available %}

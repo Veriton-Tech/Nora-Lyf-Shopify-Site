@@ -1,5 +1,5 @@
 <!-- GetSupp Style Header -->
-<div class="getsupp-header">
+<div class="getsupp-header" data-section-id="{{ section.id }}">
   <!-- Top Banner -->
   <div class="getsupp-banner" style="background:#24BAAD;{% if section.settings.banner_background_image != blank %}background-image:url('{{ section.settings.banner_background_image | image_url }}');background-repeat:repeat-x;background-size:contain;background-position:center{% endif %}">
     <div class="getsupp-banner-content">
@@ -108,9 +108,12 @@
                 stroke-linecap="round"
                 stroke-linejoin="round" />
             </svg>
-            {% if cart.item_count > 0 %}
-              <span class="getsupp-cart-count">{{ cart.item_count }}</span>
-            {% endif %}
+            <span
+              class="getsupp-cart-count"
+              id="cart-count-bubble"
+              {% if cart.item_count == 0 %}
+              style="display: none;"
+              {% endif %}>{{ cart.item_count }}</span>
           </a>
         </div>
 

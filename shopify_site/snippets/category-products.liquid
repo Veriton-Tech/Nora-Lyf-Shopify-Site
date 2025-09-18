@@ -1,0 +1,357 @@
+{% comment %} 
+  Renders products filtered by category 
+  Accepts:
+  - category: {String} The category to filter by (e.g., 'health-wellness', 'vitamins-supplements')
+  - limit: {Number} Maximum number of products to show (optional, default: 12)
+  - show_vendor: {Boolean} Show product vendor (optional, default: false)
+  - show_rating: {Boolean} Show product rating (optional, default: false) 
+  Usage: 
+  {% render 'category-products', category: 'health-wellness', limit: 8 %}
+{% endcomment %}
+
+{%- liquid
+  assign category = category | default: 'all'
+  assign limit = limit | default: 12
+  assign show_vendor = show_vendor | default: false
+  assign show_rating = show_rating | default: false
+
+  comment
+    Define category keywords for filtering
+  endcomment
+  assign health_wellness_keywords = 'health,wellness,general,immune,digestive,heart,mental,stress,energy,detox,antioxidant' | split: ','
+  assign herbal_ayurveda_keywords = 'herbal,ayurveda,ayurvedic,traditional,herbs,plant-based,natural,organic,ashwagandha,turmeric,ginger,neem' | split: ','
+  assign vitamins_supplements_keywords = 'vitamin,vitamins,supplement,supplements,mineral,minerals,multivitamin,b-complex,vitamin-c,vitamin-d,calcium,iron,zinc' | split: ','
+  assign health_foods_keywords = 'food,superfood,protein,greens,supergreens,spirulina,chia,flax,quinoa,organic,raw,whole' | split: ','
+  assign sports_nutrition_keywords = 'sports,fitness,workout,gym,protein,creatine,pre-workout,post-workout,muscle,bcaa,amino,recovery' | split: ','
+  assign brands_keywords = 'brand,manufacturer,company,label' | split: ','
+
+  comment
+    Get the appropriate keywords based on category
+  endcomment
+  case category
+    when 'health-wellness'
+      assign category_keywords = health_wellness_keywords
+    when 'herbal-ayurveda'
+      assign category_keywords = herbal_ayurveda_keywords
+    when 'vitamins-supplements'
+      assign category_keywords = vitamins_supplements_keywords
+    when 'health-foods'
+      assign category_keywords = health_foods_keywords
+    when 'sports-nutrition'
+      assign category_keywords = sports_nutrition_keywords
+    when 'brands'
+      assign category_keywords = brands_keywords
+    else
+      assign category_keywords = ''
+  endcase
+
+  comment
+    Filter products based on category keywords
+  endcomment
+  assign filtered_products = ''
+  assign product_count = 0
+
+  for product in collections.all.products
+    if product_count >= limit
+      break
+    endif
+
+    assign product_matches = false
+    assign product_text = product.title | downcase | append: ' ' | append: product.type | downcase | append: ' ' | append: product.tags | downcase
+
+    comment
+      Check if product matches category keywords
+    endcomment
+    for keyword in category_keywords
+      if product_text contains keyword
+        assign product_matches = true
+        break
+      endif
+    endfor
+
+    comment
+      For brands category, check if product has vendor
+    endcomment
+    if category == 'brands' and product.vendor != blank
+      assign product_matches = true
+    endif
+
+    comment
+      If no specific category, show all products
+    endcomment
+    if category == 'all'
+      assign product_matches = true
+    endif
+
+    if product_matches
+      assign filtered_products = filtered_products | append: product.handle | append: ','
+      assign product_count = product_count | plus: 1
+    endif
+  endfor
+
+  assign product_handles = filtered_products | split: ','
+-%}
+
+<div class="category-products">
+  {% if product_handles.size > 0 %}
+    <div class="category-products-grid">
+      {% for product_handle in product_handles limit: limit %}
+        {% if product_handle != blank %}
+          {% assign product = all_products[product_handle] %}
+          {% if product %}
+            <div class="category-product-card">
+              <a href="{{ product.url }}" class="category-product-link">
+                <div class="category-product-image">
+                  {% if product.featured_image %}
+                    <img
+                      src="{{ product.featured_image | image_url: width: 300 }}"
+                      alt="{{ product.title }}"
+                      class="category-product-img"
+                      width="300"
+                      height="300">
+                  {% else %}
+                    <div class="category-product-placeholder">
+                      <svg
+                        width="60"
+                        height="60"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect
+                          x="3"
+                          y="3"
+                          width="18"
+                          height="18"
+                          rx="2"
+                          stroke="#24BAAD"
+                          stroke-width="2" />
+                        <path
+                          d="M9 9h6v6H9z"
+                          stroke="#24BAAD"
+                          stroke-width="2" />
+                      </svg>
+                    </div>
+                  {% endif %}
+                  {% if product.compare_at_price > product.price %}
+                    <div class="category-product-badge">Sale</div>
+                  {% endif %}
+                  {% if product.available == false %}
+                    <div class="category-product-sold-out-badge">Sold Out</div>
+                  {% endif %}
+                </div>
+                <div class="category-product-info">
+                  {% if show_vendor and product.vendor != blank %}
+                    <p class="category-product-vendor">{{ product.vendor }}</p>
+                  {% endif %}
+                  <h3 class="category-product-title">{{ product.title }}</h3>
+                  <div class="category-product-price">
+                    {% if product.compare_at_price > product.price %}
+                      <span class="category-price-compare">₹{{ product.compare_at_price | money_without_currency }}</span>
+                      <span class="category-price-current">₹{{ product.price | money_without_currency }}</span>
+                    {% else %}
+                      <span class="category-price-current">₹{{ product.price | money_without_currency }}</span>
+                    {% endif %}
+                  </div>
+                  {% if show_rating %}
+                    <div class="category-product-rating">
+                      <div class="category-stars">
+                        <span class="category-star">★</span>
+                        <span class="category-star">★</span>
+                        <span class="category-star">★</span>
+                        <span class="category-star">★</span>
+                        <span class="category-star">★</span>
+                      </div>
+                      <span class="category-rating-text">(4.5)</span>
+                    </div>
+                  {% endif %}
+                </div>
+              </a>
+            </div>
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="category-no-products">
+      <p>No products found in this category.</p>
+    </div>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .category-products {
+    width: 100%;
+  }
+
+  .category-products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+
+  .category-product-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #f0f0f0;
+  }
+
+  .category-product-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(36, 186, 173, 0.15);
+    border-color: #24BAAD;
+  }
+
+  .category-product-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .category-product-image {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: #f8f9fa;
+  }
+
+  .category-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+  }
+
+  .category-product-card:hover .category-product-img {
+    transform: scale(1.05);
+  }
+
+  .category-product-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+  }
+
+  .category-product-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: #e74c3c;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .category-product-sold-out-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: #95a5a6;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .category-product-info {
+    padding: 16px;
+  }
+
+  .category-product-vendor {
+    font-size: 12px;
+    color: #666;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .category-product-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 12px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .category-product-price {
+    margin-bottom: 12px;
+  }
+
+  .category-price-compare {
+    font-size: 14px;
+    color: #999;
+    text-decoration: line-through;
+    margin-right: 8px;
+  }
+
+  .category-price-current {
+    font-size: 18px;
+    font-weight: 700;
+    color: #24BAAD;
+  }
+
+  .category-product-rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .category-stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .category-star {
+    color: #ffc107;
+    font-size: 14px;
+  }
+
+  .category-rating-text {
+    font-size: 12px;
+    color: #666;
+  }
+
+  .category-no-products {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+  }
+
+  .category-no-products p {
+    font-size: 18px;
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .category-products-grid {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .category-product-info {
+      padding: 12px;
+    }
+
+    .category-product-title {
+      font-size: 14px;
+    }
+
+    .category-price-current {
+      font-size: 16px;
+    }
+  }
+{% endstylesheet %}

@@ -1,0 +1,28 @@
+{
+  "sections": {
+    "getsupp-collection-header": {
+      "type": "getsupp-collection-header",
+      "settings": {
+        "title": "Sports Nutrition",
+        "description": "High-performance sports nutrition products to support your fitness and athletic goals."
+      }
+    },
+    "getsupp-collection-filters": {
+      "type": "getsupp-collection-filters",
+      "settings": {}
+    },
+    "getsupp-collection-products": {
+      "type": "getsupp-collection-products",
+      "settings": {
+        "products_per_page": 24,
+        "show_vendor": false,
+        "show_rating": true
+      }
+    }
+  },
+  "order": [
+    "getsupp-collection-header",
+    "getsupp-collection-filters",
+    "getsupp-collection-products"
+  ]
+}
