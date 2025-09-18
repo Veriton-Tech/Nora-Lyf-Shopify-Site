@@ -1,0 +1,45 @@
+{% comment %} 
+  Renders an image with optional link 
+  Accepts:
+  - image: {Object} Image object
+  - url: {String} Optional URL to link the image to
+  - alt: {String} Alt text for the image
+  - width: {Number} Width of the image
+  - height: {Number} Height of the image
+  - class: {String} CSS classes to add to the image 
+  Usage: 
+  {% render 'image', image: product.featured_image, url: product.url %}
+{% endcomment %}
+
+{%- liquid
+  assign alt = alt | default: image.alt | default: ''
+  assign width = width | default: 200
+  assign height = height | default: 200
+  assign class = class | default: ''
+-%}
+
+{%- if image != blank -%}
+  {%- if url != blank -%}
+    <a href="{{ url }}" class="image-link {{ class }}">
+      <img
+        src="{{ image | image_url: width: width, height: height }}"
+        alt="{{ alt | escape }}"
+        width="{{ width }}"
+        height="{{ height }}"
+        loading="lazy"
+        class="image {{ class }}">
+    </a>
+  {%- else -%}
+    <img
+      src="{{ image | image_url: width: width, height: height }}"
+      alt="{{ alt | escape }}"
+      width="{{ width }}"
+      height="{{ height }}"
+      loading="lazy"
+      class="image {{ class }}">
+  {%- endif -%}
+{%- else -%}
+  <div class="image-placeholder {{ class }}" style="width: {{ width }}px; height: {{ height }}px; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #999;">
+    <span>No image</span>
+  </div>
+{%- endif -%}

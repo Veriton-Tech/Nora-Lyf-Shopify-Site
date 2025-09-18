@@ -1,18 +1,60 @@
 <section class="page-width">
   <div class="cart-footer">
-    <a href="/collections/all">Continue shopping</a>
+    <a href="{{ routes.all_products_collection_url }}" class="button button--secondary">
+      {{ 'general.continue_shopping' | t }}
+    </a>
   </div>
 </section>
 
+<style>
+  .cart-footer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 2rem 0;
+    margin-top: 2rem;
+    border-top: 1px solid #e5e5e5;
+  }
+
+  .cart-footer .button {
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #6c757d;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    background: white;
+    color: #6c757d;
+  }
+
+  .cart-footer .button:hover {
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+  }
+
+  .cart-footer .button:focus {
+    outline: 2px solid #24BAAD;
+    outline-offset: 2px;
+  }
+
+  @media (max-width: 768px) {
+    .cart-footer {
+      justify-content: center;
+      padding: 1.5rem 0;
+    }
+  }
+</style>
+
 {% schema %}
-{
-  "name": "Cart footer",
-  "settings": [],
-  "blocks": [],
-  "tag": "section"
-}
+  {
+    "name": "Cart footer",
+    "settings": [],
+    "blocks": [],
+    "tag": "section"
+  }
 {% endschema %}
-
-
-
-
