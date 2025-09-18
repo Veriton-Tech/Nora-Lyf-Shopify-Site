@@ -1,7 +1,11 @@
-{% comment %}
-  GetSupp Collection Filters Section
-  Displays filters and sorting options
+{% comment %} 
+  GetSupp Collection Filters Section 
+  Displays filters and sorting options using Shopify's standard facets system
 {% endcomment %}
+
+{{ 'component-facets.css' | asset_url | stylesheet_tag }}
+
+<script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
 
 <div class="getsupp-collection-filters">
   <div class="getsupp-collection-container">
@@ -9,8 +13,18 @@
       <div class="getsupp-filters-left">
         {% if section.settings.show_filters %}
           <button class="getsupp-filter-toggle" id="filter-toggle">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 6h18M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M3 6h18M7 12h10M10 18h4"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
             </svg>
             Filters
           </button>
@@ -19,7 +33,7 @@
           {{ collection.products_count }} {{ collection.products_count | pluralize: 'product', 'products' }}
         </div>
       </div>
-      
+
       {% if section.settings.show_sort %}
         <div class="getsupp-sort-dropdown">
           <select class="getsupp-sort-select" id="sort-select">
@@ -35,64 +49,35 @@
         </div>
       {% endif %}
     </div>
-    
+
     {% if section.settings.show_filters %}
       <div class="getsupp-filters-panel" id="filters-panel">
         <div class="getsupp-filters-content">
           <div class="getsupp-filters-header">
             <h3>Filters</h3>
             <button class="getsupp-filters-close" id="filters-close">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M18 6L6 18M6 6l12 12"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round" />
               </svg>
             </button>
           </div>
-          
+
           <div class="getsupp-filters-body">
-            {% for filter in collection.filters %}
-              <div class="getsupp-filter-group">
-                <h4 class="getsupp-filter-title">{{ filter.label }}</h4>
-                
-                {% case filter.type %}
-                  {% when 'list' %}
-                    <div class="getsupp-filter-options">
-                      {% for value in filter.values %}
-                        <label class="getsupp-filter-option">
-                          <input type="checkbox" 
-                                 name="{{ filter.param_name }}" 
-                                 value="{{ value.value }}"
-                                 {% if value.active %}checked{% endif %}
-                                 {% if value.count == 0 and value.active == false %}disabled{% endif %}>
-                          <span class="getsupp-filter-checkbox"></span>
-                          <span class="getsupp-filter-label">{{ value.label }}</span>
-                          <span class="getsupp-filter-count">({{ value.count }})</span>
-                        </label>
-                      {% endfor %}
-                    </div>
-                  {% when 'price_range' %}
-                    <div class="getsupp-price-range">
-                      <div class="getsupp-price-inputs">
-                        <input type="number" 
-                               name="{{ filter.min_value.param_name }}" 
-                               value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
-                               placeholder="Min"
-                               class="getsupp-price-input">
-                        <span class="getsupp-price-separator">to</span>
-                        <input type="number" 
-                               name="{{ filter.max_value.param_name }}" 
-                               value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
-                               placeholder="Max"
-                               class="getsupp-price-input">
-                      </div>
-                    </div>
-                {% endcase %}
-              </div>
-            {% endfor %}
-          </div>
-          
-          <div class="getsupp-filters-footer">
-            <button class="getsupp-clear-filters" id="clear-filters">Clear All</button>
-            <button class="getsupp-apply-filters" id="apply-filters">Apply Filters</button>
+            {% render 'facets'
+              , results: collection
+              , enable_filtering: true
+              , enable_sorting: false
+              , filter_type: 'drawer' %}
           </div>
         </div>
       </div>
@@ -220,6 +205,103 @@
 
   .getsupp-filters-body {
     padding: 20px;
+  }
+
+  .getsupp-filters-body {
+    flex: 1;
+    overflow-y: auto;
+  }
+
+  /* Override standard facets styles for our custom panel */
+  .getsupp-filters-body .facets {
+    padding: 0;
+  }
+
+  .getsupp-filters-body .facets__form {
+    padding: 0;
+  }
+
+  .getsupp-filters-body .facets__wrapper {
+    padding: 0;
+  }
+
+  .getsupp-filters-body .facets__summary {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-bottom: 16px;
+  }
+
+  .getsupp-filters-body .facets__display {
+    background: none;
+    border: none;
+    padding: 0;
+  }
+
+  .getsupp-filters-body .facets__heading {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  .getsupp-filters-body .facets__list {
+    margin: 0;
+    padding: 0;
+  }
+
+  .getsupp-filters-body .facets__item {
+    margin-bottom: 12px;
+  }
+
+  .getsupp-filters-body .facets__label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+  }
+
+  .getsupp-filters-body .facets__label .facets__label-text {
+    margin-left: 0;
+  }
+
+  .getsupp-filters-body .facets__input {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    margin: 0;
+  }
+
+  .getsupp-filters-body .facets__input:checked {
+    background: #24BAAD;
+    border-color: #24BAAD;
+  }
+
+  .getsupp-filters-body .facets__price {
+    margin-top: 16px;
+  }
+
+  .getsupp-filters-body .facets__price .field {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .getsupp-filters-body .facets__price .field__input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .getsupp-filters-body .facets__price .field__input:focus {
+    outline: none;
+    border-color: #24BAAD;
+    box-shadow: 0 0 0 2px rgba(36, 186, 173, 0.2);
   }
 
   .getsupp-filter-group {
@@ -379,68 +461,76 @@
     const filterToggle = document.getElementById('filter-toggle');
     const filtersPanel = document.getElementById('filters-panel');
     const filtersClose = document.getElementById('filters-close');
-    const clearFilters = document.getElementById('clear-filters');
-    const applyFilters = document.getElementById('apply-filters');
+    const sortSelect = document.getElementById('sort-select');
 
+// Toggle filters panel
     if (filterToggle && filtersPanel) {
       filterToggle.addEventListener('click', function() {
         filtersPanel.classList.add('active');
       });
     }
 
+// Close filters panel
     if (filtersClose && filtersPanel) {
       filtersClose.addEventListener('click', function() {
         filtersPanel.classList.remove('active');
       });
     }
 
-    if (clearFilters) {
-      clearFilters.addEventListener('click', function() {
-        const checkboxes = document.querySelectorAll('.getsupp-filter-option input[type="checkbox"]');
-        checkboxes.forEach(checkbox => {
-          checkbox.checked = false;
-        });
+// Handle sort dropdown change
+    if (sortSelect) {
+      sortSelect.addEventListener('change', function() {
+        const currentUrl = new URL(window.location);
+        const sortValue = this.value;
+
+        if (sortValue) {
+          currentUrl.searchParams.set('sort_by', sortValue);
+        } else {
+          currentUrl.searchParams.delete('sort_by');
+        }
+
+        window.location.href = currentUrl.toString();
       });
     }
 
-    if (applyFilters) {
-      applyFilters.addEventListener('click', function() {
-        // Apply filters logic here
-        filtersPanel.classList.remove('active');
-      });
+// Set current sort value if present in URL
+    if (sortSelect) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const currentSort = urlParams.get('sort_by');
+      if (currentSort) {
+        sortSelect.value = currentSort;
+      }
     }
   });
 {% endjavascript %}
 
 {% schema %}
-{
-  "name": "GetSupp Filters",
-  "tag": "section",
-  "class": "section",
-  "settings": [
-    {
-      "type": "checkbox",
-      "id": "show_filters",
-      "label": "Show filters",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_sort",
-      "label": "Show sort options",
-      "default": true
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-1"
-    }
-  ],
-  "presets": [
-    {
-      "name": "GetSupp Filters"
-    }
-  ]
-}
+  {
+    "name": "GetSupp Filters",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "show_filters",
+        "label": "Show filters",
+        "default": true
+      }, {
+        "type": "checkbox",
+        "id": "show_sort",
+        "label": "Show sort options",
+        "default": true
+      }, {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "default": "scheme-1"
+      }
+    ],
+    "presets": [
+      {
+        "name": "GetSupp Filters"
+      }
+    ]
+  }
 {% endschema %}
