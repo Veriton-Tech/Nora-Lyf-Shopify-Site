@@ -20,25 +20,55 @@
       <div class="getsupp-logo">
         <a href="{{ routes.root_url }}">
           <span class="logo-text">Nora Lyf</span>
-        </a>
-      </div>
+          </a>
+          </div>
+    
+        <!-- Mobile Menu Button -->
+        <button class="getsupp-mobile-menu" aria-label="Toggle mobile menu">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M3 12H21M3 6H21M3 18H21"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
 
-      <!-- Mobile Menu Button -->
-      <button class="getsupp-mobile-menu" aria-label="Toggle mobile menu">
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M3 12H21M3 6H21M3 18H21"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </button>
+      <!-- Search Bar -->
+       <form
+        action="{{ routes.search_url }}"
+        method="get"
+        class="getsupp-hero-inline__search">
+        <input
+          type="search"
+          name="q"
+          placeholder="{{ section.settings.hero_search_placeholder | default: 'Search for supplements & health concerns...' }}"
+          aria-label="Search" />
+        <button type="submit" aria-label="Search">
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"><circle
+              cx="11"
+              cy="11"
+              r="8"
+              stroke="#04683F"
+              stroke-width="2" /><path
+              d="m21 21-4.35-4.35"
+              stroke="#04683F"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" /></svg>
+        </button>
+      </form>
 
       <!-- Right Icons -->
       <div class="getsupp-header-icons">
@@ -765,7 +795,7 @@
           xmlns="http://www.w3.org/2000/svg">
           <path d="M60 10L100 30V60C100 85 60 110 60 110S20 85 20 60V30L60 10Z" fill="#B88B34" />
           <path
-            d="M45 55L52 62L75 39"
+            d="M45 60L52 67L75 44"
             stroke="white"
             stroke-width="4"
             stroke-linecap="round"
@@ -815,34 +845,7 @@
         </a>
       </div>
       <p class="getsupp-hero-inline__subtitle">{{ section.settings.hero_subtitle | default: 'Shop 100% genuine health products from more than 300+ brands' }}</p>
-      <form
-        action="{{ routes.search_url }}"
-        method="get"
-        class="getsupp-hero-inline__search">
-        <input
-          type="search"
-          name="q"
-          placeholder="{{ section.settings.hero_search_placeholder | default: 'Search for supplements & health concerns...' }}"
-          aria-label="Search" />
-        <button type="submit" aria-label="Search">
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"><circle
-              cx="11"
-              cy="11"
-              r="8"
-              stroke="#04683F"
-              stroke-width="2" /><path
-              d="m21 21-4.35-4.35"
-              stroke="#04683F"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round" /></svg>
-        </button>
-      </form>
+     
     </div>
   </div>
 {% endif %}
@@ -1000,6 +1003,9 @@
 {% endjavascript %}
 
 {% stylesheet %}
+  //Importing Font
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
   /* GetSupp Header Styles */
   .getsupp-header {
     position: sticky;
@@ -1128,10 +1134,10 @@
   }
 
   .getsupp-header-container {
-    max-width: 1180px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 0 24px;
-    height: 60px;
+    padding: 0 20px;
+    height: 75px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -1143,7 +1149,8 @@
   }
 
   .getsupp-mobile-menu {
-    display: block;
+    display: flex;
+    align-items:center;
     background: none;
     border: none;
     cursor: pointer;
@@ -1151,9 +1158,9 @@
   }
 
   .getsupp-mobile-menu svg {
-    width: 20px;
-    height: 20px;
-    color: #000;
+    width: 25px;
+    height: 25px;
+    color: #f0f5f3;
   }
 
   .getsupp-logo {
@@ -1172,29 +1179,27 @@
   }
 
   .logo-text {
-    font-size: 28px;
-    font-weight: 800;
+    font-size: 32px;
+    font-weight: 200;
     color: #B88B34;
     text-decoration: none !important;
-    letter-spacing: 0.5px;
-    background: linear-gradient(135deg, #B88B34 0%, #a67c2a 50%, #946d20 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    letter-spacing: 0.2px;
+    word-spacing: -2px;
+    // background: linear-gradient(135deg, #B88B34 0%, #a67c2a 50%, #946d20 100%);
+    // -webkit-background-clip: text;
+    // -webkit-text-fill-color: transparent;
     background-clip: text;
     transition: all 0.3s ease;
-    font-family: 'Comic Sans MS'
-    , 'Chalkduster'
-    , 'Bradley Hand'
-    , cursive
-    , sans-serif;
-    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
-    transform: rotate(-2deg);
+    font-family: "Playfair Display", serif;
+    // text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+    // transform: rotate(-2deg);
     display: inline-block;
+    filter:brightness(1.4);
   }
 
   .logo-text:hover {
-    transform: scale(1.05) rotate(-2deg);
-    filter: brightness(1.1);
+    // transform: scale(1.05) rotate(-2deg);
+    filter: brightness(1.5);
     text-decoration: none !important;
   }
 
@@ -1253,9 +1258,9 @@
   }
 
   .getsupp-search-button svg {
-    width: 20px;
-    height: 20px;
-    color: #000;
+    width: 25px;
+    height: 25px;
+    color: #f0f5f3;
   }
 
   .getsupp-header-icons {
@@ -1270,14 +1275,20 @@
   }
 
   .getsupp-mobile-search a {
-    display: block;
-    padding: 8px;
+    display: flex;
+    padding: 12px;
+    align-items:center;
+    border-radius: 30px;
+    transition: all 0.3s ease;
   }
 
+  .getsupp-mobile-search a:hover{
+    background: #005532;
+  }
   .getsupp-mobile-search svg {
-    width: 20px;
-    height: 20px;
-    color: #000;
+    width: 25px;
+    height: 25px;
+    color: #f0f5f3;
   }
 
   .getsupp-cart {
@@ -1285,14 +1296,22 @@
   }
 
   .getsupp-cart a {
-    display: block;
-    padding: 8px;
+    display: flex;
+    padding: 12px;
+    align-items:center;
+    border-radius: 30px;
+    transition: all 0.3s ease;
   }
 
+  .getsupp-cart a:hover{
+    background: #005532;
+  }
+
+
   .getsupp-cart svg {
-    width: 20px;
-    height: 20px;
-    color: #000;
+    width: 25px;
+    height: 25px;
+    color: #f0f5f3;
   }
 
   .getsupp-cart-count {
@@ -1313,14 +1332,21 @@
 
 
   .getsupp-account a {
-    display: block;
-    padding: 8px;
+    display: flex;
+    padding: 12px;
+    align-items:center;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-account a:hover{
+    background: #005532;
   }
 
   .getsupp-account svg {
-    width: 20px;
-    height: 20px;
-    color: #000;
+    width: 25px;
+    height: 25px;
+    color: #f0f5f3;
   }
 
   /* Navigation Styles */
@@ -1335,9 +1361,9 @@
   }
 
   .getsupp-nav-container {
-    max-width: 1180px;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 22px;
   }
 
   .getsupp-nav-list {
@@ -1346,32 +1372,33 @@
     margin: 0;
     padding: 0;
     overflow: visible;
-    justify-content: center;
+    justify-content: left;
     align-items: center;
     gap: 0;
   }
 
   .getsupp-nav-item {
-    position: relative;
+    // position: relative;
     display: flex;
     align-items: center;
   }
 
-  .getsupp-nav-item:not(:last-child)::after {
+  .getsupp-nav-item:nth-child(5)::after {
     content: '';
     width: 1px;
     height: 20px;
     background-color: #d0d0d0;
     margin: 0 8px;
     opacity: 0.6;
+    margin-right: 35px;
   }
 
   .getsupp-nav-link {
     display: flex;
     align-items: center;
-    padding: 16px 24px;
-    font-size: 15px;
-    font-weight: 500;
+    padding: 12px 24px 12px 0px;
+    font-size: 14px;
+    font-weight: 900;
     color: #223;
     text-decoration: none;
     cursor: pointer;
@@ -1384,14 +1411,14 @@
 
   .getsupp-nav-link:hover {
     color: #0b7285;
-    background-color: rgba(36, 186, 173, 0.06);
+    // background-color: rgba(36, 186, 173, 0.06);
     transform: translateY(-1px);
   }
 
   .getsupp-nav-link::after {
     content: '';
     position: absolute;
-    left: 24px;
+    left: 0px;
     right: 24px;
     bottom: 10px;
     height: 2px;
@@ -1409,16 +1436,18 @@
   /* Mega Menu Styles */
   .getsupp-mega-menu {
     position: absolute;
-    top: calc(100% + 6px);
+    top: 100%;
     left: 50%;
     transform: translateX(-50%);
-    width: min(95vw, 780px);
-    max-width: calc(100vw - 40px);
+    width: 100vw !important;
+    padding: 0px 50px;
+    // max-width: calc(100vw - 40px);
+    // visibility: hidden;
     opacity: 0;
-    visibility: hidden;
+    background: rgba(0,0,0,0.2);
+    height: 85vh;
     pointer-events: none;
-    transition: opacity 0.2s ease
-    , visibility 0.2s ease;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
     z-index: 3000;
   }
 
@@ -1437,13 +1466,16 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 24px;
-    padding: 16px;
+    padding: 24px 16px;
     width: 100%;
     background: white;
     border-radius: 8px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     border: 1px solid #e5e5e5;
-    min-height: 320px;
+    border-top : none;
+    // min-height: 320px;
     overflow-x: hidden;
     overflow-y: auto;
     box-sizing: border-box;
@@ -1452,17 +1484,18 @@
   .getsupp-mega-column {
     display: flex;
     flex-direction: column;
+    // margin-right: 24px;
   }
 
   .getsupp-mega-title {
     font-size: 14px;
     font-weight: bold;
     color: #04683F;
-    background: #eaf1f3;
-    padding: 4px 8px;
+    // background: #eaf1f3;
+    padding: 0px 8px;
     border-radius: 4px;
     margin: 0 0 8px;
-    border-left: 3px solid #04683F;
+    // border-left: 3px solid #04683F;
   }
 
   .getsupp-mega-links {
@@ -1477,8 +1510,8 @@
 
   .getsupp-mega-links a {
     display: block;
-    padding: 4px 8px;
-    font-size: 14px;
+    padding: 0px 8px;
+    font-size: 13px;
     color: #000;
     text-decoration: none;
     border-radius: 4px;
@@ -1487,8 +1520,9 @@
 
   .getsupp-mega-links a:hover {
     color: #04683F;
-    font-weight: bold;
-    background: #f0fdfc;
+    // font-weight: bold;
+    text-decoration: underline;
+    // background: #f0fdfc;
   }
 
   /* Brands Menu Special Styling */
@@ -1612,15 +1646,18 @@
     animation: fadeInUp 0.8s ease-out 0.2s both;
   }
   .getsupp-hero-inline__search {
-    max-width: 600px;
+    // max-width: 600px;
+    width: 80%;
+    height: 50px;
     margin: 0 auto;
     position: relative;
-    animation: fadeInUp 0.8s ease-out 0.4s both;
+    // animation: fadeInUp 0.8s ease-out 0.4s both;
   }
   .getsupp-hero-inline__search input {
     width: 100%;
     padding: 20px 24px;
     border: 2px solid #e5e5e5;
+    height: 100%;
     border-radius: 50px;
     font-size: 16px;
     outline: none;
@@ -1632,7 +1669,6 @@
     border-color: #04683F;
     box-shadow: 0 0 0 4px rgba(4, 104, 63, 0.1)
     , 0 8px 30px rgba(0, 0, 0, 0.15);
-    transform: translateY(-2px);
   }
   .getsupp-hero-inline__search input::placeholder {
     color: #999;
@@ -1643,20 +1679,21 @@
     right: 8px;
     top: 50%;
     transform: translateY(-50%);
-    background: linear-gradient(135deg, #04683F 0%, #035a3a 100%);
+    background: transparent;
+    width: 40px;
+    height: 40px;
     color: white;
     border: none;
-    padding: 12px 24px;
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
-    box-shadow: 0 4px 15px rgba(4, 104, 63, 0.3);
+    // box-shadow: 0 4px 15px rgba(4, 104, 63, 0.3);
   }
   .getsupp-hero-inline__search button:hover {
-    background: linear-gradient(135deg, #035a3a 0%, #024a2f 100%);
-    transform: translateY(-50%) scale(1.05);
-    box-shadow: 0 6px 20px rgba(4, 104, 63, 0.4);
+    background: #f0f5f3;
+    // transform: translateY(-50%);
+    // box-shadow: 0 6px 20px rgba(4, 104, 63, 0.4);
   }
   @media (max-width: 768px) {
     .getsupp-hero-inline {
@@ -1688,11 +1725,11 @@
   }
 
   /* Force left alignment for first few tabs to prevent clipping */
-  .getsupp-nav-item:nth-child(1) .getsupp-mega-menu,
-  .getsupp-nav-item:nth-child(2) .getsupp-mega-menu {
-    left: 0 !important;
-    transform: none !important;
-  }
+  // .getsupp-nav-item:nth-child(1) .getsupp-mega-menu,
+  // .getsupp-nav-item:nth-child(2) .getsupp-mega-menu {
+  //   left: 10 !important;
+  //   transform: none !important;
+  // }
 
   /* Force right alignment for last few tabs */
   .getsupp-nav-item:nth-last-child(1) .getsupp-mega-menu,
@@ -1700,16 +1737,20 @@
     left: auto !important;
     right: 0 !important;
     transform: none !important;
+    background: transparent;
+  }
+  .getsupp-nav-item:nth-last-child(2) .getsupp-mega-menu .getsupp-mega-content {
+    transform: translateX(250%);
   }
 
   /* Override for middle tabs to use centered positioning */
-  .getsupp-nav-item:nth-child(3) .getsupp-mega-menu,
-  .getsupp-nav-item:nth-child(4) .getsupp-mega-menu,
-  .getsupp-nav-item:nth-child(5) .getsupp-mega-menu,
-  .getsupp-nav-item:nth-child(6) .getsupp-mega-menu {
-    left: 50% !important;
-    transform: translateX(-50%) !important;
-  }
+  // .getsupp-nav-item:nth-child(3) .getsupp-mega-menu,
+  // .getsupp-nav-item:nth-child(4) .getsupp-mega-menu,
+  // .getsupp-nav-item:nth-child(5) .getsupp-mega-menu,
+  // .getsupp-nav-item:nth-child(6) .getsupp-mega-menu {
+  //   left: 50% !important;
+  //   transform: translateX(-50%) !important;
+  // }
 
   /* Mobile Responsive */
   @media (max-width: 1024px) {
@@ -1722,6 +1763,9 @@
     }
 
     .getsupp-navigation {
+      display: none;
+    }
+    .getsupp-hero-inline__search{
       display: none;
     }
   }
