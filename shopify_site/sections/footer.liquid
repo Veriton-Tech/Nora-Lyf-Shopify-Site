@@ -1,4 +1,4 @@
-<!-- GetSupp Footer -->
+<!-- Nora Lyf Footer -->
 <footer class="getsupp-footer">
   <div class="getsupp-footer-container">
     <div class="getsupp-footer-content">
@@ -7,13 +7,9 @@
         <!-- Left Section: Logo and Navigation -->
         <div class="getsupp-footer-left">
           <div class="getsupp-footer-logo">
-
-            <img
-              src="{{ 'logo.svg' | asset_url }}"
-              alt="GetSupp Logo"
-              class="getsupp-logo-img"
-              width="200"
-              height="50">
+            <a href="{{ routes.root_url }}">
+              <span class="footer-logo-text">Nora Lyf</span>
+            </a>
           </div>
           <div class="getsupp-footer-nav">
             <a href="/pages/contact" class="getsupp-nav-link">Contact Us</a>
@@ -24,7 +20,7 @@
           </div>
           <div class="getsupp-footer-copyright">
             <p>&copy; 2025,
-              <strong>GetSupp</strong>. All rights reserved.</p>
+              <strong>Nora Lyf</strong>. All rights reserved.</p>
           </div>
         </div>
 
@@ -111,9 +107,9 @@
 </footer>
 
 {% stylesheet %}
-  /* ====== GetSupp Footer ====== */
+  /* ====== Nora Lyf Footer ====== */
   .getsupp-footer {
-    background: linear-gradient(135deg, #24BAAD 0%, #1a9b8e 100%);
+    background: #04683F;
     margin-top: 60px;
     font-family: 'Inter'
     , sans-serif;
@@ -168,11 +164,39 @@
     transform: scale(1.02);
   }
 
-  .getsupp-logo-img {
-    width: 200px;
-    height: 50px;
-    object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  .footer-logo-text {
+    font-size: 32px;
+    font-weight: 800;
+    color: #B88B34;
+    text-decoration: none !important;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #B88B34 0%, #a67c2a 50%, #946d20 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: all 0.3s ease;
+    font-family: 'Comic Sans MS'
+    , 'Chalkduster'
+    , 'Bradley Hand'
+    , cursive
+    , sans-serif;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+    transform: rotate(-2deg);
+    display: inline-block;
+  }
+
+  .footer-logo-text:hover {
+    transform: scale(1.05) rotate(-2deg);
+    filter: brightness(1.1);
+    text-decoration: none !important;
+  }
+
+  .getsupp-footer-logo a {
+    text-decoration: none !important;
+  }
+
+  .getsupp-footer-logo a:hover {
+    text-decoration: none !important;
   }
 
   /* Navigation Links */
