@@ -1,6 +1,6 @@
 .drawer {
   position: fixed;
-  z-index: 4000;
+  z-index: 9999;
   left: 0;
   top: 0;
   width: 100vw;
@@ -11,8 +11,17 @@
   transition: visibility var(--duration-default) ease;
 }
 
+/* Ensure cart drawer is visible when active */
 .drawer.active {
-  visibility: visible;
+  visibility: visible !important;
+  display: flex !important;
+}
+
+.drawer.active .drawer__inner {
+  transform: translateX(0) !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  display: flex !important;
 }
 
 .drawer__inner {
@@ -27,6 +36,10 @@
   flex-direction: column;
   transform: translateX(100%);
   transition: transform var(--duration-default) ease;
+  position: relative;
+  right: 0;
+  background: white;
+  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
 }
 
 .drawer__inner-empty {
@@ -64,9 +77,6 @@ cart-drawer:not(.is-empty) .cart-drawer__collection {
   margin-top: 2.5rem;
 }
 
-.drawer.active .drawer__inner {
-  transform: translateX(0);
-}
 
 .drawer__header {
   position: relative;
@@ -145,6 +155,14 @@ cart-drawer {
   left: 0;
   width: 100vw;
   height: 100%;
+  z-index: 9999;
+  overflow: visible;
+}
+
+/* Ensure cart drawer is not hidden */
+cart-drawer.active {
+  visibility: visible !important;
+  display: block !important;
 }
 
 .cart-drawer__overlay {

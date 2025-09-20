@@ -20,28 +20,28 @@
       <div class="getsupp-logo">
         <a href="{{ routes.root_url }}">
           <span class="logo-text">Nora Lyf</span>
-          </a>
-          </div>
-    
-        <!-- Mobile Menu Button -->
-        <button class="getsupp-mobile-menu" aria-label="Toggle mobile menu">
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M3 12H21M3 6H21M3 18H21"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round" />
-          </svg>
-        </button>
+        </a>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <button class="getsupp-mobile-menu" aria-label="Toggle mobile menu">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M3 12H21M3 6H21M3 18H21"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+      </button>
 
       <!-- Search Bar -->
-       <form
+      <form
         action="{{ routes.search_url }}"
         method="get"
         class="getsupp-hero-inline__search">
@@ -783,7 +783,7 @@
   </div>
 </nav>
 
-{% if section.settings.show_hero_inline %}
+{% if section.settings.show_hero_inline and template.name != 'cart' and template.name != 'page' or template.name == 'page' and page.handle != 'contact' and page.handle != 'shipping-policy' and page.handle != 'privacy-policy' and page.handle != 'terms-conditions' and page.handle != 'returns-cancellations' %}
   <div class="getsupp-hero-inline">
     <div class="getsupp-hero-inline__container">
       <div class="getsupp-hero-inline__icon">
@@ -845,99 +845,101 @@
         </a>
       </div>
       <p class="getsupp-hero-inline__subtitle">{{ section.settings.hero_subtitle | default: 'Shop 100% genuine health products from more than 300+ brands' }}</p>
-     
+
     </div>
   </div>
 {% endif %}
 
 <!-- Benefits Section -->
-<div class="getsupp-benefits-section">
-  <div class="getsupp-benefits-container">
-    <div class="getsupp-benefits-grid">
-      <div class="getsupp-benefit-item">
-        <div class="getsupp-benefit-icon">
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M12 2L13.09 8.26L19 9L13.09 9.74L12 16L10.91 9.74L5 9L10.91 8.26L12 2Z"
-              stroke="#B88B34"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round" />
-            <circle
-              cx="12"
-              cy="12"
-              r="3"
-              stroke="#B88B34"
-              stroke-width="2" />
-          </svg>
+{% unless template.name == 'cart' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'shipping-policy' or template.name == 'page' and page.handle == 'privacy-policy' or template.name == 'page' and page.handle == 'terms-conditions' or template.name == 'page' and page.handle == 'returns-cancellations' %}
+  <div class="getsupp-benefits-section">
+    <div class="getsupp-benefits-container">
+      <div class="getsupp-benefits-grid">
+        <div class="getsupp-benefit-item">
+          <div class="getsupp-benefit-icon">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2L13.09 8.26L19 9L13.09 9.74L12 16L10.91 9.74L5 9L10.91 8.26L12 2Z"
+                stroke="#B88B34"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+              <circle
+                cx="12"
+                cy="12"
+                r="3"
+                stroke="#B88B34"
+                stroke-width="2" />
+            </svg>
+          </div>
+          <h3 class="getsupp-benefit-title">High-Quality Ingredients</h3>
+          <p class="getsupp-benefit-description">Lorem ipsum, aliquant.</p>
         </div>
-        <h3 class="getsupp-benefit-title">High-Quality Ingredients</h3>
-        <p class="getsupp-benefit-description">Lorem ipsum, aliquant.</p>
-      </div>
 
-      <div class="getsupp-benefit-item">
-        <div class="getsupp-benefit-icon">
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M12 2L15.09 8.26L22 9L16 14L17.18 21L12 17.77L6.82 21L8 14L2 9L8.91 8.26L12 2Z"
-              stroke="#B88B34"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round" />
-          </svg>
+        <div class="getsupp-benefit-item">
+          <div class="getsupp-benefit-icon">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M12 2L15.09 8.26L22 9L16 14L17.18 21L12 17.77L6.82 21L8 14L2 9L8.91 8.26L12 2Z"
+                stroke="#B88B34"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+            </svg>
+          </div>
+          <h3 class="getsupp-benefit-title">Sustainable Sourcing</h3>
+          <p class="getsupp-benefit-description">Larrea dicarant impri.</p>
         </div>
-        <h3 class="getsupp-benefit-title">Sustainable Sourcing</h3>
-        <p class="getsupp-benefit-description">Larrea dicarant impri.</p>
-      </div>
 
-      <div class="getsupp-benefit-item">
-        <div class="getsupp-benefit-icon">
-          <svg
-            width="48"
-            height="48"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <circle
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="#B88B34"
-              stroke-width="2" />
-            <path
-              d="M8 14s1.5 2 4 2 4-2 4-2"
-              stroke="#B88B34"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round" />
-            <circle
-              cx="9"
-              cy="9"
-              r="1"
-              fill="#B88B34" />
-            <circle
-              cx="15"
-              cy="9"
-              r="1"
-              fill="#B88B34" />
-          </svg>
+        <div class="getsupp-benefit-item">
+          <div class="getsupp-benefit-icon">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="#B88B34"
+                stroke-width="2" />
+              <path
+                d="M8 14s1.5 2 4 2 4-2 4-2"
+                stroke="#B88B34"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round" />
+              <circle
+                cx="9"
+                cy="9"
+                r="1"
+                fill="#B88B34" />
+              <circle
+                cx="15"
+                cy="9"
+                r="1"
+                fill="#B88B34" />
+            </svg>
+          </div>
+          <h3 class="getsupp-benefit-title">Science-Backed Formulas</h3>
+          <p class="getsupp-benefit-description">Lorum-rosum, aliquant.</p>
         </div>
-        <h3 class="getsupp-benefit-title">Science-Backed Formulas</h3>
-        <p class="getsupp-benefit-description">Lorum-rosum, aliquant.</p>
       </div>
     </div>
   </div>
-</div>
+{% endunless %}
 
 {% javascript %}
   (function() {
@@ -1003,7 +1005,7 @@
 {% endjavascript %}
 
 {% stylesheet %}
-  //Importing Font
+  // Importing Font
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
 
   /* GetSupp Header Styles */
@@ -1150,7 +1152,7 @@
 
   .getsupp-mobile-menu {
     display: flex;
-    align-items:center;
+    align-items: center;
     background: none;
     border: none;
     cursor: pointer;
@@ -1190,7 +1192,8 @@
     // -webkit-text-fill-color: transparent;
     background-clip: text;
     transition: all 0.3s ease;
-    font-family: "Playfair Display", serif;
+    font-family: "Playfair Display"
+    , serif;
     // text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
     // transform: rotate(-2deg);
     display: inline-block;
@@ -1277,12 +1280,12 @@
   .getsupp-mobile-search a {
     display: flex;
     padding: 12px;
-    align-items:center;
+    align-items: center;
     border-radius: 30px;
     transition: all 0.3s ease;
   }
 
-  .getsupp-mobile-search a:hover{
+  .getsupp-mobile-search a:hover {
     background: #005532;
   }
   .getsupp-mobile-search svg {
@@ -1298,12 +1301,12 @@
   .getsupp-cart a {
     display: flex;
     padding: 12px;
-    align-items:center;
+    align-items: center;
     border-radius: 30px;
     transition: all 0.3s ease;
   }
 
-  .getsupp-cart a:hover{
+  .getsupp-cart a:hover {
     background: #005532;
   }
 
@@ -1334,12 +1337,12 @@
   .getsupp-account a {
     display: flex;
     padding: 12px;
-    align-items:center;
+    align-items: center;
     border-radius: 30px;
     transition: all 0.3s ease;
   }
 
-  .getsupp-account a:hover{
+  .getsupp-account a:hover {
     background: #005532;
   }
 
@@ -1388,15 +1391,14 @@
     width: 1px;
     height: 20px;
     background-color: #d0d0d0;
-    margin: 0 8px;
+    margin: 0 35px 0 8px;
     opacity: 0.6;
-    margin-right: 35px;
   }
 
   .getsupp-nav-link {
     display: flex;
     align-items: center;
-    padding: 12px 24px 12px 0px;
+    padding: 12px 24px 12px 0;
     font-size: 14px;
     font-weight: 900;
     color: #223;
@@ -1418,7 +1420,7 @@
   .getsupp-nav-link::after {
     content: '';
     position: absolute;
-    left: 0px;
+    left: 0;
     right: 24px;
     bottom: 10px;
     height: 2px;
@@ -1440,14 +1442,15 @@
     left: 50%;
     transform: translateX(-50%);
     width: 100vw !important;
-    padding: 0px 50px;
+    padding: 0 50px;
     // max-width: calc(100vw - 40px);
     // visibility: hidden;
     opacity: 0;
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     height: 85vh;
     pointer-events: none;
-    transition: opacity 0.2s ease, visibility 0.2s ease;
+    transition: opacity 0.2s ease
+    , visibility 0.2s ease;
     z-index: 3000;
   }
 
@@ -1470,11 +1473,11 @@
     width: 100%;
     background: white;
     border-radius: 8px;
-    border-top-left-radius: 0px;
-    border-top-right-radius: 0px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
     border: 1px solid #e5e5e5;
-    border-top : none;
+    border-top: none;
     // min-height: 320px;
     overflow-x: hidden;
     overflow-y: auto;
@@ -1492,7 +1495,7 @@
     font-weight: bold;
     color: #04683F;
     // background: #eaf1f3;
-    padding: 0px 8px;
+    padding: 0 8px;
     border-radius: 4px;
     margin: 0 0 8px;
     // border-left: 3px solid #04683F;
@@ -1510,7 +1513,7 @@
 
   .getsupp-mega-links a {
     display: block;
-    padding: 0px 8px;
+    padding: 0 8px;
     font-size: 13px;
     color: #000;
     text-decoration: none;
@@ -1727,8 +1730,8 @@
   /* Force left alignment for first few tabs to prevent clipping */
   // .getsupp-nav-item:nth-child(1) .getsupp-mega-menu,
   // .getsupp-nav-item:nth-child(2) .getsupp-mega-menu {
-  //   left: 10 !important;
-  //   transform: none !important;
+  // left: 10 !important;
+  // transform: none !important;
   // }
 
   /* Force right alignment for last few tabs */
@@ -1748,12 +1751,11 @@
   // .getsupp-nav-item:nth-child(4) .getsupp-mega-menu,
   // .getsupp-nav-item:nth-child(5) .getsupp-mega-menu,
   // .getsupp-nav-item:nth-child(6) .getsupp-mega-menu {
-  //   left: 50% !important;
-  //   transform: translateX(-50%) !important;
+  // left: 50% !important;
+  // transform: translateX(-50%) !important;
   // }
 
-  /* Mobile Responsive */
-  @media (max-width: 1024px) {
+  /* Mobile Responsive */@media (max-width: 1024px) {
     .getsupp-search {
       display: none;
     }
@@ -1765,7 +1767,7 @@
     .getsupp-navigation {
       display: none;
     }
-    .getsupp-hero-inline__search{
+    .getsupp-hero-inline__search {
       display: none;
     }
   }

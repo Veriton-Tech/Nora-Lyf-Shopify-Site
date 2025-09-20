@@ -130,7 +130,7 @@
   .getsupp-footer-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 24px 0 0;
     position: relative;
     z-index: 1;
   }
@@ -145,6 +145,7 @@
     grid-template-columns: 2fr 1fr;
     gap: 40px;
     align-items: start;
+    justify-content: flex-start;
   }
 
   /* Left Section: Logo, Navigation, and Copyright */
@@ -277,6 +278,7 @@
     border-radius: 16px;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-left: 0;
   }
 
   .getsupp-social-title {
@@ -354,18 +356,18 @@
     }
 
     .getsupp-footer-right {
-      align-items: center;
-      text-align: center;
+      align-items: flex-start;
+      text-align: left;
     }
 
     .getsupp-social-icons {
-      justify-content: center;
+      justify-content: flex-start;
     }
   }
 
   @media (max-width: 768px) {
     .getsupp-footer-container {
-      padding: 0 20px;
+      padding: 0 20px 0 0;
     }
 
     .getsupp-footer-content {
@@ -378,7 +380,7 @@
     }
 
     .getsupp-footer-nav {
-      justify-content: center;
+      justify-content: flex-start;
       flex-wrap: wrap;
       padding: 14px 16px;
       gap: 8px;

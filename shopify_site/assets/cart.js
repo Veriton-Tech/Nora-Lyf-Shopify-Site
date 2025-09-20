@@ -3,9 +3,16 @@ class CartRemoveButton extends HTMLElement {
     super();
 
     this.addEventListener('click', (event) => {
+      console.log('Cart remove button clicked', event);
       event.preventDefault();
       const cartItems = this.closest('cart-items') || this.closest('cart-drawer-items');
-      cartItems.updateQuantity(this.dataset.index, 0, event);
+      console.log('Cart items element found:', cartItems);
+      console.log('Data index:', this.dataset.index);
+      if (cartItems) {
+        cartItems.updateQuantity(this.dataset.index, 0, event);
+      } else {
+        console.error('Cart items element not found');
+      }
     });
   }
 }
