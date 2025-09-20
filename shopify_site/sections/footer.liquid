@@ -18,9 +18,11 @@
             <a href="/pages/terms-conditions" class="getsupp-nav-link">Terms & Conditions</a>
             <a href="/pages/returns-cancellations" class="getsupp-nav-link">Returns & Cancellations</a>
           </div>
-          <div class="getsupp-footer-copyright">
-            <p>&copy; 2025,
-              <strong>Nora Lyf</strong>. All rights reserved.</p>
+          <!-- Disclaimer -->
+          <div class="getsupp-footer-disclaimer">
+            <p>
+              <strong>Disclaimer:</strong>
+              Products sold under Nora Lyf are wellness/nutraceutical/cosmetic items. They are not intended to diagnose, treat, cure, or prevent any disease. Always consult with a healthcare professional before use.</p>
           </div>
         </div>
 
@@ -268,6 +270,29 @@
     color: #E8F4FD;
   }
 
+  /* Disclaimer */
+  .getsupp-footer-disclaimer {
+    margin-top: 16px;
+    padding: 16px 20px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    border-left: 3px solid #B88B34;
+    backdrop-filter: blur(5px);
+  }
+
+  .getsupp-footer-disclaimer p {
+    font-size: 13px;
+    color: #FFFFFF;
+    margin: 0;
+    line-height: 1.5;
+    opacity: 0.9;
+  }
+
+  .getsupp-footer-disclaimer strong {
+    font-weight: 600;
+    color: #B88B34;
+  }
+
   /* Right Section: Social Media */
   .getsupp-footer-right {
     display: flex;
@@ -400,6 +425,15 @@
       font-size: 13px;
     }
 
+    .getsupp-footer-disclaimer {
+      margin-top: 12px;
+      padding: 12px 16px;
+    }
+
+    .getsupp-footer-disclaimer p {
+      font-size: 12px;
+    }
+
     .getsupp-social-title {
       font-size: 16px;
     }
@@ -445,6 +479,15 @@
 
     .getsupp-footer-copyright p {
       font-size: 12px;
+    }
+
+    .getsupp-footer-disclaimer {
+      margin-top: 10px;
+      padding: 10px 12px;
+    }
+
+    .getsupp-footer-disclaimer p {
+      font-size: 11px;
     }
 
     .getsupp-social-title {

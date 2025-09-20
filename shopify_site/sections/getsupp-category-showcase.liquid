@@ -1,6 +1,6 @@
 {% comment %} 
-                    GetSupp Category Showcase Section 
-                    Displays product categories in a grid layout
+                      GetSupp Category Showcase Section 
+                      Displays product categories in a grid layout
 {% endcomment %}
 
 <div class="getsupp-category-showcase">
@@ -52,10 +52,10 @@
               {%- liquid
                 assign collection_handle = block.settings.category_url | remove: '/collections/' | remove: '/'
                 assign collection = collections[collection_handle]
-                if collection and collection.products_count and collection.products_count != blank and collection.products_count != 0
+                if collection and collection.products_count != blank
                   echo collection.products_count | append: ' Products'
                 else
-                  echo block.settings.product_count | default: "50+" | append: ' Products'
+                  echo '0 Products'
                 endif
               -%}
             </p>

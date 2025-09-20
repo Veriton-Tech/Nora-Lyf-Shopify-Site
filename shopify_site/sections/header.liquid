@@ -783,7 +783,7 @@
   </div>
 </nav>
 
-{% if section.settings.show_hero_inline and template.name != 'cart' and template.name != 'page' or template.name == 'page' and page.handle != 'contact' and page.handle != 'shipping-policy' and page.handle != 'privacy-policy' and page.handle != 'terms-conditions' and page.handle != 'returns-cancellations' %}
+{% if section.settings.show_hero_inline and template.name != 'cart' and template.name != 'page' and template.name != 'product' or template.name == 'page' and page.handle != 'contact' and page.handle != 'shipping-policy' and page.handle != 'privacy-policy' and page.handle != 'terms-conditions' and page.handle != 'returns-cancellations' %}
   <div class="getsupp-hero-inline">
     <div class="getsupp-hero-inline__container">
       <div class="getsupp-hero-inline__icon">
@@ -803,46 +803,77 @@
         </svg>
       </div>
       <h1 class="getsupp-hero-inline__title">{{ section.settings.hero_title | default: "Unlock Your Natural Potential" }}</h1>
-      <div class="getsupp-hero-inline__links">
-        <a class="getsupp-hero-inline__link" href="{{ section.settings.hero_link1_url | default: routes.collections_url }}">{{ section.settings.hero_link1_text | default: 'Right Products' }}
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"><path
-              d="M5 12H19M19 12L12 5M19 12L12 19"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round" /></svg>
-        </a>
-        <a class="getsupp-hero-inline__link" href="{{ section.settings.hero_link2_url | default: routes.root_url }}">{{ section.settings.hero_link2_text | default: 'Expert Guidance' }}
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"><path
-              d="M5 12H19M19 12L12 5M19 12L12 19"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round" /></svg>
-        </a>
-        <a class="getsupp-hero-inline__link" href="{{ section.settings.hero_link3_url | default: routes.root_url }}">{{ section.settings.hero_link3_text | default: 'Right Results' }}
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"><path
-              d="M5 12H19M19 12L12 5M19 12L12 19"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round" /></svg>
-        </a>
+      <!-- Sliding Product Banners -->
+      <div class="getsupp-product-banner-slider">
+        <div class="getsupp-product-banner-container">
+          {%- liquid
+            assign featured_products = collections[section.settings.featured_collection].products | limit: 6
+            if featured_products.size == 0
+              assign featured_products = collections.all.products | limit: 6
+            endif
+          -%}
+
+          {% for product in featured_products %}
+            <div class="getsupp-product-banner-item {% if forloop.first %}active{% endif %}" data-product-id="{{ product.id }}">
+              <a href="{{ product.url }}" class="getsupp-product-banner-link">
+                <div class="getsupp-product-banner-image">
+                  {% if product.featured_image %}
+                    <img
+                      src="{{ product.featured_image | img_url: '300x300' }}"
+                      alt="{{ product.title }}"
+                      loading="lazy">
+                  {% else %}
+                    <div class="getsupp-product-banner-placeholder">
+                      <svg
+                        width="60"
+                        height="60"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <rect
+                          x="3"
+                          y="3"
+                          width="18"
+                          height="18"
+                          rx="2"
+                          stroke="currentColor"
+                          stroke-width="2" />
+                        <circle
+                          cx="8.5"
+                          cy="8.5"
+                          r="1.5"
+                          stroke="currentColor"
+                          stroke-width="2" />
+                        <path
+                          d="M21 15L16 10L5 21"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round" />
+                      </svg>
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="getsupp-product-banner-content">
+                  <h3 class="getsupp-product-banner-title">{{ product.title | truncate: 30 }}</h3>
+                  <div class="getsupp-product-banner-price">
+                    {% if product.compare_at_price > product.price %}
+                      <span class="getsupp-product-banner-compare-price">{{ product.compare_at_price | money_without_currency }} INR</span>
+                    {% endif %}
+                    <span class="getsupp-product-banner-current-price">{{ product.price | money_without_currency }} INR</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="getsupp-product-banner-dots">
+          {% for product in featured_products %}
+            <button class="getsupp-product-banner-dot {% if forloop.first %}active{% endif %}" data-slide="{{ forloop.index0 }}"></button>
+          {% endfor %}
+        </div>
       </div>
       <p class="getsupp-hero-inline__subtitle">{{ section.settings.hero_subtitle | default: 'Shop 100% genuine health products from more than 300+ brands' }}</p>
 
@@ -851,7 +882,7 @@
 {% endif %}
 
 <!-- Benefits Section -->
-{% unless template.name == 'cart' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'shipping-policy' or template.name == 'page' and page.handle == 'privacy-policy' or template.name == 'page' and page.handle == 'terms-conditions' or template.name == 'page' and page.handle == 'returns-cancellations' %}
+{% unless template.name == 'cart' or template.name == 'product' or template.name == 'page' and page.handle == 'contact' or template.name == 'page' and page.handle == 'shipping-policy' or template.name == 'page' and page.handle == 'privacy-policy' or template.name == 'page' and page.handle == 'terms-conditions' or template.name == 'page' and page.handle == 'returns-cancellations' %}
   <div class="getsupp-benefits-section">
     <div class="getsupp-benefits-container">
       <div class="getsupp-benefits-grid">
@@ -1611,6 +1642,150 @@
       transform: translateY(0);
     }
   }
+  /* Product Banner Slider */
+  .getsupp-product-banner-slider {
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .getsupp-product-banner-container {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .getsupp-product-banner-item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.5s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .getsupp-product-banner-item.active {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .getsupp-product-banner-link {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-product-banner-link:hover {
+    transform: scale(1.02);
+  }
+
+  .getsupp-product-banner-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+  }
+
+  .getsupp-product-banner-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .getsupp-product-banner-placeholder {
+    width: 60px;
+    height: 60px;
+    color: #04683F;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .getsupp-product-banner-content {
+    flex: 1;
+    text-align: left;
+  }
+
+  .getsupp-product-banner-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: white;
+    margin: 0 0 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .getsupp-product-banner-price {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .getsupp-product-banner-compare-price {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: line-through;
+  }
+
+  .getsupp-product-banner-current-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #B88B34;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  }
+
+  .getsupp-product-banner-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+  }
+
+  .getsupp-product-banner-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-product-banner-dot.active {
+    background: #B88B34;
+    transform: scale(1.2);
+  }
+
+  .getsupp-product-banner-dot:hover {
+    background: rgba(255, 255, 255, 0.6);
+  }
+
+  .getsupp-product-banner-dot.active:hover {
+    background: #B88B34;
+  }
+
   .getsupp-hero-inline__links {
     display: flex;
     gap: 32px;
@@ -1897,8 +2072,95 @@
     .getsupp-benefit-description {
       font-size: 14px;
     }
+
+    /* Product Banner Mobile Styles */
+    .getsupp-product-banner-container {
+      height: 160px;
+      max-width: 100%;
+    }
+
+    .getsupp-product-banner-link {
+      gap: 15px;
+      padding: 15px;
+    }
+
+    .getsupp-product-banner-image {
+      width: 80px;
+      height: 80px;
+    }
+
+    .getsupp-product-banner-title {
+      font-size: 18px;
+    }
+
+    .getsupp-product-banner-current-price {
+      font-size: 16px;
+    }
+
+    .getsupp-product-banner-compare-price {
+      font-size: 14px;
+    }
   }
 {% endstylesheet %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  const slider = document.querySelector('.getsupp-product-banner-slider');
+  if (!slider) return;
+  
+  const items = slider.querySelectorAll('.getsupp-product-banner-item');
+  const dots = slider.querySelectorAll('.getsupp-product-banner-dot');
+  let currentSlide = 0;
+  let slideInterval;
+  
+  function showSlide(index) {
+    // Remove active class from all items and dots
+    items.forEach(item => item.classList.remove('active'));
+    dots.forEach(dot => dot.classList.remove('active'));
+  
+    // Add active class to current slide
+    if (items[index]) {
+      items[index].classList.add('active');
+    }
+    if (dots[index]) {
+      dots[index].classList.add('active');
+    }
+  
+    currentSlide = index;
+  }
+  
+  function nextSlide() {
+    const nextIndex = (currentSlide + 1) % items.length;
+    showSlide(nextIndex);
+  }
+  
+  function startSlider() {
+    slideInterval = setInterval(nextSlide, 2000); // Change slide every 2 seconds
+  }
+  
+  function stopSlider() {
+    clearInterval(slideInterval);
+  }
+  
+  // Add click handlers to dots
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      stopSlider();
+      showSlide(index);
+      startSlider();
+    });
+  });
+  
+  // Pause on hover
+  slider.addEventListener('mouseenter', stopSlider);
+  slider.addEventListener('mouseleave', startSlider);
+  
+  // Start the slider
+  if (items.length > 1) {
+    startSlider();
+  }
+  });
+</script>
 
 {% schema %}
   {
@@ -1967,6 +2229,11 @@
         "type": "url",
         "id": "hero_link3_url",
         "label": "Link 3 URL"
+      }, {
+        "type": "collection",
+        "id": "featured_collection",
+        "label": "Featured Collection for Product Banner",
+        "info": "Select a collection to display products in the sliding banner. If no collection is selected, it will show products from all collections."
       }, {
         "type": "text",
         "id": "hero_search_placeholder",
