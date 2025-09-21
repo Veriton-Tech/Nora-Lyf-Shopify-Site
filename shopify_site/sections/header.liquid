@@ -783,6 +783,28 @@
   </div>
 </nav>
 
+<!-- Getsupp Image banner -->
+
+<div class="banner-slider">
+  <div class="slides">
+    <div class="slide active">
+      <img src="https://placehold.co/1200x400/04683F/F0F5F3?text=Image+1" alt="Image 1">
+    </div>
+    <div class="slide">
+      <img src="https://placehold.co/1200x400/04683F/F0F5F3?text=Image+2" alt="Image 2">
+    </div>
+    <div class="slide">
+      <img src="https://placehold.co/1200x400/04683F/F0F5F3?text=Image+3" alt="Image 3">
+    </div>
+  </div>
+  
+  <!-- Arrows -->
+  <button class="prev">&#10094;</button>
+  <button class="next">&#10095;</button>
+</div>
+
+<!-------------------------->
+
 {% if section.settings.show_hero_inline and template.name != 'cart' and template.name != 'page' and template.name != 'product' or template.name == 'page' and page.handle != 'contact' and page.handle != 'shipping-policy' and page.handle != 'privacy-policy' and page.handle != 'terms-conditions' and page.handle != 'returns-cancellations' %}
   <div class="getsupp-hero-inline">
     <div class="getsupp-hero-inline__container">
@@ -795,14 +817,15 @@
           xmlns="http://www.w3.org/2000/svg">
           <path d="M60 10L100 30V60C100 85 60 110 60 110S20 85 20 60V30L60 10Z" fill="#B88B34" />
           <path
-            d="M45 60L52 67L75 44"
-            stroke="white"
-            stroke-width="4"
-            stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-      </div>
-      <h1 class="getsupp-hero-inline__title">{{ section.settings.hero_title | default: "Unlock Your Natural Potential" }}</h1>
+          d="M45 60L52 67L75 44"
+          stroke="white"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round" />
+          </svg>
+          </div>
+          <h1 class="getsupp-hero-inline__title">{{ section.settings.hero_title | default: "Unlock Your Natural Potential" }}</h1>
+          <p class="getsupp-hero-inline__subtitle">{{ section.settings.hero_subtitle | default: 'Shop 100% genuine health products from more than 300+ brands' }}</p>
       <!-- Sliding Product Banners -->
       <div class="getsupp-product-banner-slider">
         <div class="getsupp-product-banner-container">
@@ -875,7 +898,6 @@
           {% endfor %}
         </div>
       </div>
-      <p class="getsupp-hero-inline__subtitle">{{ section.settings.hero_subtitle | default: 'Shop 100% genuine health products from more than 300+ brands' }}</p>
 
     </div>
   </div>
@@ -974,66 +996,105 @@
 
 {% javascript %}
   (function() {
-    try { // Set CSS var to keep dropdown just under header/navigation
+    try { 
+      /* ------------------ NAV OFFSET ------------------ */
       var nav = document.querySelector('.getsupp-navigation');
       function updateNavBottom() {
-        var rect = nav
-          ? nav.getBoundingClientRect()
-          : null;
-        var bottom = rect
-          ? Math.max(0, Math.floor(rect.bottom))
-          : 100;
+        var rect = nav ? nav.getBoundingClientRect() : null;
+        var bottom = rect ? Math.max(0, Math.floor(rect.bottom)) : 100;
         document.documentElement.style.setProperty('--getsupp-nav-bottom', bottom + 'px');
       }
       updateNavBottom();
       window.addEventListener('resize', updateNavBottom);
       window.addEventListener('scroll', updateNavBottom, {passive: true});
 
+      /* ------------------ OFFER TIMER ------------------ */
       var timerContainer = document.querySelector('.getsupp-banner-timer');
-      if (! timerContainer) return;
-      
-
-
-      var endAttr = timerContainer.getAttribute('data-endtime');
-      if (! endAttr || endAttr.trim() === '') return;
-      
-
-
-      var endTime = new Date(endAttr).getTime();
-      if (isNaN(endTime)) return;
-      
-
-
-      var el = document.getElementById('getsupp-offer-timer');
-      if (! el) return;
-      
-
-
-      function pad(n) {
-        return n < 10
-          ? '0' + n
-          : '' + n;
+      if (timerContainer) {
+        var endAttr = timerContainer.getAttribute('data-endtime');
+        if (endAttr && endAttr.trim() !== '') {
+          var endTime = new Date(endAttr).getTime();
+          if (!isNaN(endTime)) {
+            var el = document.getElementById('getsupp-offer-timer');
+            if (el) {
+              function pad(n) {
+                return n < 10 ? '0' + n : '' + n;
+              }
+              function tick() {
+                var now = Date.now();
+                var diff = Math.max(0, endTime - now);
+                var totalSeconds = Math.floor(diff / 1000);
+                var hours = Math.floor(totalSeconds / 3600);
+                var minutes = Math.floor((totalSeconds % 3600) / 60);
+                var seconds = totalSeconds % 60;
+                el.textContent = pad(hours) + 'h : ' + pad(minutes) + 'm : ' + pad(seconds) + 's';
+                if (diff <= 0) clearInterval(intervalId);
+              }
+              tick();
+              var intervalId = setInterval(tick, 1000);
+            }
+          }
+        }
       }
-      function tick() {
-        var now = Date.now();
-        var diff = Math.max(0, endTime - now);
-        var totalSeconds = Math.floor(diff / 1000);
-        var hours = Math.floor(totalSeconds / 3600);
-        var minutes = Math.floor((totalSeconds % 3600) / 60);
-        var seconds = totalSeconds % 60;
-        el.textContent = pad(hours) + 'h : ' + pad(minutes) + 'm : ' + pad(seconds) + 's';
-        if (diff <= 0) 
-          clearInterval(intervalId);
-        
 
+      /* ------------------ BANNER SLIDER ------------------ */
+      function initBannerSlider() {
+        const slider = document.querySelector('.banner-slider');
+        if (!slider) return;
 
+        const slidesWrap = slider.querySelector('.slides');
+        const slides = slider.querySelectorAll('.slide');
+        const prevBtn = slider.querySelector('.prev');
+        const nextBtn = slider.querySelector('.next');
+        if (!slidesWrap || slides.length === 0) return;
+
+        let current = 0;
+        let autoId = null;
+        const AUTO_MS = 4000;
+
+        function update() {
+          slidesWrap.style.transform = 'translateX(-' + (current * 100) + '%)';
+        }
+        function prev() {
+          current = (current - 1 + slides.length) % slides.length;
+          update();
+        }
+        function next() {
+          current = (current + 1) % slides.length;
+          update();
+        }
+        function startAuto() {
+          stopAuto();
+          autoId = setInterval(() => { next(); }, AUTO_MS);
+        }
+        function stopAuto() {
+          if (autoId) clearInterval(autoId);
+        }
+
+        if (prevBtn) prevBtn.addEventListener('click', () => { prev(); startAuto(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { next(); startAuto(); });
+
+        slider.addEventListener('mouseenter', stopAuto);
+        slider.addEventListener('mouseleave', startAuto);
+
+        update();
+        startAuto();
       }
-      tick();
-      var intervalId = setInterval(tick, 1000);
-    } catch (e) { // no-op
+
+      // Run after DOM is ready
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initBannerSlider);
+      } else {
+        initBannerSlider();
+      }
+
+    } catch (e) { 
+      // no-op
+      console.error('Banner script error:', e);
     }
   })();
 {% endjavascript %}
+
 
 {% stylesheet %}
   // Importing Font
@@ -1478,7 +1539,7 @@
     // visibility: hidden;
     opacity: 0;
     background: rgba(0, 0, 0, 0.2);
-    height: 85vh;
+    height: 100vh;
     pointer-events: none;
     transition: opacity 0.2s ease
     , visibility 0.2s ease;
@@ -1584,6 +1645,65 @@
     outline: none;
   }
 
+  /* Image Banner CSS*/
+
+  .banner-slider {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  height: 300px;  /* fixed banner height */
+}
+
+.banner-slider .slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;        /* fills container, crops edges */
+  object-position: center;  /* keeps center aligned */
+  display: block;
+  // border-radius: 6px;
+}
+
+  .banner-slider .slides {
+    display: flex;
+    transition: transform 0.55s ease;
+    will-change: transform;
+    height: 100%;
+  }
+  .banner-slider .slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    user-select: none;
+    object-position: center; 
+    height: 100%;
+}
+
+
+  /* Arrow buttons */
+  .banner-slider .prev,
+  .banner-slider .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    color:  #F0F5F3;
+    border: none;
+    outline: none;
+    padding: 10px 12px;
+    cursor: pointer;
+    border-radius: 50%;
+    z-index: 30;
+    font-size: 32px;
+    font-weight: 900;
+    text-shadow: 1px 1px 5px rgba(0,0,0,1);
+  }
+  .banner-slider .prev { left: 12px; }
+  .banner-slider .next { right: 12px; }
+  .banner-slider .prev:hover,
+  .banner-slider .next:hover {  text-shadow: 2px 2px 5px rgba(0,0,0,1); }
+
+
   /* Enhanced Inline Hero below navigation */
   .getsupp-hero-inline {
     background: #F0F5F3;
@@ -1650,7 +1770,7 @@
 
   .getsupp-product-banner-container {
     position: relative;
-    width: 100%;
+    width: 40%;
     max-width: 800px;
     margin: 0 auto;
     height: 200px;
@@ -1732,9 +1852,9 @@
   .getsupp-product-banner-title {
     font-size: 24px;
     font-weight: 600;
-    color: white;
+    color:  #04683F;
     margin: 0 0 10px;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    // text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   }
 
   .getsupp-product-banner-price {
@@ -1768,13 +1888,13 @@
     height: 12px;
     border-radius: 50%;
     border: none;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.2);
     cursor: pointer;
     transition: all 0.3s ease;
   }
 
   .getsupp-product-banner-dot.active {
-    background: #B88B34;
+    background:  #04683F;
     transform: scale(1.2);
   }
 
