@@ -9,72 +9,6 @@
  */
 {
   "sections": {
-    "getsupp_category_showcase": {
-      "type": "getsupp-category-showcase",
-      "settings": {
-        "title": "Shop by Health Concerns",
-        "description": "Find the right supplements for your specific health needs",
-        "color_scheme": "getsupp-light"
-      },
-      "blocks": {
-        "health_wellness": {
-          "type": "category",
-          "settings": {
-            "category_name": "Health & Wellness",
-            "category_url": "/collections/health-wellness",
-            "product_count": "150+"
-          }
-        },
-        "herbal_ayurveda": {
-          "type": "category",
-          "settings": {
-            "category_name": "Herbal & Ayurveda",
-            "category_url": "/collections/herbal-ayurveda",
-            "product_count": "200+"
-          }
-        },
-        "vitamins_supplements": {
-          "type": "category",
-          "settings": {
-            "category_name": "Vitamins & Supplements",
-            "category_url": "/collections/vitamins-supplements",
-            "product_count": "300+"
-          }
-        },
-        "health_foods": {
-          "type": "category",
-          "settings": {
-            "category_name": "Health Foods",
-            "category_url": "/collections/health-foods",
-            "product_count": "100+"
-          }
-        },
-        "sports_nutrition": {
-          "type": "category",
-          "settings": {
-            "category_name": "Sports Nutrition",
-            "category_url": "/collections/sports-nutrition",
-            "product_count": "80+"
-          }
-        },
-        "brands": {
-          "type": "category",
-          "settings": {
-            "category_name": "Brands",
-            "category_url": "/collections/brands",
-            "product_count": "50+"
-          }
-        }
-      },
-      "block_order": [
-        "health_wellness",
-        "herbal_ayurveda",
-        "vitamins_supplements",
-        "health_foods",
-        "sports_nutrition",
-        "brands"
-      ]
-    },
     "getsupp_featured_products": {
       "type": "getsupp-featured-products",
       "settings": {
@@ -89,7 +23,6 @@
     }
   },
   "order": [
-    "getsupp_category_showcase",
     "getsupp_featured_products"
   ]
 }
