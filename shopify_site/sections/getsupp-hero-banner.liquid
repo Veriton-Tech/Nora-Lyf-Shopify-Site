@@ -1,35 +1,75 @@
-{% comment %}
-  GetSupp Hero Banner Section - Screenshot 2 Design
-  Displays a centered hero with shield icon and navigation links
+{% comment %} 
+    GetSupp Hero Banner Section - Screenshot 2 Design 
+    Displays a centered hero with shield icon and navigation links
 {% endcomment %}
 
 <div class="getsupp-hero-banner">
   <div class="getsupp-hero-container">
     <div class="getsupp-hero-content">
       <div class="getsupp-hero-icon">
-        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M60 10L100 30V60C100 85 60 110 60 110S20 85 20 60V30L60 10Z" fill="#24BAAD"/>
-          <path d="M45 55L52 62L75 39" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg
+          width="120"
+          height="120"
+          viewBox="0 0 120 120"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg">
+          <path d="M60 10L100 30V60C100 85 60 110 60 110S20 85 20 60V30L60 10Z" fill="#24BAAD" />
+          <path
+            d="M45 55L52 62L75 39"
+            stroke="white"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round" />
         </svg>
       </div>
       <h1 class="getsupp-hero-title">{{ section.settings.title | default: "Transform your Health with Getsupp" }}</h1>
       <div class="getsupp-hero-links">
         <a href="{{ section.settings.link1_url | default: '/collections/all' }}" class="getsupp-hero-link">
           {{ section.settings.link1_text | default: "Right Products" }}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M5 12H19M19 12L12 5M19 12L12 19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
           </svg>
         </a>
         <a href="{{ section.settings.link2_url | default: '/pages/expert-guidance' }}" class="getsupp-hero-link">
           {{ section.settings.link2_text | default: "Expert Guidance" }}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M5 12H19M19 12L12 5M19 12L12 19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
           </svg>
         </a>
         <a href="{{ section.settings.link3_url | default: '/pages/results' }}" class="getsupp-hero-link">
           {{ section.settings.link3_text | default: "Right Results" }}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path
+              d="M5 12H19M19 12L12 5M19 12L12 19"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round" />
           </svg>
         </a>
       </div>
@@ -71,7 +111,8 @@
     color: #000;
     line-height: 1.2;
     margin-bottom: 30px;
-    font-family: 'Inter', sans-serif;
+    font-family: 'Inter'
+    , sans-serif;
   }
 
   .getsupp-hero-links {
@@ -107,11 +148,11 @@
   /* Mobile Responsive */
   @media (max-width: 768px) {
     .getsupp-hero-banner {
-      padding: 60px 0;
+      padding: 48px 0;
     }
 
     .getsupp-hero-title {
-      font-size: 36px;
+      font-size: 32px;
     }
 
     .getsupp-hero-links {
@@ -129,81 +170,90 @@
 
   @media (max-width: 480px) {
     .getsupp-hero-title {
-      font-size: 28px;
+      font-size: 24px;
+      line-height: 1.25;
+    }
+    .getsupp-hero-container {
+      padding: 0 16px;
+    }
+    .getsupp-hero-content {
+      max-width: 100%;
+    }
+    .getsupp-hero-icon svg {
+      width: 80px;
+      height: 80px;
     }
 
     .getsupp-hero-links {
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
+    }
+    .getsupp-hero-link {
+      font-size: 15px;
+    }
+    .getsupp-hero-description {
+      font-size: 14px;
     }
   }
 {% endstylesheet %}
 
 {% schema %}
-{
-  "name": "GetSupp Hero",
-  "tag": "section",
-  "class": "section",
-  "settings": [
-    {
-      "type": "text",
-      "id": "title",
-      "label": "Title",
-      "default": "Transform your Health with Getsupp"
-    },
-    {
-      "type": "textarea",
-      "id": "description",
-      "label": "Description",
-      "default": "Shop 100% genuine health products from more than 300+ brands"
-    },
-    {
-      "type": "text",
-      "id": "link1_text",
-      "label": "Link 1 Text",
-      "default": "Right Products"
-    },
-    {
-      "type": "url",
-      "id": "link1_url",
-      "label": "Link 1 URL",
-      
-    },
-    {
-      "type": "text",
-      "id": "link2_text",
-      "label": "Link 2 Text",
-      "default": "Expert Guidance"
-    },
-    {
-      "type": "url",
-      "id": "link2_url",
-      "label": "Link 2 URL",
-      
-    },
-    {
-      "type": "text",
-      "id": "link3_text",
-      "label": "Link 3 Text",
-      "default": "Right Results"
-    },
-    {
-      "type": "url",
-      "id": "link3_url",
-      "label": "Link 3 URL",
-      
-    },
-    {
-      "type": "color_scheme",
-      "id": "color_scheme",
-      "label": "Color scheme",
-      "default": "scheme-1"
-    }
-  ],
-  "presets": [
-    {
-      "name": "GetSupp Hero"
-    }
-  ]
-}
+  {
+    "name": "GetSupp Hero",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Transform your Health with Getsupp"
+      },
+      {
+        "type": "textarea",
+        "id": "description",
+        "label": "Description",
+        "default": "Shop 100% genuine health products from more than 300+ brands"
+      },
+      {
+        "type": "text",
+        "id": "link1_text",
+        "label": "Link 1 Text",
+        "default": "Right Products"
+      },
+      {
+        "type": "url",
+        "id": "link1_url",
+        "label": "Link 1 URL"
+      }, {
+        "type": "text",
+        "id": "link2_text",
+        "label": "Link 2 Text",
+        "default": "Expert Guidance"
+      }, {
+        "type": "url",
+        "id": "link2_url",
+        "label": "Link 2 URL"
+      }, {
+        "type": "text",
+        "id": "link3_text",
+        "label": "Link 3 Text",
+        "default": "Right Results"
+      }, {
+        "type": "url",
+        "id": "link3_url",
+        "label": "Link 3 URL"
+      }, {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "default": "scheme-1"
+      }
+    ],
+    "presets": [
+      {
+        "name": "GetSupp Hero"
+      }
+    ]
+  }
 {% endschema %}

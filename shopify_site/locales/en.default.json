@@ -517,6 +517,13 @@
   "collections": {
     "title": "Collections"
   },
+  "search": {
+    "title": "Search",
+    "submit": "Search",
+    "results_for_html": "Results for “{{ terms }}”",
+    "placeholder": "Search products, pages, and articles",
+    "no_results_html": "No results for “{{ terms }}”. Try different keywords."
+  },
   "gift_cards": {
     "issued": {
       "how_to_use_gift_card": "Use the gift card code online or QR code in-store",
