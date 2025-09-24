@@ -2337,9 +2337,9 @@
                 var minutes = Math.floor((totalSeconds % 3600) / 60);
                 var seconds = totalSeconds % 60;
                 el.textContent = pad(hours) + 'h : ' + pad(minutes) + 'm : ' + pad(seconds) + 's';
-                if (diff <= 0) 
+                if (diff <= 0) {
                   clearInterval(intervalId);
-                
+                }
 
 
               }
@@ -3115,508 +3115,392 @@
   }
 
   /* Image Banner CSS*/
+.banner-slider {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  height: 300px; /* Reduced height */
+}
 
+.banner-slider .slides {
+  display: flex;
+  transition: transform 0.55s ease;
+  will-change: transform;
+  height: 100%;
+  width: 100%;
+}
+
+.banner-slider .slide {
+  min-width: 100%;
+  flex: 0 0 100%;
+  box-sizing: border-box;
+  user-select: none;
+  height: 100%;
+}
+
+.banner-slider .slide .banner-benefits-overlay,
+.banner-slider .slide .banner-features-overlay,
+.banner-slider .slide .banner-testimonials-overlay {
+  position: static;
+  background: linear-gradient(135deg, #04683F 0%, #2d5a3d 100%);
+  padding: 20px 0; /* Reduced padding */
+  height: 100%; /* Full height of slide */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-benefits-container,
+.banner-features-container,
+.banner-testimonials-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px; /* Reduced padding */
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-benefits-grid,
+.banner-features-grid,
+.banner-testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px; /* Reduced gap */
+  align-items: center;
+  width: 100%;
+}
+
+.banner-benefit-item,
+.banner-feature-item,
+.banner-testimonial-item {
+  text-align: center;
+  padding: 15px 10px; /* Reduced padding */
+  border-radius: 8px; /* Slightly smaller */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  min-height: 150px; /* Reduced height */
+  box-sizing: border-box;
+}
+
+.banner-benefit-item:hover,
+.banner-feature-item:hover,
+.banner-testimonial-item:hover {
+  transform: translateY(-2px); /* Smaller hover effect */
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Smaller shadow */
+}
+
+.banner-benefit-icon,
+.banner-feature-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 8px; /* Reduced margin */
+  width: 35px; /* Smaller icon */
+  height: 35px;
+  background: rgba(184, 139, 52, 0.2);
+  border-radius: 50%;
+  border: 2px solid rgba(184, 139, 52, 0.4);
+  transition: all 0.3s ease;
+}
+
+.banner-benefit-item:hover .banner-benefit-icon,
+.banner-feature-item:hover .banner-feature-icon {
+  background: rgba(184, 139, 52, 0.3);
+  border-color: #B88B34;
+  transform: scale(1.05); /* Smaller scale */
+}
+
+.banner-benefit-icon svg,
+.banner-feature-icon svg {
+  width: 20px; /* Smaller SVG */
+  height: 20px;
+}
+
+.banner-benefit-title,
+.banner-feature-title {
+  font-size: 13px; /* Smaller font */
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 5px; /* Reduced margin */
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.banner-benefit-description,
+.banner-feature-description {
+  font-size: 10px; /* Smaller font */
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.banner-features-header,
+.banner-testimonials-header {
+  text-align: center;
+  margin-bottom: 20px; /* Reduced margin */
+}
+
+.banner-features-title,
+.banner-testimonials-title {
+  font-size: 24px; /* Smaller title */
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0 0 8px; /* Reduced margin */
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+}
+
+.banner-features-subtitle,
+.banner-testimonials-subtitle {
+  font-size: 12px; /* Smaller subtitle */
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.banner-feature-icon {
+  width: 40px; /* Smaller feature icon */
+  height: 40px;
+  margin-bottom: 10px; /* Reduced margin */
+}
+
+.banner-feature-icon svg {
+  width: 24px; /* Smaller SVG */
+  height: 24px;
+  color: #B88B34;
+}
+
+.banner-feature-title {
+  font-size: 14px; /* Smaller font */
+}
+
+.banner-feature-description {
+  font-size: 11px; /* Smaller font */
+}
+
+.banner-testimonial-item {
+  justify-content: space-between;
+  min-height: 90px; /* Reduced height */
+}
+
+.banner-testimonial-rating {
+  margin-bottom: 10px; /* Reduced margin */
+}
+
+.banner-testimonial-rating .star {
+  color: #B88B34;
+  font-size: 14px; /* Smaller stars */
+  margin: 0 1px;
+}
+
+.banner-testimonial-text {
+  font-size: 11px; /* Smaller font */
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 12px; /* Reduced margin */
+  line-height: 1.3;
+  font-style: italic;
+  flex-grow: 1;
+}
+
+.banner-testimonial-author {
+  margin-top: auto;
+}
+
+.banner-testimonial-author strong {
+  display: block;
+  font-size: 12px; /* Smaller font */
+  color: #ffffff;
+  margin-bottom: 2px;
+  font-weight: 600;
+}
+
+.banner-testimonial-author span {
+  font-size: 10px; /* Smaller font */
+  color: rgba(255, 255, 255, 0.7);
+  font-weight: 400;
+}
+
+.banner-slider .prev,
+.banner-slider .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  color: #F0F5F3;
+  border: none;
+  outline: none;
+  padding: 8px 10px; /* Reduced padding */
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 30;
+  font-size: 24px; /* Smaller arrows */
+  font-weight: 900;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 1);
+}
+
+.banner-slider .prev {
+  left: 10px;
+}
+
+.banner-slider .next {
+  right: 10px;
+}
+
+.banner-slider .prev:hover,
+.banner-slider .next:hover {
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 1);
+}
+
+/* Mobile - Just make everything even more compact */
+@media (max-width: 768px) {
   .banner-slider {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    height: 400px;
-    /* increased banner height to accommodate content */
+    height: 250px !important; /* Slightly smaller on mobile */
   }
 
-  .banner-slider .slide img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* fills container, crops edges */
-    object-position: center;
-    /* keeps center aligned */
-    display: block;
-    // border-radius: 6px;
+  .banner-testimonial-author span{
+    display: none;
   }
-
-  .banner-slider .slides {
-    display: flex;
-    transition: transform 0.55s ease;
-    will-change: transform;
-    height: 100%;
-    width: 100%;
-  }
-  .banner-slider .slide {
-    min-width: 100%;
-    flex: 0 0 100%;
-    box-sizing: border-box;
-    user-select: none;
-    object-position: center;
-    height: 100%;
-  }
-
-  /* Responsive adjustments for slider */
-  @media (max-width: 768px) {
-    .banner-slider {
-      height: 300px;
-    }
-    .banner-slider .prev,
-    .banner-slider .next {
-      font-size: 26px;
-      padding: 8px 10px;
-    }
-  }
-  @media (max-width: 480px) {
-    .banner-slider {
-      height: 240px;
-    }
-    .banner-slider .prev {
-      left: 6px;
-    }
-    .banner-slider .next {
-      right: 6px;
-    }
-    .banner-slider .prev,
-    .banner-slider .next {
-      font-size: 22px;
-      padding: 6px 8px;
-    }
-  }
-
-
-  /* Arrow buttons */
-  .banner-slider .prev,
-  .banner-slider .next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    color: #F0F5F3;
-    border: none;
-    outline: none;
-    padding: 10px 12px;
-    cursor: pointer;
-    border-radius: 50%;
-    z-index: 30;
-    font-size: 32px;
-    font-weight: 900;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 1);
-  }
-  .banner-slider .prev {
-    left: 12px;
-  }
-  .banner-slider .next {
-    right: 12px;
-  }
-  .banner-slider .prev:hover,
-  .banner-slider .next:hover {
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 1);
-  }
-
-  /* Banner Benefits Overlay Styles */
-  .banner-benefits-overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
-    padding: 40px 0 20px;
-    z-index: 10;
-  }
-
-  /* All slides without background images */
+  
   .banner-slider .slide .banner-benefits-overlay,
   .banner-slider .slide .banner-features-overlay,
   .banner-slider .slide .banner-testimonials-overlay {
-    position: static;
-    background: linear-gradient(135deg, #04683F 0%, #2d5a3d 100%);
-    padding: 40px 0 30px;
-    min-height: 400px;
-    display: flex;
-    align-items: center;
+    padding: 15px 0; /* Even less padding */
+    height: 250px;
   }
 
-  .banner-benefits-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  .banner-benefits-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    align-items: center;
-  }
-
-  .banner-benefit-item {
-    text-align: center;
-    padding: 20px 16px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 120px;
-  }
-
-  .banner-benefit-item:hover {
-    transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  }
-
-  .banner-benefit-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 12px;
-    width: 50px;
-    height: 50px;
-    background: rgba(184, 139, 52, 0.2);
-    border-radius: 50%;
-    border: 2px solid rgba(184, 139, 52, 0.4);
-    transition: all 0.3s ease;
-  }
-
-  .banner-benefit-item:hover .banner-benefit-icon {
-    background: rgba(184, 139, 52, 0.3);
-    border-color: #B88B34;
-    transform: scale(1.1);
-  }
-
-  .banner-benefit-icon svg {
-    width: 32px;
-    height: 32px;
-  }
-
-  .banner-benefit-title {
-    font-size: 16px;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 8px;
-    letter-spacing: 0.5px;
-    line-height: 1.3;
-  }
-
-  .banner-benefit-description {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0;
-    line-height: 1.4;
-    text-align: center;
-  }
-
-  /* Banner Features Styles */
-  .banner-features-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  .banner-features-header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  .banner-features-title {
-    font-size: 32px;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 12px;
-    letter-spacing: 0.5px;
-  }
-
-  .banner-features-subtitle {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0;
-    font-weight: 400;
-  }
-
-  .banner-features-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    align-items: center;
-  }
-
-  .banner-feature-item {
-    text-align: center;
-    padding: 24px 20px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 140px;
-  }
-
-  .banner-feature-item:hover {
-    transform: translateY(-6px);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
-  }
-
-  .banner-feature-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 auto 16px;
-    width: 60px;
-    height: 60px;
-    background: rgba(184, 139, 52, 0.2);
-    border-radius: 50%;
-    border: 2px solid rgba(184, 139, 52, 0.4);
-    transition: all 0.3s ease;
-  }
-
-  .banner-feature-item:hover .banner-feature-icon {
-    background: rgba(184, 139, 52, 0.3);
-    border-color: #B88B34;
-    transform: scale(1.1);
-  }
-
-  .banner-feature-icon svg {
-    width: 40px;
-    height: 40px;
-    color: #B88B34;
-  }
-
-  .banner-feature-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 8px;
-    letter-spacing: 0.5px;
-    line-height: 1.3;
-  }
-
-  .banner-feature-description {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0;
-    line-height: 1.4;
-    text-align: center;
-  }
-
-  /* Banner Testimonials Styles */
+  .banner-benefits-container,
+  .banner-features-container,
   .banner-testimonials-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 24px;
+    padding: 0 15px;
   }
 
-  .banner-testimonials-header {
-    text-align: center;
-    margin-bottom: 40px;
-  }
-
-  .banner-testimonials-title {
-    font-size: 32px;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 12px;
-    letter-spacing: 0.5px;
-  }
-
-  .banner-testimonials-subtitle {
-    font-size: 16px;
-    color: rgba(255, 255, 255, 0.8);
-    margin: 0;
-    font-weight: 400;
-  }
-
+  .banner-benefits-grid,
+  .banner-features-grid,
   .banner-testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 32px;
-    align-items: stretch;
+    gap: 12px; /* Smaller gap */
   }
 
+  .banner-benefit-item,
+  .banner-feature-item,
   .banner-testimonial-item {
-    text-align: center;
-    padding: 20px 16px;
-    border-radius: 16px;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    min-height: 140px;
+    padding: 10px 8px; /* Even more compact */
+    min-height: 70px;
   }
 
-  .banner-testimonial-item:hover {
-    transform: translateY(-6px);
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  .banner-benefit-icon,
+  .banner-feature-icon {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 6px;
   }
 
-  .banner-testimonial-rating {
-    margin-bottom: 16px;
+  .banner-benefit-icon svg,
+  .banner-feature-icon svg {
+    width: 16px;
+    height: 16px;
   }
 
-  .banner-testimonial-rating .star {
-    color: #B88B34;
-    font-size: 18px;
-    margin: 0 2px;
+  .banner-benefit-title,
+  .banner-feature-title {
+    font-size: 11px;
+    margin-bottom: 3px;
+  }
+
+  .banner-benefit-description,
+  .banner-feature-description {
+    font-size: 9px;
+  }
+
+  .banner-features-title,
+  .banner-testimonials-title {
+    font-size: 16px;
+  }
+
+  .banner-features-subtitle,
+  .banner-testimonials-subtitle {
+    font-size: 10px;
   }
 
   .banner-testimonial-text {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.9);
-    margin: 0 0 20px;
-    line-height: 1.5;
-    font-style: italic;
-    flex-grow: 1;
+    font-size: 10px;
   }
 
-  .banner-testimonial-author {
-    margin-top: auto;
+  .banner-slider .prev,
+  .banner-slider .next {
+    font-size: 20px;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .banner-slider{
+    height: 200px !important; /* Smallest height */
   }
 
-  .banner-testimonial-author strong {
-    display: block;
-    font-size: 16px;
-    color: #ffffff;
-    margin-bottom: 4px;
-    font-weight: 600;
+  .banner-features-header,
+  .banner-testimonials-header {
+    margin-bottom: 5px; /* Reduced margin */
+  }  
+
+  .banner-slider .slide .banner-benefits-overlay,
+  .banner-slider .slide .banner-features-overlay,
+  .banner-slider .slide .banner-testimonials-overlay {
+    padding: 15px 0; /* Even less padding */
+    height: 200px;
   }
 
-  .banner-testimonial-author span {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: 400;
+  .banner-testimonial-text{
+    font-size: 6px;
+  }
+  .banner-testimonial-author strong{
+    font-size: 8px;
+  }
+  
+  .banner-benefits-grid,
+  .banner-features-grid,
+  .banner-testimonials-grid {
+    gap: 8px; /* Smallest gap */
   }
 
-  /* Mobile Responsive for Banner Benefits */
-  @media (max-width: 768px) {
-    .banner-benefits-overlay,
-    .banner-features-overlay,
-    .banner-testimonials-overlay {
-      padding: 20px 0 15px;
-    }
-
-    .banner-slider .slide .banner-benefits-overlay,
-    .banner-slider .slide .banner-features-overlay,
-    .banner-slider .slide .banner-testimonials-overlay {
-      padding: 30px 0 20px;
-      min-height: 300px;
-    }
-
-    .banner-benefits-container,
-    .banner-features-container,
-    .banner-testimonials-container {
-      padding: 0 16px;
-    }
-
-    .banner-benefits-grid,
-    .banner-features-grid,
-    .banner-testimonials-grid {
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-
-    .banner-benefit-item,
-    .banner-feature-item,
-    .banner-testimonial-item {
-      padding: 16px 12px;
-      min-height: 100px;
-    }
-
-    .banner-benefit-icon,
-    .banner-feature-icon {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 8px;
-    }
-
-    .banner-benefit-icon svg,
-    .banner-feature-icon svg {
-      width: 24px;
-      height: 24px;
-    }
-
-    .banner-benefit-title,
-    .banner-feature-title,
-    .banner-testimonials-title {
-      font-size: 14px;
-      margin-bottom: 6px;
-    }
-
-    .banner-benefit-description,
-    .banner-feature-description {
-      font-size: 11px;
-    }
-
-    .banner-features-title,
-    .banner-testimonials-title {
-      font-size: 24px;
-    }
-
-    .banner-features-subtitle,
-    .banner-testimonials-subtitle {
-      font-size: 14px;
-    }
-
-    .banner-testimonial-text {
-      font-size: 12px;
-    }
-
-    .banner-testimonial-author strong {
-      font-size: 14px;
-    }
+  .banner-benefit-item,
+  .banner-feature-item,
+  .banner-testimonial-item {
+    padding: 8px 6px;
+    min-height: 60px;
   }
 
-  @media (max-width: 480px) {
-    .banner-slider .slide .banner-benefits-overlay,
-    .banner-slider .slide .banner-features-overlay,
-    .banner-slider .slide .banner-testimonials-overlay {
-      padding: 25px 0 15px;
-      min-height: 250px;
-    }
-
-    .banner-benefits-grid,
-    .banner-features-grid,
-    .banner-testimonials-grid {
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-
-    .banner-benefit-item,
-    .banner-feature-item,
-    .banner-testimonial-item {
-      padding: 12px 8px;
-      min-height: 80px;
-    }
-
-    .banner-benefit-icon {
-      width: 35px;
-      height: 35px;
-    }
-
-    .banner-benefit-icon svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    .banner-benefit-title {
-      font-size: 13px;
-    }
-
-    .banner-benefit-description {
-      font-size: 10px;
-    }
+  .banner-benefit-title,
+  .banner-feature-title {
+    font-size: 10px;
   }
 
+  .banner-benefit-description,
+  .banner-feature-description {
+    font-size: 8px;
+  }
+
+  .banner-slider .prev,
+  .banner-slider .next {
+    font-size: 18px;
+    padding: 5px 7px;
+  }
+}
 
   /* Enhanced Inline Hero below navigation */
   .getsupp-hero-inline {
