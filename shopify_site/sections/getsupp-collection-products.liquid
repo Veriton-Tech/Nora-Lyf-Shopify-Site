@@ -85,7 +85,7 @@
             </a>
             {% if product.available and section.settings.show_quick_add %}
               <form
-                action="/cart/add"
+                action="{{ routes.cart_add_url }}"
                 method="post"
                 enctype="multipart/form-data"
                 class="getsupp-product-form">
@@ -93,6 +93,10 @@
                   type="hidden"
                   name="id"
                   value="{{ product.selected_or_first_available_variant.id }}">
+                <input
+                  type="hidden"
+                  name="return_to"
+                  value="{{ routes.cart_url }}">
                 <button type="submit" class="getsupp-add-to-cart">
                   <svg
                     width="16"
@@ -169,7 +173,7 @@
     {% else %}
       {%- comment -%} Try to filter products by category if collection is empty {%- endcomment -%}
       {% if collection_handle %}
-        {% render 'category-products',  category: collection_handle,  limit: section.settings.products_per_page | default: 24, show_vendor: section.settings.show_vendor | default: false, show_rating: section.settings.show_rating | default: false
+        {% render 'category-products', category: collection_handle, limit: section.settings.products_per_page | default: 24, show_vendor: section.settings.show_vendor | default: false, show_rating: section.settings.show_rating | default: false
         %}
       {% else %}
         <div class="getsupp-empty-collection">

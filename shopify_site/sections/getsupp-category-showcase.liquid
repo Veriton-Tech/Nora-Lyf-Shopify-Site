@@ -1,6 +1,6 @@
 {% comment %} 
-                      GetSupp Category Showcase Section 
-                      Displays product categories in a grid layout
+                              GetSupp Category Showcase Section 
+                              Displays product categories in a grid layout
 {% endcomment %}
 
 <div class="getsupp-category-showcase">
@@ -16,12 +16,10 @@
           <a href="{{ block.settings.category_url | default: '/collections' }}" class="getsupp-category-link">
             <div class="getsupp-category-icon">
               {% if block.settings.category_icon %}
-                <img
-                  src="{{ block.settings.category_icon | img_url: '80x80' }}"
-                  alt="{{ block.settings.category_name }}"
-                  class="getsupp-category-img"
-                  width="80"
-                  height="80">
+                <div
+                  class="getsupp-category-glyph"
+                  style="--icon-url: url('{{ block.settings.category_icon | image_url: width: 80 }}');"
+                  aria-hidden="true"></div>
               {% else %}
                 <div class="getsupp-category-placeholder">
                   <svg
@@ -150,21 +148,34 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f0fdfc;
+    background: #04683F;
+    border: 1px solid #04683F;
     border-radius: 50%;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
   }
 
   .getsupp-category-card:hover .getsupp-category-icon {
-    background: #04683F;
     transform: scale(1.1);
   }
 
-  .getsupp-category-img {
+  /* Mask-based glyph; render icon as white so it shows on green circle */
+  .getsupp-category-glyph {
     width: 40px;
     height: 40px;
-    object-fit: contain;
+    background-color: #ffffff;
+    -webkit-mask-image: var(--icon-url);
+    mask-image: var(--icon-url);
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
   }
+  .getsupp-category-card:hover .getsupp-category-glyph {
+    background-color: #ffffff;
+  }
+
 
   .getsupp-category-placeholder {
     width: 40px;
@@ -174,8 +185,9 @@
     justify-content: center;
   }
 
-  .getsupp-category-card:hover .getsupp-category-placeholder svg {
-    stroke: white;
+  /* Placeholder icon should remain white over green */
+  .getsupp-category-placeholder svg {
+    stroke: #ffffff;
   }
 
   .getsupp-category-name {

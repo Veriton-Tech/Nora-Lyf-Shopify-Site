@@ -1672,7 +1672,7 @@
 
 <!-- ---------------------- -->
 
-{% if section.settings.show_hero_inline and template.name != 'cart' and template.name != 'page' and template.name != 'product' and template.name != 'collection' or template.name == 'page' and page.handle != 'contact' and page.handle != 'shipping-policy' and page.handle != 'privacy-policy' and page.handle != 'terms-conditions' and page.handle != 'returns-cancellations' %}
+{% if section.settings.show_hero_inline and template.name != 'cart' and template.name != 'page' and template.name != 'product' and template.name != 'collection' and template.name != 'search' or template.name == 'page' and page.handle != 'contact' and page.handle != 'shipping-policy' and page.handle != 'privacy-policy' and page.handle != 'terms-conditions' and page.handle != 'returns-cancellations' %}
   <div class="getsupp-hero-inline">
     <div class="getsupp-hero-inline__container">
       <div class="getsupp-hero-inline__icon">
@@ -2122,20 +2122,12 @@
                           width="18"
                           height="18"
                           rx="2"
-                          stroke="currentColor"
-                          stroke-width="2" />
-                        <circle
-                          cx="8.5"
-                          cy="8.5"
-                          r="1.5"
-                          stroke="currentColor"
+                          stroke="#24BAAD"
                           stroke-width="2" />
                         <path
-                          d="M21 15L16 10L5 21"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round" />
+                          d="M9 9h6v6H9z"
+                          stroke="#24BAAD"
+                          stroke-width="2" />
                       </svg>
                     </div>
                   {% endif %}
@@ -2145,28 +2137,6 @@
                   {% if product.compare_at_price > product.price %}
                     <span class="getsupp-new-arrivals-badge getsupp-sale-badge">Sale</span>
                   {% endif %}
-                </div>
-                <div class="getsupp-new-arrivals-overlay">
-                  <a href="{{ product.url }}" class="getsupp-quick-view-btn">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg">
-                      <path
-                        d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
-                        stroke="currentColor"
-                        stroke-width="2" />
-                      <circle
-                        cx="12"
-                        cy="12"
-                        r="3"
-                        stroke="currentColor"
-                        stroke-width="2" />
-                    </svg>
-                    Quick View
-                  </a>
                 </div>
               </div>
             </div>
@@ -2196,12 +2166,12 @@
 
               <div class="getsupp-new-arrivals-price">
                 {% if product.compare_at_price > product.price %}
-                  <span class="getsupp-new-arrivals-compare-price">{{ product.compare_at_price | money_without_currency }} INR</span>
+                  <span class="getsupp-new-arrivals-compare-price">₹{{ product.compare_at_price | money_without_currency }}</span>
                   <span class="getsupp-discount-badge">
                     -{{ product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price }}%
                   </span>
                 {% endif %}
-                <span class="getsupp-new-arrivals-current-price">{{ product.price | money_without_currency }} INR</span>
+                <span class="getsupp-new-arrivals-current-price">₹{{ product.price | money_without_currency }}</span>
               </div>
 
               <div class="getsupp-new-arrivals-actions">
@@ -4247,28 +4217,23 @@ section.getsupp-new-arrivals {
 
 .getsupp-new-arrivals-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
   margin-top: 4rem;
   position: relative;
   z-index: 2;
 }
 
 .getsupp-new-arrivals-card {
-  background: linear-gradient(145deg, #ffffff 0%, #fafbfc 100%);
-  border-radius: 28px;
+  background: white;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08)
-  , 0 5px 15px rgba(0, 0, 0, 0.05)
-  , inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  border: 2px solid rgba(4, 104, 63, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #f0f0f0;
   height: 100%;
   display: flex;
   flex-direction: column;
-  animation: slideInUp 0.8s ease-out both;
-  animation-delay: calc(var(--card-index, 0) * 0.1s);
 }
 
 @keyframes slideInUp {
@@ -4283,30 +4248,11 @@ section.getsupp-new-arrivals {
 }
 
 .getsupp-new-arrivals-card:hover {
-  transform: translateY(-15px) scale(1.02);
-  box-shadow: 0 25px 70px rgba(4, 104, 63, 0.25)
-  , 0 10px 30px rgba(184, 139, 52, 0.15)
-  , inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(4, 104, 63, 0.15);
   border-color: #04683F;
-  background: linear-gradient(145deg, #ffffff 0%, #f8fffe 100%);
 }
 
-.getsupp-new-arrivals-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, rgba(4, 104, 63, 0.02) 0%, transparent 50%, rgba(184, 139, 52, 0.02) 100%);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.getsupp-new-arrivals-card:hover::before {
-  opacity: 1;
-}
 
 .getsupp-new-arrivals-image-wrapper {
   position: relative;
@@ -4314,34 +4260,34 @@ section.getsupp-new-arrivals {
 }
 
 .getsupp-new-arrivals-image {
-  height: 300px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  height: 200px;
+  background: #f8f9fa;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  transition: all 0.4s ease;
+  transition: all 0.3s ease;
 }
 
 .getsupp-new-arrivals-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  filter: brightness(1) saturate(1);
+  transition: transform 0.3s ease;
 }
 
 .getsupp-new-arrivals-card:hover .getsupp-new-arrivals-image img {
-  transform: scale(1.1);
-  filter: brightness(1.05) saturate(1.1);
+  transform: scale(1.05);
 }
 
 .getsupp-new-arrivals-placeholder {
-  color: #ccc;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: #f0fdfc;
 }
 
 .getsupp-new-arrivals-badges {
@@ -4355,31 +4301,21 @@ section.getsupp-new-arrivals {
 }
 
 .getsupp-new-arrivals-badge {
-  padding: 0.5rem 1rem;
-  border-radius: 25px;
-  font-size: 0.85rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-.getsupp-new-arrivals-card:hover .getsupp-new-arrivals-badge {
-  transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-}
 
 .getsupp-new-badge {
-  background: linear-gradient(135deg, #04683F, #035a3a);
+  background: #ff4757;
   color: white;
 }
 
 .getsupp-sale-badge {
-  background: linear-gradient(135deg, #B88B34, #d4a853);
+  background: #ff4757;
   color: white;
-  animation: pulse 2s ease-in-out infinite;
 }
 
 @keyframes pulse {
@@ -4392,48 +4328,9 @@ section.getsupp-new-arrivals {
   }
 }
 
-.getsupp-new-arrivals-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(4, 104, 63, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: all 0.3s ease;
-  z-index: 3;
-}
-
-.getsupp-new-arrivals-card:hover .getsupp-new-arrivals-overlay {
-  opacity: 1;
-}
-
-.getsupp-quick-view-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: white;
-  color: #04683F;
-  padding: 0.8rem 1.5rem;
-  border-radius: 25px;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-.getsupp-quick-view-btn:hover {
-  background: #04683F;
-  color: white;
-  transform: translateY(-2px);
-}
 
 .getsupp-new-arrivals-content {
-  padding: 2rem;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -4441,7 +4338,7 @@ section.getsupp-new-arrivals {
 }
 
 .getsupp-new-arrivals-category {
-  margin-bottom: 0.8rem;
+  margin-bottom: 8px;
 }
 
 .getsupp-category-tag {
@@ -4459,7 +4356,7 @@ section.getsupp-new-arrivals {
 .getsupp-product-link {
   text-decoration: none;
   color: inherit;
-  margin-bottom: 1rem;
+  margin-bottom: 8px;
 }
 
 .getsupp-product-link:hover {
@@ -4467,12 +4364,12 @@ section.getsupp-new-arrivals {
 }
 
 .getsupp-new-arrivals-name {
-  font-size: 1.4rem;
+  font-size: 16px;
   font-weight: 600;
-  color: #04683F;
-  margin: 0 0 1rem;
-  font-family: "Playfair Display"
-  , serif;
+  color: #333;
+  margin: 0 0 8px;
+  font-family: 'Inter'
+  , sans-serif;
   line-height: 1.4;
   transition: color 0.3s ease;
 }
@@ -4480,8 +4377,8 @@ section.getsupp-new-arrivals {
 .getsupp-new-arrivals-rating {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+  gap: 8px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
 }
 
@@ -4491,50 +4388,47 @@ section.getsupp-new-arrivals {
 }
 
 .getsupp-star {
-  color: #B88B34;
-  font-size: 1rem;
+  color: #ffd700;
+  font-size: 14px;
 }
 
 .getsupp-rating-text {
-  font-size: 0.9rem;
+  font-size: 12px;
   color: #666;
-  font-weight: 600;
 }
 
 .getsupp-review-count {
-  font-size: 0.8rem;
+  font-size: 12px;
   color: #999;
 }
 
 .getsupp-new-arrivals-price {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  margin-bottom: 1.5rem;
+  gap: 8px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
 }
 
 .getsupp-new-arrivals-compare-price {
-  font-size: 1rem;
+  font-size: 14px;
   color: #999;
   text-decoration: line-through;
 }
 
 .getsupp-new-arrivals-current-price {
-  font-size: 1.4rem;
+  font-size: 18px;
   font-weight: 700;
   color: #04683F;
 }
 
 .getsupp-discount-badge {
-  background: linear-gradient(135deg, #B88B34, #d4a853);
+  background: #ff4757;
   color: white;
   padding: 0.2rem 0.6rem;
-  border-radius: 12px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .getsupp-new-arrivals-actions {
@@ -4547,32 +4441,24 @@ section.getsupp-new-arrivals {
 
 .getsupp-add-to-cart-btn {
   width: 100%;
-  background: linear-gradient(135deg, #04683F, #035a3a);
+  background: #04683F;
   color: white;
   border: none;
-  padding: 1rem 1.5rem;
-  border-radius: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
   font-weight: 600;
-  font-size: 1rem;
-  font-family: "Playfair Display"
-  , serif;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.8rem;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(4, 104, 63, 0.3);
+  gap: 8px;
 }
 
 .getsupp-add-to-cart-btn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #035a3a, #024a2f);
+  background: #035a3a;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(4, 104, 63, 0.4);
 }
 
 .getsupp-add-to-cart-btn:active:not(:disabled) {
@@ -4608,38 +4494,26 @@ section.getsupp-new-arrivals {
   }
 
   .getsupp-new-arrivals-title {
-    font-size: 2.5rem;
+    font-size: 28px;
   }
 
   .getsupp-new-arrivals-grid {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-  }
-
-  .getsupp-new-arrivals-card {
-    margin: 0 1rem;
-  }
-
-  .getsupp-new-arrivals-content {
-    padding: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
   }
 
   .getsupp-new-arrivals-image {
-    height: 220px;
+    height: 180px;
+  }
+
+  .getsupp-new-arrivals-content {
+    padding: 16px;
   }
 }
 
 @media (max-width: 480px) {
-  .getsupp-new-arrivals-container {
-    padding: 0 1rem;
-  }
-
-  .getsupp-new-arrivals-title {
-    font-size: 2rem;
-  }
-
-  .getsupp-new-arrivals-card {
-    margin: 0;
+  .getsupp-new-arrivals-grid {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -4836,8 +4710,8 @@ section.getsupp-new-arrivals {
 
 .getsupp-categories-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
-  gap: 3rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
   margin-top: 4rem;
   position: relative;
   z-index: 2;
@@ -4845,10 +4719,10 @@ section.getsupp-new-arrivals {
 
 .getsupp-category-card {
   background: linear-gradient(145deg, #ffffff 0%, #fafbfc 100%);
-  border-radius: 28px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08)
-  , 0 5px 15px rgba(0, 0, 0, 0.05)
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08)
+  , 0 3px 10px rgba(0, 0, 0, 0.05)
   , inset 0 1px 0 rgba(255, 255, 255, 0.8);
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
@@ -4906,7 +4780,7 @@ section.getsupp-new-arrivals {
 }
 
 .getsupp-category-image {
-  height: 260px;
+  height: 180px;
   background: linear-gradient(135deg, #04683F 0%, #035a3a 30%, #024a2f 70%, #013d26 100%);
   display: flex;
   align-items: center;
@@ -4950,12 +4824,12 @@ section.getsupp-new-arrivals {
 }
 
 .getsupp-category-icon {
-  color: white;
+  color: #B88B34;
   z-index: 3;
   position: relative;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
-  animation: iconFloat 3s ease-in-out infinite;
+  animation: iconFloat 3s ease-in-out infinite 1s;
 }
 
 @keyframes iconFloat {
@@ -5133,60 +5007,6 @@ section.getsupp-new-arrivals {
   }
 }
 
-.getsupp-add-to-cart-btn {
-  width: 100%;
-  background: linear-gradient(90deg, #04683F, #035a3a);
-  color: white;
-  border: none;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  font-family: "Playfair Display"
-  , serif;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  position: relative;
-  overflow: hidden;
-}
-
-.getsupp-add-to-cart-btn:hover:not(:disabled) {
-  background: linear-gradient(90deg, #035a3a, #024a2f);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(4, 104, 63, 0.3);
-}
-
-.getsupp-add-to-cart-btn:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.getsupp-add-to-cart-btn:disabled {
-  background: #ccc;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.getsupp-btn-text {
-  transition: all 0.3s ease;
-}
-
-.getsupp-btn-icon {
-  transition: all 0.3s ease;
-}
-
-.getsupp-add-to-cart-btn:hover:not(:disabled) .getsupp-btn-icon {
-  transform: scale(1.1);
-}
-
-.getsupp-add-to-cart-btn:disabled .getsupp-btn-text {
-  color: #999;
-}
 
 .getsupp-stars {
   display: flex;
@@ -5373,39 +5193,23 @@ section.getsupp-new-arrivals {
     addToCartForms.forEach(form => {
       form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         const formData = new FormData(form);
         const button = form.querySelector('.getsupp-add-to-cart-btn');
         const originalText = button.querySelector('.getsupp-btn-text').textContent;
-        
+
         // Show loading state
         button.disabled = true;
         button.querySelector('.getsupp-btn-text').textContent = 'Adding...';
-        
+
         fetch('/cart/add.js', {
           method: 'POST',
           body: formData
         })
         .then(response => response.json())
         .then(data => {
-          // Success - show success state
-          button.querySelector('.getsupp-btn-text').textContent = 'Added!';
-          button.style.background = 'linear-gradient(90deg, #28a745, #20c997)';
-          
-          // Update cart count
-          const cartCount = document.getElementById('cart-count-bubble');
-          if (cartCount) {
-            const currentCount = parseInt(cartCount.textContent) || 0;
-            cartCount.textContent = currentCount + 1;
-            cartCount.style.display = 'inline';
-          }
-          
-          // Reset after 2 seconds
-          setTimeout(() => {
-            button.disabled = false;
-            button.querySelector('.getsupp-btn-text').textContent = originalText;
-            button.style.background = 'linear-gradient(90deg, #04683F, #035a3a)';
-          }, 2000);
+          // Redirect to cart page after successful add
+          window.location.href = '/cart';
         })
         .catch(error => {
           console.error('Error adding to cart:', error);

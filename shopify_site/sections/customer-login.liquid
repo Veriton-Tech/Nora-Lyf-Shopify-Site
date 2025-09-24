@@ -1,0 +1,273 @@
+{% comment %} 
+    Custom Customer Login Section 
+    Provides full theme-controlled login UI for classic customer accounts. 
+    Uses locale strings under customer.login_page.* and customer.*
+{% endcomment %}
+
+<section class="customer-login-section color-{{ section.settings.color_scheme }}">
+  <div class="customer-login-container">
+    <div class="customer-login-card">
+      <h1 class="customer-login-title">{{ 'customer.login_page.title' | t }}</h1>
+
+      {%- if form.errors -%}
+        <div class="customer-login-alert" role="alert">
+          {{ form.errors | default_errors }}
+        </div>
+      {%- endif -%}
+
+      {%- form 'customer_login'
+        , novalidate: 'novalidate'
+        , class: 'customer-login-form' -%}
+        <div class="form-field">
+          <label for="CustomerEmail" class="form-label">{{ 'customer.login_page.email' | t }}</label>
+          <input
+            type="email"
+            name="customer[email]"
+            id="CustomerEmail"
+            class="input"
+            autocomplete="email"
+            autocorrect="off"
+            autocapitalize="off"
+            aria-required="true"
+            required>
+        </div>
+
+        <div class="form-field">
+          <div class="form-label-row">
+            <label for="CustomerPassword" class="form-label">{{ 'customer.login_page.password' | t }}</label>
+            <a href="{{ routes.recover_password }}" class="link link-muted">{{ 'customer.login_page.forgot_password' | t }}</a>
+          </div>
+          <input
+            type="password"
+            name="customer[password]"
+            id="CustomerPassword"
+            class="input"
+            autocomplete="current-password"
+            aria-required="true"
+            required>
+        </div>
+
+        <button type="submit" class="button button-primary button-block">
+          {{ 'customer.login_page.sign_in' | t }}
+        </button>
+      {%- endform -%}
+
+      <div class="customer-login-divider">
+        <span>{{ 'customer.login_page.alternate_provider_separator' | t }}</span>
+      </div>
+
+      <div class="customer-login-actions">
+        <a href="{{ routes.account_register_url }}" class="button button-outline button-block">{{ 'customer.login_page.create_account' | t }}</a>
+        <a href="{{ routes.root_url }}" class="button button-ghost button-block">{{ 'customer.login_page.cancel' | t }}</a>
+      </div>
+    </div>
+  </div>
+
+  {%- if shop.checkout.guest_login -%}
+    <div class="customer-login-guest">
+      <h2 class="guest-title">{{ 'customer.login_page.guest_title' | t }}</h2>
+      {%- form 'guest_login'
+        , class: 'guest-form' -%}
+        <button type="submit" class="button button-secondary">{{ 'customer.login_page.guest_continue' | t }}</button>
+      {%- endform -%}
+    </div>
+  {%- endif -%}
+</section>
+
+{% stylesheet %}
+  .customer-login-section {
+    padding: 48px 0;
+  }
+
+  .customer-login-container {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  .customer-login-card {
+    background: rgb(var(--color-background));
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+    padding: 32px;
+  }
+
+  .customer-login-title {
+    margin: 0 0 16px;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .customer-login-alert {
+    background: rgba(var(--color-foreground), 0.06);
+    color: rgb(var(--color-foreground));
+    border: 1px solid rgba(var(--color-foreground), 0.15);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 16px;
+  }
+
+  .customer-login-form {
+    display: grid;
+    gap: 16px;
+  }
+
+  .form-field {}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.form-label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.input {
+  width: 100%;
+  height: 44px;
+  padding: 10px 12px;
+  border: var(--inputs-border-width) solid rgba(var(--color-foreground), var(--inputs-border-opacity));
+  border-radius: var(--inputs-radius);
+  background: rgb(var(--color-background));
+  transition: border-color 0.2s
+  , box-shadow 0.2s;
+}
+
+.input:focus {
+  outline: none;
+  border-color: rgb(var(--color-foreground));
+  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width)) rgba(var(--color-foreground));
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: var(--buttons-radius);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s
+  , color 0.2s
+  , box-shadow 0.2s
+  , transform 0.05s;
+  border: 1px solid transparent;
+}
+
+.button-block {
+  width: 100%;
+}
+
+.button-primary {
+  background: rgba(var(--color-button), var(--alpha-button-background, 1));
+  color: rgb(var(--color-button-text));
+  border: var(--buttons-border-width) solid rgba(var(--color-button-text), var(--buttons-border-opacity, 0));
+}
+
+.button-primary:hover {
+  filter: brightness(0.95);
+}
+
+.button-primary:active {
+  transform: translateY(1px);
+}
+
+.button-secondary {
+  background: rgb(var(--color-foreground));
+  color: rgb(var(--color-background));
+}
+
+.button-outline {
+  background: transparent;
+  color: rgb(var(--color-button));
+  border-color: rgb(var(--color-button));
+}
+
+.button-outline:hover {
+  background: rgba(var(--color-button), 0.06);
+}
+
+.button-ghost {
+  background: transparent;
+  color: rgb(var(--color-foreground));
+}
+
+.link {
+  color: rgb(var(--color-link));
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.link-muted {
+  color: #6b7280;
+}
+
+.customer-login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #6b7280;
+  margin: 18px 0;
+}
+
+.customer-login-divider::before,
+.customer-login-divider::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: #e5e7eb;
+}
+
+.customer-login-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.customer-login-guest {
+  max-width: 560px;
+  margin: 20px auto 0;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.guest-title {
+  margin-bottom: 10px;
+}
+
+@media (max-width: 480px) {
+  .customer-login-card {
+    padding: 24px;
+  }
+  .customer-login-title {
+    font-size: 24px;
+  }
+}
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "Customer login",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "default": "scheme-1"
+      }
+    ]
+  }
+{% endschema %}

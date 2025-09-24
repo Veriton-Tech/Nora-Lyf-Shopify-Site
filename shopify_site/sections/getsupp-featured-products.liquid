@@ -1,6 +1,6 @@
 {% comment %} 
-          GetSupp Featured Products Section 
-          Displays featured products in a grid layout
+                GetSupp Featured Products Section 
+                Displays featured products in a grid layout
 {% endcomment %}
 
 {% assign collection = collections[section.settings.collection] | default: collections.all %}
@@ -81,7 +81,7 @@
           </a>
           {% if product.available %}
             <form
-              action="/cart/add"
+              action="{{ routes.cart_add_url }}"
               method="post"
               enctype="multipart/form-data"
               class="getsupp-product-form">
@@ -89,6 +89,10 @@
                 type="hidden"
                 name="id"
                 value="{{ product.selected_or_first_available_variant.id }}">
+              <input
+                type="hidden"
+                name="return_to"
+                value="{{ routes.cart_url }}">
               <button type="submit" class="getsupp-add-to-cart">
                 <svg
                   width="16"

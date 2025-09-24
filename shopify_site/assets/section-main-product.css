@@ -974,6 +974,23 @@ a.product__text {
   }
 }
 
+/* Center product media slider on desktop */
+@media screen and (min-width: 990px) {
+  /* Center the entire slider track */
+  .product__media-wrapper .slider--desktop,
+  .product__media-list.slider--desktop {
+    margin-left: auto;
+    margin-right: auto;
+    /* Remove extra left offset on first slide */
+    --desktop-margin-left-first-item: 0;
+  }
+
+  /* Center grid content within the media list */
+  .product__media-list {
+    justify-content: center;
+  }
+}
+
 @media screen and (min-width: 750px) {
   .product--thumbnail_slider .thumbnail-slider {
     display: flex;
