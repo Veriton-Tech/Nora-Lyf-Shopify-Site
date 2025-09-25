@@ -1,0 +1,30 @@
+/* Mobile header visibility fixes moved from sections/header.liquid */
+
+@media (max-width: 1024px) {
+  /* Hide large inline search in header to free space for icons */
+  .getsupp-hero-inline__search {
+    display: none !important;
+    width: auto;
+    flex: 0 0 auto;
+  }
+  .getsupp-search-brand { display: none !important; }
+
+  /* Tighten spacing so icons are visible */
+  .getsupp-header-container {
+    gap: 8px;
+    padding: 0 12px;
+  }
+  .getsupp-header-icons {
+    margin-left: auto;
+    gap: 8px;
+  }
+  .getsupp-mobile-menu { padding: 6px; }
+  .getsupp-logo .logo-text { font-size: 28px; }
+}
+
+@media (max-width: 767px) {
+  .getsupp-header-container { gap: 6px; padding: 0 10px; }
+  .getsupp-header-icons { gap: 6px; }
+}
+
+

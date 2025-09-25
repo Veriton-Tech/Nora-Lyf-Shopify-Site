@@ -1,0 +1,29 @@
+/* Extracted from sections/header.liquid to reduce file size */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+/* Paste of header styles moved out of the section */
+/* NOTE: This file intentionally mirrors the rules previously inside {% stylesheet %} of header.liquid */
+
+/* GetSupp Header Styles */
+.getsupp-header { position: sticky; top: 0; z-index: 30; background: #04683F; box-shadow: 0 2px 4px rgba(0,0,0,.1); }
+
+/* The full CSS block is very large; move core header/layout/mobile rules here first to cut size. */
+.getsupp-main-header { background:#04683F; padding:0; }
+.getsupp-header-container { max-width:1440px; margin:0 auto; padding:0 20px; height:75px; display:flex; align-items:center; gap:12px; }
+.getsupp-logo { order:-10; flex-shrink:0; }
+.logo-text { font-size:32px; font-weight:200; color:#B88B34 !important; letter-spacing:.2px; word-spacing:-2px; font-family:"Playfair Display", serif; display:inline-block; filter:brightness(1.4); transition:all .3s ease; }
+.getsupp-header-icons { display:flex; align-items:center; gap:12px; margin-left:auto; }
+.getsupp-mobile-search a, .getsupp-cart a { display:flex; padding:12px; align-items:center; border-radius:30px; transition:all .3s ease; }
+.getsupp-mobile-search a:hover, .getsupp-cart a:hover { background:#005532; }
+.getsupp-mobile-search svg, .getsupp-cart svg { width:25px; height:25px; color:#f0f5f3; }
+.getsupp-cart { position:relative; }
+.getsupp-cart-count { position:absolute; top:4px; right:4px; background:#04683F; color:#fff; border-radius:50%; width:18px; height:18px; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; }
+
+/* Mobile: prevent horizontal scrolling and ensure banners visible */
+@media (max-width: 767px){ html,body{ overflow-x:hidden; width:100%; max-width:100vw; } .banner-slider{ padding-bottom:12px; height:auto; } .banner-slider .slides{ display:flex; height:auto; } .banner-slider .slide{ min-width:100%; height:auto; } .banner-slider img,.banner-slider video,.banner-slider picture,.banner-slider svg{ max-width:100%; height:auto; } .getsupp-main-header + .banner-slider{ margin-top:8px; } }
+
+/* Mobile header visibility fixes */
+@media (max-width: 1024px){ .getsupp-hero-inline__search{ display:none !important; } .getsupp-search-brand{ display:none !important; } .getsupp-header-container{ gap:8px; padding:0 12px; } .getsupp-header-icons{ margin-left:auto; gap:8px; } .getsupp-mobile-menu{ padding:6px; } .getsupp-logo .logo-text{ font-size:28px; } }
+@media (max-width: 768px){ .getsupp-header-icons{ gap:6px; } }
+
+
