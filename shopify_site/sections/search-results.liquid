@@ -12,6 +12,20 @@
           Search
         {% endif %}
       </h1>
+
+      <form
+        action="{{ routes.search_url }}"
+        method="get"
+        role="search"
+        class="search-results__mobile-form">
+        <input
+          type="search"
+          name="q"
+          value="{{ search.terms | escape }}"
+          placeholder="{{ 'general.search.search' | t }}"
+          class="search-results__mobile-input">
+        <button type="submit" class="search-results__mobile-button">{{ 'general.search.search' | t }}</button>
+      </form>
       
       {% if search.performed %}
         <p class="search-results__count">
@@ -22,14 +36,18 @@
     
     <div class="search-results__filters">
       <div class="search-results__filter-group">
-        <label class="search-results__filter-label">Sort by:</label>
-        <select class="search-results__filter-select" id="search-sort">
-          <option value="relevance">Relevance</option>
-          <option value="price-ascending">Price: Low to High</option>
-          <option value="price-descending">Price: High to Low</option>
-          <option value="title-ascending">A-Z</option>
-          <option value="title-descending">Z-A</option>
-        </select>
+        <label class="search-results__filter-label" for="search-sort">Sort by:</label>
+        <form class="search-results__sort-form" action="{{ routes.search_url }}" method="get">
+          <input type="hidden" name="q" value="{{ search.terms | escape }}">
+          <select class="search-results__filter-select" id="search-sort" name="sort_by" onchange="this.form.submit()">
+            {% assign current_sort = request.params.sort_by | default: 'relevance' %}
+            <option value="relevance"{% if current_sort == 'relevance' %} selected{% endif %}>Relevance</option>
+            <option value="price-ascending"{% if current_sort == 'price-ascending' %} selected{% endif %}>Price: Low to High</option>
+            <option value="price-descending"{% if current_sort == 'price-descending' %} selected{% endif %}>Price: High to Low</option>
+            <option value="title-ascending"{% if current_sort == 'title-ascending' %} selected{% endif %}>A-Z</option>
+            <option value="title-descending"{% if current_sort == 'title-descending' %} selected{% endif %}>Z-A</option>
+          </select>
+        </form>
       </div>
       
       <div class="search-results__filter-group">
@@ -276,6 +294,31 @@
     padding: 1rem;
     background: #f8f9fa;
     border-radius: 8px;
+  }
+
+  /* Mobile-only search form on /search */
+  .search-results__mobile-form {
+    display: none;
+    gap: 0.5rem;
+    margin: 1rem auto 0;
+    max-width: 600px;
+    padding: 0 1rem;
+  }
+  .search-results__mobile-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  .search-results__mobile-button {
+    padding: 0.75rem 1rem;
+    border: 1px solid #04683F;
+    background: #04683F;
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
   }
   
   .search-results__filter-group {
@@ -715,6 +758,9 @@
   }
   
   @media (max-width: 768px) {
+    .search-results__mobile-form {
+      display: flex;
+    }
     .search-results__filters {
       flex-direction: column;
       gap: 1rem;

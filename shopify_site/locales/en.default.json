@@ -496,7 +496,10 @@
     "recover_password": {
       "title": "Reset your password",
       "subtext": "We will send you an email to reset your password",
-      "success": "We've sent you an email with a link to update your password."
+      "success": "We've sent you an email with a link to update your password.",
+      "email": "Email",
+      "submit": "Send reset link",
+      "cancel": "Back to login"
     },
     "register": {
       "title": "Create account",

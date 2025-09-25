@@ -1,0 +1,85 @@
+{% comment %}
+  Customer Register Section
+  Renders Shopify's create_customer form for /account/register
+{% endcomment %}
+
+<section class="customer-register-section color-{{ section.settings.color_scheme }}">
+  <div class="customer-register-container">
+    <div class="customer-register-card">
+      <h1 class="customer-register-title">{{ 'customer.register.title' | t }}</h1>
+
+      {%- form 'create_customer', novalidate: 'novalidate', class: 'customer-register-form' -%}
+        {%- if form.errors -%}
+          <div class="customer-register-alert" role="alert">
+            {{ form.errors | default_errors }}
+          </div>
+        {%- endif -%}
+
+        <div class="form-field-grid">
+          <div class="form-field">
+            <label class="form-label" for="RegisterFirstName">{{ 'customer.register.first_name' | t }}</label>
+            <input class="input" type="text" id="RegisterFirstName" name="customer[first_name]" autocomplete="given-name">
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="RegisterLastName">{{ 'customer.register.last_name' | t }}</label>
+            <input class="input" type="text" id="RegisterLastName" name="customer[last_name]" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="RegisterEmail">{{ 'customer.register.email' | t }}</label>
+          <input class="input" type="email" id="RegisterEmail" name="customer[email]" autocomplete="email" required aria-required="true">
+        </div>
+
+        <div class="form-field">
+          <label class="form-label" for="RegisterPassword">{{ 'customer.register.password' | t }}</label>
+          <input class="input" type="password" id="RegisterPassword" name="customer[password]" autocomplete="new-password" required aria-required="true">
+        </div>
+
+        <button type="submit" class="button button-primary button-block">{{ 'customer.register.submit' | t }}</button>
+      {%- endform -%}
+
+      <div class="customer-register-actions">
+        <a class="button button-ghost button-block" href="{{ routes.account_login_url }}">{{ 'customer.login_page.title' | t }}</a>
+      </div>
+    </div>
+  </div>
+
+  {% stylesheet %}
+  .customer-register-section { padding: 48px 0; }
+  .customer-register-container { max-width: 560px; margin: 0 auto; padding: 0 20px; }
+  .customer-register-card { background: rgb(var(--color-background)); border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,.06); padding: 32px; }
+  .customer-register-title { margin: 0 0 16px; font-size: 28px; font-weight: 700; text-align: center; }
+  .customer-register-alert { background: rgba(var(--color-foreground), .06); color: rgb(var(--color-foreground)); border: 1px solid rgba(var(--color-foreground), .15); border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; }
+  .customer-register-form { display: grid; gap: 16px; }
+  .form-field-grid { display: grid; gap: 12px; grid-template-columns: 1fr 1fr; }
+  .form-label { display: block; margin-bottom: 8px; font-weight: 600; }
+  .input { width: 100%; height: 44px; padding: 10px 12px; border: var(--inputs-border-width) solid rgba(var(--color-foreground), var(--inputs-border-opacity)); border-radius: var(--inputs-radius); background: rgb(var(--color-background)); transition: border-color .2s, box-shadow .2s; }
+  .input:focus { outline: none; border-color: rgb(var(--color-foreground)); box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width)) rgba(var(--color-foreground)); }
+  .button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; padding: 0 16px; border-radius: var(--buttons-radius); font-weight: 700; text-decoration: none; cursor: pointer; transition: background-color .2s, color .2s, box-shadow .2s, transform .05s; border: 1px solid transparent; }
+  .button-block { width: 100%; }
+  .button-primary { background: rgba(var(--color-button), var(--alpha-button-background, 1)); color: rgb(var(--color-button-text)); border: var(--buttons-border-width) solid rgba(var(--color-button-text), var(--buttons-border-opacity, 0)); }
+  .button-primary:hover { filter: brightness(.95); }
+  .button-ghost { background: transparent; color: rgb(var(--color-foreground)); }
+  .customer-register-actions { display: grid; gap: 10px; margin-top: 8px; }
+  @media (max-width: 480px) { .customer-register-card { padding: 24px; } .customer-register-title { font-size: 24px; } .form-field-grid { grid-template-columns: 1fr; } }
+  {% endstylesheet %}
+
+  {% schema %}
+  {
+    "name": "Customer register",
+    "tag": "section",
+    "class": "section",
+    "settings": [
+      {
+        "type": "color_scheme",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "default": "scheme-1"
+      }
+    ]
+  }
+  {% endschema %}
+
+
+

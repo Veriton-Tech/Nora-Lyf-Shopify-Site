@@ -1,0 +1,142 @@
+{%- comment -%} 
+            Full-screen mobile menu page 
+            Usage: assign to a Page with template "page.menu"
+{%- endcomment -%}
+
+<section class="mobile-menu-page color-{{ section.settings.color_scheme }}">
+  <div class="mobile-menu-page__header">
+    <a
+      class="mobile-menu-page__close"
+      href="{{ routes.root_url }}"
+      aria-label="{{ 'accessibility.close' | t }}">
+      <span class="svg-wrapper">{{- 'icon-close.svg' | inline_asset_content -}}</span>
+    </a>
+  </div>
+
+  <nav
+    class="mobile-menu-page__nav"
+    role="navigation"
+    aria-label="{{ 'sections.header.menu' | t }}">
+    <h2 class="mobile-menu-page__title-text">Menu</h2>
+    <ul class="mobile-menu-page__list" role="list">
+      <li>
+        <a class="mobile-menu-page__link" href="{{ routes.root_url }}">Home</a>
+      </li>
+      <li>
+        <a class="mobile-menu-page__link" href="{{ routes.collections_url }}/supplements">Supplements</a>
+      </li>
+      <li>
+        <a class="mobile-menu-page__link" href="{{ routes.collections_url }}/sports">Sports</a>
+      </li>
+      <li>
+        <a class="mobile-menu-page__link" href="{{ routes.collections_url }}/bath-beauty">Bath</a>
+      </li>
+      <li>
+        <a class="mobile-menu-page__link" href="{{ routes.collections_url }}/beauty-skincare">Beauty</a>
+      </li>
+      <li>
+        <a class="mobile-menu-page__link" href="{{ routes.collections_url }}/grocery">Grocery</a>
+      </li>
+      <li>
+        <a class="mobile-menu-page__link" href="{{ routes.collections_url }}/baby">Baby</a>
+      </li>
+      <li>
+        <a class="mobile-menu-page__link" href="{{ routes.collections_url }}/pets">Pets</a>
+      </li>
+    </ul>
+  </nav>
+</section>
+
+{% schema %}
+  {
+    "name": "Mobile menu page",
+    "settings": [
+      {
+        "type": "link_list",
+        "id": "menu",
+        "label": "Menu",
+        "default": "main-menu"
+      }, {
+        "type": "checkbox",
+        "id": "show_logo",
+        "label": "Show logo",
+        "default": true
+      }, {
+        "type": "select",
+        "id": "color_scheme",
+        "label": "Color scheme",
+        "options": [
+          {
+            "value": "scheme-1",
+            "label": "Scheme 1"
+          }, {
+            "value": "scheme-2",
+            "label": "Scheme 2"
+          }, {
+            "value": "scheme-3",
+            "label": "Scheme 3"
+          }
+        ],
+        "default": "scheme-1"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Mobile menu page"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+  .mobile-menu-page {
+    min-height: 100vh;
+    padding: 1.2rem 1.6rem 4rem;
+  }
+  .mobile-menu-page__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+  }
+  .mobile-menu-page__close {
+    display: inline-flex;
+    align-items: center;
+  }
+  .mobile-menu-page__title {
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.8rem;
+  }
+  .mobile-menu-page__nav {
+    margin-top: 1.2rem;
+    border: 1px solid rgba(var(--color-foreground), 0.1);
+    border-radius: 8px;
+    padding: 0 1.2rem;
+  }
+  .mobile-menu-page__title-text {
+    font-size: 2rem;
+    font-weight: 600;
+    margin: 0.6rem 0 0.4rem;
+    color: rgb(var(--color-foreground));
+  }
+  .mobile-menu-page__list,
+  .mobile-menu-page__sublist {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .mobile-menu-page__link {
+    display: block;
+    padding: 1.2rem 0;
+    font-size: 1.7rem;
+    text-decoration: none;
+    color: rgb(var(--color-foreground));
+  }
+  .mobile-menu-page__summary {
+    cursor: pointer;
+  }
+  .mobile-menu-page__group {
+    border-bottom: 1px solid rgba(var(--color-foreground), 0.08);
+  }
+{% endstylesheet %}

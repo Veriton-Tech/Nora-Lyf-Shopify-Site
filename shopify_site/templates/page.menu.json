@@ -1,0 +1,11 @@
+{
+  "sections": {
+    "main": {
+      "type": "mobile-menu-page",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}
+
+

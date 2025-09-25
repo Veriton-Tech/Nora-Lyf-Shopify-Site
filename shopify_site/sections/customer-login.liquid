@@ -1,13 +1,23 @@
 {% comment %} 
-    Custom Customer Login Section 
-    Provides full theme-controlled login UI for classic customer accounts. 
-    Uses locale strings under customer.login_page.* and customer.*
+                        Custom Customer Login Section 
+                        Provides full theme-controlled login UI for classic customer accounts. 
+                        Uses locale strings under customer.login_page.* and customer.*
 {% endcomment %}
 
 <section class="customer-login-section color-{{ section.settings.color_scheme }}">
   <div class="customer-login-container">
     <div class="customer-login-card">
-      <h1 class="customer-login-title">{{ 'customer.login_page.title' | t }}</h1>
+      {%- if settings.logo != blank -%}
+        <div class="customer-login-brand">
+          <a
+            href="{{ routes.root_url }}"
+            class="brand-link"
+            aria-label="Nora Lyf">
+            {{ settings.logo | image_url: width: settings.logo_width | image_tag: widths: '100, 160, 240, 320', width: settings.logo_width, alt: 'Nora Lyf', class: 'brand-logo' }}
+          </a>
+        </div>
+      {%- endif -%}
+      <h1 class="customer-login-title">Nora Lyf Login</h1>
 
       {%- if form.errors -%}
         <div class="customer-login-alert" role="alert">
@@ -35,7 +45,7 @@
         <div class="form-field">
           <div class="form-label-row">
             <label for="CustomerPassword" class="form-label">{{ 'customer.login_page.password' | t }}</label>
-            <a href="{{ routes.recover_password }}" class="link link-muted">{{ 'customer.login_page.forgot_password' | t }}</a>
+            <a href="/pages/forgot-password" class="link link-muted">{{ 'customer.login_page.forgot_password' | t }}</a>
           </div>
           <input
             type="password"
@@ -51,6 +61,8 @@
           {{ 'customer.login_page.sign_in' | t }}
         </button>
       {%- endform -%}
+
+      <!-- Recover form moved to dedicated page: /pages/forgot-password -->
 
       <div class="customer-login-divider">
         <span>{{ 'customer.login_page.alternate_provider_separator' | t }}</span>
@@ -74,6 +86,8 @@
   {%- endif -%}
 </section>
 
+<!-- No inline JS needed; forgot password handled on dedicated page -->
+
 {% stylesheet %}
   .customer-login-section {
     padding: 48px 0;
@@ -90,6 +104,28 @@
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
     padding: 32px;
+  }
+
+  .customer-login-brand {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+  }
+
+  /* removed brand-fallback styles */
+
+  .brand-text {
+    font-weight: 800;
+    font-size: 18px;
+    line-height: 1;
+    color: rgb(var(--color-foreground));
+  }
+
+  .brand-logo {
+    max-height: 44px;
+    height: auto;
+    width: auto;
+    display: block;
   }
 
   .customer-login-title {
@@ -113,147 +149,155 @@
     gap: 16px;
   }
 
-  .form-field {}
+  /* removed empty ruleset */
 
-.form-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
-}
-
-.form-label-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
-}
-
-.input {
-  width: 100%;
-  height: 44px;
-  padding: 10px 12px;
-  border: var(--inputs-border-width) solid rgba(var(--color-foreground), var(--inputs-border-opacity));
-  border-radius: var(--inputs-radius);
-  background: rgb(var(--color-background));
-  transition: border-color 0.2s
-  , box-shadow 0.2s;
-}
-
-.input:focus {
-  outline: none;
-  border-color: rgb(var(--color-foreground));
-  box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width)) rgba(var(--color-foreground));
-}
-
-.button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  height: 44px;
-  padding: 0 16px;
-  border-radius: var(--buttons-radius);
-  font-weight: 700;
-  text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.2s
-  , color 0.2s
-  , box-shadow 0.2s
-  , transform 0.05s;
-  border: 1px solid transparent;
-}
-
-.button-block {
-  width: 100%;
-}
-
-.button-primary {
-  background: rgba(var(--color-button), var(--alpha-button-background, 1));
-  color: rgb(var(--color-button-text));
-  border: var(--buttons-border-width) solid rgba(var(--color-button-text), var(--buttons-border-opacity, 0));
-}
-
-.button-primary:hover {
-  filter: brightness(0.95);
-}
-
-.button-primary:active {
-  transform: translateY(1px);
-}
-
-.button-secondary {
-  background: rgb(var(--color-foreground));
-  color: rgb(var(--color-background));
-}
-
-.button-outline {
-  background: transparent;
-  color: rgb(var(--color-button));
-  border-color: rgb(var(--color-button));
-}
-
-.button-outline:hover {
-  background: rgba(var(--color-button), 0.06);
-}
-
-.button-ghost {
-  background: transparent;
-  color: rgb(var(--color-foreground));
-}
-
-.link {
-  color: rgb(var(--color-link));
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
-}
-
-.link-muted {
-  color: #6b7280;
-}
-
-.customer-login-divider {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #6b7280;
-  margin: 18px 0;
-}
-
-.customer-login-divider::before,
-.customer-login-divider::after {
-  content: "";
-  height: 1px;
-  flex: 1;
-  background: #e5e7eb;
-}
-
-.customer-login-actions {
-  display: grid;
-  gap: 10px;
-}
-
-.customer-login-guest {
-  max-width: 560px;
-  margin: 20px auto 0;
-  padding: 0 20px;
-  text-align: center;
-}
-
-.guest-title {
-  margin-bottom: 10px;
-}
-
-@media (max-width: 480px) {
-  .customer-login-card {
-    padding: 24px;
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
   }
-  .customer-login-title {
-    font-size: 24px;
+
+  .form-label-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
   }
-}
+
+  .input {
+    width: 100%;
+    height: 44px;
+    padding: 10px 12px;
+    border: var(--inputs-border-width) solid rgba(var(--color-foreground), var(--inputs-border-opacity));
+    border-radius: var(--inputs-radius);
+    background: rgb(var(--color-background));
+    transition: border-color 0.2s
+    , box-shadow 0.2s;
+  }
+
+  .input:focus {
+    outline: none;
+    border-color: rgb(var(--color-foreground));
+    box-shadow: 0 0 0 calc(0.1rem + var(--inputs-border-width)) rgba(var(--color-foreground));
+  }
+
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: var(--buttons-radius);
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s
+    , color 0.2s
+    , box-shadow 0.2s
+    , transform 0.05s;
+    border: 1px solid transparent;
+  }
+
+  .button-block {
+    width: 100%;
+  }
+
+  .button-primary {
+    background: rgba(var(--color-button), var(--alpha-button-background, 1));
+    color: rgb(var(--color-button-text));
+    border: var(--buttons-border-width) solid rgba(var(--color-button-text), var(--buttons-border-opacity, 0));
+  }
+
+  .button-primary:hover {
+    filter: brightness(0.95);
+  }
+
+  .button-primary:active {
+    transform: translateY(1px);
+  }
+
+  .button-secondary {
+    background: rgb(var(--color-foreground));
+    color: rgb(var(--color-background));
+  }
+
+  .button-outline {
+    background: transparent;
+    color: rgb(var(--color-button));
+    border-color: rgb(var(--color-button));
+  }
+
+  .customer-login-actions .button-outline:hover {
+    background: transparent;
+    color: rgb(var(--color-button));
+    border-color: rgb(var(--color-button));
+  }
+
+  .button-ghost {
+    background: transparent;
+    color: rgb(var(--color-foreground));
+  }
+
+  .link {
+    color: rgb(var(--color-link));
+    text-decoration: none;
+  }
+
+  .link:hover {
+    text-decoration: underline;
+  }
+
+  .link-muted {
+    color: #6b7280;
+  }
+
+  .customer-login-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #6b7280;
+    margin: 18px 0;
+  }
+
+  /* Recover password moved to dedicated page */
+
+  .customer-login-divider::before,
+  .customer-login-divider::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: #e5e7eb;
+  }
+
+  .customer-login-actions {
+    display: grid;
+    gap: 10px;
+  }
+
+  .customer-login-guest {
+    max-width: 560px;
+    margin: 20px auto 0;
+    padding: 0 20px;
+    text-align: center;
+  }
+
+  .guest-title {
+    margin-bottom: 10px;
+  }
+
+  @media (max-width: 480px) {
+    .customer-login-card {
+      padding: 24px;
+    }
+    .customer-login-title {
+      font-size: 24px;
+    }
+  }
+  /* Hide previous header logo on login page */
+  .getsupp-header .getsupp-logo {
+    display: none;
+  }
 {% endstylesheet %}
 
 {% schema %}
