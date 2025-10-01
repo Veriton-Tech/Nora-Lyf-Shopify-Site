@@ -1,18 +1,52 @@
 <h1 align="center" style="position: relative;">
   <br>
-    <img src="./assets/shoppy-x-ray.svg" alt="logo" width="200">
-  <br>
-  Shopify Skeleton Theme
+  🛡️ GetSupp Shopify Theme
 </h1>
 
-A minimal, carefully structured Shopify theme designed to help you quickly get started. Designed with modularity, maintainability, and Shopify's best practices in mind.
+A custom Shopify theme designed specifically for **GetSupp** - a health and wellness e-commerce platform specializing in genuine health products, supplements, and wellness solutions from 300+ trusted brands.
 
 <p align="center">
   <a href="./LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
-  <a href="./actions/workflows/ci.yml"><img alt="CI" src="https://github.com/Shopify/skeleton-theme/actions/workflows/ci.yml/badge.svg"></a>
+  <img src="https://img.shields.io/badge/Shopify-Theme-96bf47" alt="Shopify Theme">
+  <img src="https://img.shields.io/badge/Health%20%26%20Wellness-E-commerce-24BAAD" alt="Health & Wellness">
 </p>
 
-## Getting started
+## About GetSupp
+
+GetSupp is a comprehensive health and wellness platform that offers:
+- 🏥 **Genuine Health Products**: 100% authentic supplements and health products
+- 🏢 **300+ Trusted Brands**: Curated selection from verified manufacturers
+- 🎯 **Expert Guidance**: Professional recommendations for health concerns
+- 🚀 **Right Results**: Evidence-based products for optimal health outcomes
+
+## Features
+
+This custom Shopify theme includes specialized components for the health and wellness industry:
+
+### 🎨 Custom Sections
+- **Hero Banner**: Eye-catching landing section with health-focused messaging
+- **Featured Products**: Showcase premium health products with detailed information
+- **Category Showcase**: Browse products by health concerns and categories
+- **Testimonials**: Customer success stories and reviews
+- **Collection Filters**: Advanced filtering for supplements and health products
+- **Trust Elements**: Security badges and authenticity guarantees
+
+### 🎯 Health & Wellness Focused
+- Product categorization by health concerns
+- Brand showcase for 300+ trusted manufacturers
+- Expert guidance integration
+- Mobile-optimized for health-conscious consumers
+- Accessibility features for all users
+
+### 🛡️ Trust & Security
+- Authenticity guarantees
+- Secure payment processing
+- Privacy-compliant design
+- Professional medical disclaimers
+
+## Theme Architecture
+
+## Getting Started
 
 ### Prerequisites
 
@@ -26,12 +60,11 @@ If you use VS Code:
 
 ### Clone
 
-Clone this repository using Git or Shopify CLI:
+Clone this repository using Git:
 
 ```bash
-git clone git@github.com:Shopify/skeleton-theme.git
-# or
-shopify theme init
+git clone https://github.com/fayzan101/Shopify-site.git
+cd Shopify-site
 ```
 
 ### Preview
@@ -42,119 +75,264 @@ Preview this theme using Shopify CLI:
 shopify theme dev
 ```
 
-## Theme architecture
+### Deploy
+
+Deploy the theme to your Shopify store:
 
 ```bash
-.
-├── assets          # Stores static assets (CSS, JS, images, fonts, etc.)
-├── blocks          # Reusable, nestable, customizable UI components
-├── config          # Global theme settings and customization options
-├── layout          # Top-level wrappers for pages (layout templates)
-├── locales         # Translation files for theme internationalization
-├── sections        # Modular full-width page components
-├── snippets        # Reusable Liquid code or HTML fragments
-└── templates       # Templates combining sections to define page structures
+shopify theme push
 ```
 
-To learn more, refer to the [theme architecture documentation](https://shopify.dev/docs/storefronts/themes/architecture).
+## GetSupp Custom Components
 
-### Templates
+### Hero Banner (`getsupp-hero-banner.liquid`)
+Custom hero section with:
+- Shield icon representing trust and authenticity
+- Centered messaging about health transformation
+- Navigation links to key product categories
+- Mobile-responsive design
+
+### Featured Products (`getsupp-featured-products.liquid`)
+Specialized product showcase with:
+- Health product cards with vendor information
+- Price display with compare-at pricing
+- Sale badges for promotional items
+- Grid layout optimized for supplement products
+
+### Category Showcase (`getsupp-category-showcase.liquid`)
+Health-focused category browsing:
+- Browse by health concerns
+- Visual category representations
+- Product counts per category
+- Intuitive navigation for health shoppers
+
+### Collection Components
+- **Filters** (`getsupp-collection-filters.liquid`): Advanced filtering for supplements
+- **Headers** (`getsupp-collection-header.liquid`): Collection page headers
+- **Products** (`getsupp-collection-products.liquid`): Product grid for collections
+
+### Testimonials (`getsupp-testimonials.liquid`)
+Customer success stories with:
+- Health transformation testimonials
+- Star ratings
+- Customer verification
+- Mobile-optimized carousel
+
+## Project Structure
+
+```bash
+shopify_site/
+├── assets/          # Static assets (CSS, JS, images, fonts)
+│   ├── getsupp-*    # GetSupp-specific styling and scripts
+│   ├── base.css     # Core theme styles
+│   └── components/  # Component-specific styles
+├── config/          # Theme settings and configuration
+├── layout/          # Page layout templates
+├── locales/         # Internationalization files
+├── sections/        # Page sections and components
+│   ├── getsupp-*    # Custom GetSupp sections
+│   ├── header.liquid
+│   └── footer.liquid
+├── snippets/        # Reusable code fragments
+└── templates/       # Page templates
+```
+
+### Key GetSupp Files
+- `sections/getsupp-hero-banner.liquid` - Main hero section
+- `sections/getsupp-featured-products.liquid` - Product showcase
+- `sections/getsupp-category-showcase.liquid` - Health categories
+- `sections/getsupp-testimonials.liquid` - Customer reviews
+- `sections/getsupp-collection-*.liquid` - Collection pages
+- `assets/getsupp-*.css` - Custom styling
+- `assets/getsupp-*.js` - Custom JavaScript
+
+## Development Guidelines
+
+### Color Scheme
+The GetSupp theme uses a health-focused color palette:
+- **Primary**: `#24BAAD` (Teal) - Trust and wellness
+- **Secondary**: `#04683F` (Dark Green) - Natural health
+- **Accent**: `#B88B34` (Gold) - Premium quality
+- **Text**: `#333` (Dark Gray) - Readability
+- **Background**: `#FAFAFA` (Light Gray) - Clean appearance
+
+### CSS Architecture
+- Use the `getsupp-` prefix for all custom components
+- Follow BEM methodology for CSS classes
+- Utilize CSS custom properties for theming
+- Ensure mobile-first responsive design
+
+### JavaScript Guidelines
+- Keep scripts modular and component-specific
+- Use vanilla JavaScript where possible
+- Ensure accessibility compliance
+- Optimize for performance on mobile devices
+
+## Customization
+
+### Theme Settings
+Configure the theme through the Shopify admin:
+1. Go to Online Store > Themes
+2. Click "Customize" on the GetSupp theme
+3. Modify sections, colors, and layout options
+4. Preview changes before publishing
+
+### Adding New Sections
+1. Create new `.liquid` files in the `sections/` directory
+2. Follow the `getsupp-` naming convention
+3. Include proper schema for customization options
+4. Test across different devices and browsers
+
+## Technical Implementation
+
+### Liquid Templates
 
 [Templates](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) control what's rendered on each type of page in a theme.
 
-The Skeleton Theme scaffolds [JSON templates](https://shopify.dev/docs/storefronts/themes/architecture/templates/json-templates) to make it easy for merchants to customize their store.
+The GetSupp theme uses [JSON templates](https://shopify.dev/docs/storefronts/themes/architecture/templates/json-templates) to make it easy for merchants to customize their health and wellness store.
 
-None of the template types are required, and not all of them are included in the Skeleton Theme. Refer to the [template types reference](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) for a full list.
+Custom templates include:
+- Product pages optimized for supplement information
+- Collection pages with health category filtering
+- Contact forms with health consultation options
+- About pages highlighting medical disclaimers
 
-### Sections
+### Custom Sections
 
-[Sections](https://shopify.dev/docs/storefronts/themes/architecture/sections) are Liquid files that allow you to create reusable modules of content that can be customized by merchants. They can also include blocks which allow merchants to add, remove, and reorder content within a section.
+[Sections](https://shopify.dev/docs/storefronts/themes/architecture/sections) are Liquid files that allow you to create reusable modules of content that can be customized by merchants.
 
-Sections are made customizable by including a `{% schema %}` in the body. For more information, refer to the [section schema documentation](https://shopify.dev/docs/storefronts/themes/architecture/sections/section-schema).
+GetSupp-specific sections include health-focused schema settings for:
+- Product dosage information
+- Health concern categorization
+- Brand authenticity verification
+- Medical disclaimer content
+- Customer testimonial management
 
-### Blocks
+For more information, refer to the [section schema documentation](https://shopify.dev/docs/storefronts/themes/architecture/sections/section-schema).
 
-[Blocks](https://shopify.dev/docs/storefronts/themes/architecture/blocks) let developers create flexible layouts by breaking down sections into smaller, reusable pieces of Liquid. Each block has its own set of settings, and can be added, removed, and reordered within a section.
+### Component Blocks
 
-Blocks are made customizable by including a `{% schema %}` in the body. For more information, refer to the [block schema documentation](https://shopify.dev/docs/storefronts/themes/architecture/blocks/theme-blocks/schema).
+[Blocks](https://shopify.dev/docs/storefronts/themes/architecture/blocks) let developers create flexible layouts by breaking down sections into smaller, reusable pieces of Liquid.
 
-## Schemas
+GetSupp blocks are designed for health and wellness content:
+- Health benefit highlights
+- Ingredient information cards
+- Usage instruction blocks
+- Safety warning displays
+- Brand showcase elements
 
-When developing components defined by schema settings, we recommend these guidelines to simplify your code:
+For more information, refer to the [block schema documentation](https://shopify.dev/docs/storefronts/themes/architecture/blocks/theme-blocks/schema).
 
-- **Single property settings**: For settings that correspond to a single CSS property, use CSS variables:
+## Performance & SEO
+
+### Optimization Features
+- Lazy loading for product images
+- Minified CSS and JavaScript
+- Optimized font loading
+- Mobile-first responsive design
+- Fast loading times for health product catalogs
+
+### SEO Best Practices
+- Structured data for health products
+- Proper heading hierarchy
+- Alt text for all images
+- Meta descriptions for health categories
+- Schema markup for supplement information
+
+## Schema Configuration
+
+When developing health and wellness components, we recommend these guidelines:
+
+- **Health Product Settings**: Use schema for supplement information:
 
   ```liquid
-  <div class="collection" style="--gap: {{ block.settings.gap }}px">
-    ...
+  <div class="product-dosage" style="--dosage: {{ product.metafields.health.dosage }}">
+    Recommended Dosage: {{ product.metafields.health.dosage }}
   </div>
-
-  {% stylesheet %}
-    .collection {
-      gap: var(--gap);
-    }
-  {% endstylesheet %}
 
   {% schema %}
   {
     "settings": [{
-      "type": "range",
-      "label": "gap",
-      "id": "gap",
-      "min": 0,
-      "max": 100,
-      "unit": "px",
-      "default": 0,
+      "type": "text",
+      "label": "Dosage Information",
+      "id": "dosage",
+      "info": "Daily recommended dosage"
     }]
   }
   {% endschema %}
   ```
 
-- **Multiple property settings**: For settings that control multiple CSS properties, use CSS classes:
+- **Health Category Settings**: For category-based layouts:
 
   ```liquid
-  <div class="collection {{ block.settings.layout }}">
+  <div class="health-category {{ section.settings.health_focus }}">
     ...
   </div>
-
-  {% stylesheet %}
-    .collection--full-width {
-      /* multiple styles */
-    }
-    .collection--narrow {
-      /* multiple styles */
-    }
-  {% endstylesheet %}
 
   {% schema %}
   {
     "settings": [{
       "type": "select",
-      "id": "layout",
-      "label": "layout",
-      "values": [
-        { "value": "collection--full-width", "label": "t:options.full" },
-        { "value": "collection--narrow", "label": "t:options.narrow" }
+      "id": "health_focus",
+      "label": "Health Focus",
+      "options": [
+        { "value": "immunity", "label": "Immune Support" },
+        { "value": "energy", "label": "Energy & Vitality" },
+        { "value": "digestive", "label": "Digestive Health" }
       ]
     }]
   }
   {% endschema %}
   ```
 
-## CSS & JavaScript
+## Compliance & Legal
 
-For CSS and JavaScript, we recommend using the [`{% stylesheet %}`](https://shopify.dev/docs/api/liquid/tags#stylesheet) and [`{% javascript %}`](https://shopify.dev/docs/api/liquid/tags/javascript) tags. They can be included multiple times, but the code will only appear once.
+### Medical Disclaimers
+All health product pages include appropriate medical disclaimers as required by regulations.
 
-### `critical.css`
+### Data Privacy
+The theme is designed to comply with:
+- GDPR requirements
+- CCPA compliance
+- Health data protection standards
+- Cookie consent management
 
-The Skeleton Theme explicitly separates essential CSS necessary for every page into a dedicated `critical.css` file.
+### Accessibility
+- WCAG 2.1 AA compliance
+- Screen reader compatibility
+- Keyboard navigation support
+- High contrast mode support
 
 ## Contributing
 
-We're excited for your contributions to the Skeleton Theme! This repository aims to remain as lean, lightweight, and fundamental as possible, and we kindly ask your contributions to align with this intention.
+We welcome contributions to improve the GetSupp Shopify theme! This theme is specifically designed for health and wellness e-commerce, and we ask that contributions align with this focus.
 
-Visit our [CONTRIBUTING.md](./CONTRIBUTING.md) for a detailed overview of our process, guidelines, and recommendations.
+### Contribution Guidelines
+- Follow health industry best practices
+- Ensure compliance with medical regulations
+- Maintain accessibility standards
+- Test across multiple devices and browsers
+- Document any new health-specific features
+
+### Code Standards
+- Use the `getsupp-` prefix for all custom components
+- Follow existing naming conventions
+- Include proper schema documentation
+- Write clean, maintainable code
+- Add comments for complex health-related logic
+
+## Support
+
+For questions about the GetSupp theme:
+- Check the [Shopify Theme Documentation](https://shopify.dev/docs/storefronts/themes)
+- Review health industry compliance requirements
+- Test thoroughly with health product data
+- Ensure mobile optimization for health shoppers
 
 ## License
 
-Skeleton Theme is open-sourced under the [MIT](./LICENSE.md) License.
+GetSupp Shopify Theme is open-sourced under the [MIT](./LICENSE.md) License.
+
+---
+
+**⚠️ Medical Disclaimer**: This theme is designed for e-commerce purposes only. Always include appropriate medical disclaimers and comply with local health product regulations when using this theme for supplement or health product sales.
