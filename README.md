@@ -1,19 +1,18 @@
 <h1 align="center" style="position: relative;">
   <br>
-  🛡️ GetSupp Shopify Theme
+  🛡️ Nora Lyf Shopify Theme
 </h1>
 
-A custom Shopify theme designed specifically for **GetSupp** - a health and wellness e-commerce platform specializing in genuine health products, supplements, and wellness solutions from 300+ trusted brands.
+A custom Shopify theme designed specifically for **Nora Lyf** - a health and wellness e-commerce platform specializing in genuine health products, supplements, and wellness solutions from 300+ trusted brands.
 
 <p align="center">
   <a href="./LICENSE.md"><img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License"></a>
   <img src="https://img.shields.io/badge/Shopify-Theme-96bf47" alt="Shopify Theme">
-  <img src="https://img.shields.io/badge/Health%20%26%20Wellness-E-commerce-24BAAD" alt="Health & Wellness">
 </p>
 
-## About GetSupp
+## About Nora Lyf
 
-GetSupp is a comprehensive health and wellness platform that offers:
+Nora Lyf is a comprehensive health and wellness platform that offers:
 - 🏥 **Genuine Health Products**: 100% authentic supplements and health products
 - 🏢 **300+ Trusted Brands**: Curated selection from verified manufacturers
 - 🎯 **Expert Guidance**: Professional recommendations for health concerns
@@ -83,23 +82,23 @@ Deploy the theme to your Shopify store:
 shopify theme push
 ```
 
-## GetSupp Custom Components
+## Nora Lyf Custom Components
 
-### Hero Banner (`getsupp-hero-banner.liquid`)
+### Hero Banner (`Nora Lyf-hero-banner.liquid`)
 Custom hero section with:
 - Shield icon representing trust and authenticity
 - Centered messaging about health transformation
 - Navigation links to key product categories
 - Mobile-responsive design
 
-### Featured Products (`getsupp-featured-products.liquid`)
+### Featured Products (`Nora Lyf-featured-products.liquid`)
 Specialized product showcase with:
 - Health product cards with vendor information
 - Price display with compare-at pricing
 - Sale badges for promotional items
 - Grid layout optimized for supplement products
 
-### Category Showcase (`getsupp-category-showcase.liquid`)
+### Category Showcase (`Nora Lyf-category-showcase.liquid`)
 Health-focused category browsing:
 - Browse by health concerns
 - Visual category representations
@@ -107,11 +106,11 @@ Health-focused category browsing:
 - Intuitive navigation for health shoppers
 
 ### Collection Components
-- **Filters** (`getsupp-collection-filters.liquid`): Advanced filtering for supplements
-- **Headers** (`getsupp-collection-header.liquid`): Collection page headers
-- **Products** (`getsupp-collection-products.liquid`): Product grid for collections
+- **Filters** (`Nora Lyf-collection-filters.liquid`): Advanced filtering for supplements
+- **Headers** (`Nora Lyf-collection-header.liquid`): Collection page headers
+- **Products** (`Nora Lyf-collection-products.liquid`): Product grid for collections
 
-### Testimonials (`getsupp-testimonials.liquid`)
+### Testimonials (`Nora Lyf-testimonials.liquid`)
 Customer success stories with:
 - Health transformation testimonials
 - Star ratings
@@ -123,33 +122,33 @@ Customer success stories with:
 ```bash
 shopify_site/
 ├── assets/          # Static assets (CSS, JS, images, fonts)
-│   ├── getsupp-*    # GetSupp-specific styling and scripts
+│   ├── Nora Lyf-*    # Nora Lyf-specific styling and scripts
 │   ├── base.css     # Core theme styles
 │   └── components/  # Component-specific styles
 ├── config/          # Theme settings and configuration
 ├── layout/          # Page layout templates
 ├── locales/         # Internationalization files
 ├── sections/        # Page sections and components
-│   ├── getsupp-*    # Custom GetSupp sections
+│   ├── Nora Lyf-*    # Custom Nora Lyf sections
 │   ├── header.liquid
 │   └── footer.liquid
 ├── snippets/        # Reusable code fragments
 └── templates/       # Page templates
 ```
 
-### Key GetSupp Files
-- `sections/getsupp-hero-banner.liquid` - Main hero section
-- `sections/getsupp-featured-products.liquid` - Product showcase
-- `sections/getsupp-category-showcase.liquid` - Health categories
-- `sections/getsupp-testimonials.liquid` - Customer reviews
-- `sections/getsupp-collection-*.liquid` - Collection pages
-- `assets/getsupp-*.css` - Custom styling
-- `assets/getsupp-*.js` - Custom JavaScript
+### Key Nora Lyf Files
+- `sections/Nora Lyf-hero-banner.liquid` - Main hero section
+- `sections/Nora Lyf-featured-products.liquid` - Product showcase
+- `sections/Nora Lyf-category-showcase.liquid` - Health categories
+- `sections/Nora Lyf-testimonials.liquid` - Customer reviews
+- `sections/Nora Lyf-collection-*.liquid` - Collection pages
+- `assets/Nora Lyf-*.css` - Custom styling
+- `assets/Nora Lyf-*.js` - Custom JavaScript
 
 ## Development Guidelines
 
 ### Color Scheme
-The GetSupp theme uses a health-focused color palette:
+The Nora Lyf theme uses a health-focused color palette:
 - **Primary**: `#24BAAD` (Teal) - Trust and wellness
 - **Secondary**: `#04683F` (Dark Green) - Natural health
 - **Accent**: `#B88B34` (Gold) - Premium quality
@@ -157,7 +156,7 @@ The GetSupp theme uses a health-focused color palette:
 - **Background**: `#FAFAFA` (Light Gray) - Clean appearance
 
 ### CSS Architecture
-- Use the `getsupp-` prefix for all custom components
+- Use the `Nora Lyf-` prefix for all custom components
 - Follow BEM methodology for CSS classes
 - Utilize CSS custom properties for theming
 - Ensure mobile-first responsive design
@@ -173,13 +172,13 @@ The GetSupp theme uses a health-focused color palette:
 ### Theme Settings
 Configure the theme through the Shopify admin:
 1. Go to Online Store > Themes
-2. Click "Customize" on the GetSupp theme
+2. Click "Customize" on the Nora Lyf theme
 3. Modify sections, colors, and layout options
 4. Preview changes before publishing
 
 ### Adding New Sections
 1. Create new `.liquid` files in the `sections/` directory
-2. Follow the `getsupp-` naming convention
+2. Follow the `Nora Lyf-` naming convention
 3. Include proper schema for customization options
 4. Test across different devices and browsers
 
@@ -189,7 +188,7 @@ Configure the theme through the Shopify admin:
 
 [Templates](https://shopify.dev/docs/storefronts/themes/architecture/templates#template-types) control what's rendered on each type of page in a theme.
 
-The GetSupp theme uses [JSON templates](https://shopify.dev/docs/storefronts/themes/architecture/templates/json-templates) to make it easy for merchants to customize their health and wellness store.
+The Nora Lyf theme uses [JSON templates](https://shopify.dev/docs/storefronts/themes/architecture/templates/json-templates) to make it easy for merchants to customize their health and wellness store.
 
 Custom templates include:
 - Product pages optimized for supplement information
@@ -201,7 +200,7 @@ Custom templates include:
 
 [Sections](https://shopify.dev/docs/storefronts/themes/architecture/sections) are Liquid files that allow you to create reusable modules of content that can be customized by merchants.
 
-GetSupp-specific sections include health-focused schema settings for:
+Nora Lyf-specific sections include health-focused schema settings for:
 - Product dosage information
 - Health concern categorization
 - Brand authenticity verification
@@ -214,7 +213,7 @@ For more information, refer to the [section schema documentation](https://shopif
 
 [Blocks](https://shopify.dev/docs/storefronts/themes/architecture/blocks) let developers create flexible layouts by breaking down sections into smaller, reusable pieces of Liquid.
 
-GetSupp blocks are designed for health and wellness content:
+Nora Lyf blocks are designed for health and wellness content:
 - Health benefit highlights
 - Ingredient information cards
 - Usage instruction blocks
@@ -305,7 +304,7 @@ The theme is designed to comply with:
 
 ## Contributing
 
-We welcome contributions to improve the GetSupp Shopify theme! This theme is specifically designed for health and wellness e-commerce, and we ask that contributions align with this focus.
+We welcome contributions to improve the Nora Lyf Shopify theme! This theme is specifically designed for health and wellness e-commerce, and we ask that contributions align with this focus.
 
 ### Contribution Guidelines
 - Follow health industry best practices
@@ -315,7 +314,7 @@ We welcome contributions to improve the GetSupp Shopify theme! This theme is spe
 - Document any new health-specific features
 
 ### Code Standards
-- Use the `getsupp-` prefix for all custom components
+- Use the `Nora Lyf-` prefix for all custom components
 - Follow existing naming conventions
 - Include proper schema documentation
 - Write clean, maintainable code
@@ -323,7 +322,7 @@ We welcome contributions to improve the GetSupp Shopify theme! This theme is spe
 
 ## Support
 
-For questions about the GetSupp theme:
+For questions about the Nora Lyf theme:
 - Check the [Shopify Theme Documentation](https://shopify.dev/docs/storefronts/themes)
 - Review health industry compliance requirements
 - Test thoroughly with health product data
@@ -331,7 +330,7 @@ For questions about the GetSupp theme:
 
 ## License
 
-GetSupp Shopify Theme is open-sourced under the [MIT](./LICENSE.md) License.
+Nora Lyf Shopify Theme is open-sourced under the [MIT](./LICENSE.md) License.
 
 ---
 
