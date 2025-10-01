@@ -1,49 +1,49 @@
 {% comment %} 
-  Hero banner section with customizable content
+      Hero banner section with customizable content
 {% endcomment %}
 
 {% comment %} <section class="hero-banner-section">
-    <div class="hero-slider">
-      {% for block in section.blocks %}
-        <div class="hero-slide {% if forloop.first %}active{% endif %}" {{ block.shopify_attributes }}>
-          <div class="hero-image">
-            {% if block.settings.image != blank %}
-              <img src="{{ block.settings.image | img_url: '1920x1080' }}" 
-                   alt="{{ block.settings.heading | escape }}" 
-                   class="hero-bg">
-            {% else %}
-              <img src="https://placehold.co/800x400?text=Hello+World+{{ forloop.index }}" 
-                   alt="Placeholder Image" 
-                   class="hero-bg">
-            {% endif %}
-          </div> 
+        <div class="hero-slider">
+          {% for block in section.blocks %}
+            <div class="hero-slide {% if forloop.first %}active{% endif %}" {{ block.shopify_attributes }}>
+              <div class="hero-image">
+                {% if block.settings.image != blank %}
+                  <img src="{{ block.settings.image | img_url: '1920x1080' }}" 
+                       alt="{{ block.settings.heading | escape }}" 
+                       class="hero-bg">
+                {% else %}
+                  <img src="https://placehold.co/800x400?text=Hello+World+{{ forloop.index }}" 
+                       alt="Placeholder Image" 
+                       class="hero-bg">
+                {% endif %}
+              </div> 
+            </div>
+          {% endfor %}
         </div>
-      {% endfor %}
-    </div>
-    
-    {% if section.blocks.size > 1 %}
-      <!-- Hero Navigation -->
-      <div class="hero-nav">
-        <button class="hero-prev" aria-label="Previous slide">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-        </button>
-        <button class="hero-next" aria-label="Next slide">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="9,18 15,12 9,6"></polyline>
-          </svg>
-        </button>
-      </div>
-      
-      <!-- Hero Indicators -->
-      <div class="hero-indicators">
-        {% for block in section.blocks %}
-          <button class="hero-indicator {% if forloop.first %}active{% endif %}" 
-                  data-slide="{{ forloop.index0 }}"></button>
-        {% endfor %}
-      </div>
-    {% endif %}
+        
+        {% if section.blocks.size > 1 %}
+          <!-- Hero Navigation -->
+          <div class="hero-nav">
+            <button class="hero-prev" aria-label="Previous slide">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15,18 9,12 15,6"></polyline>
+              </svg>
+            </button>
+            <button class="hero-next" aria-label="Next slide">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9,18 15,12 9,6"></polyline>
+              </svg>
+            </button>
+          </div>
+          
+          <!-- Hero Indicators -->
+          <div class="hero-indicators">
+            {% for block in section.blocks %}
+              <button class="hero-indicator {% if forloop.first %}active{% endif %}" 
+                      data-slide="{{ forloop.index0 }}"></button>
+            {% endfor %}
+          </div>
+        {% endif %}
 </section> {% endcomment %}
 
 <!-- Hero Banner Section with Full Width Slider -->
@@ -52,7 +52,7 @@
     <div class="hero-slide active">
       <div class="hero-image">
         <img
-          src="{{ 'banner2.png' | asset_url }}"
+          src="{{ 'banner2.jpg' | asset_url }}"
           alt="Placeholder Image 1"
           class="hero-bg">
       </div>
@@ -60,7 +60,7 @@
     <div class="hero-slide">
       <div class="hero-image">
         <img
-          src="{{ 'banner3.png' | asset_url }}"
+          src="{{ 'banner3.jpg' | asset_url }}"
           alt="Placeholder Image 2"
           class="hero-bg">
       </div>
@@ -68,7 +68,7 @@
     <div class="hero-slide">
       <div class="hero-image">
         <img
-          src="{{ 'banner1.jpeg' | asset_url }}"
+          src="{{ 'banner1.jpg' | asset_url }}"
           alt="Placeholder Image 3"
           class="hero-bg">
       </div>
