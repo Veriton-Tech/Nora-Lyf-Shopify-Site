@@ -1,0 +1,12 @@
+{% comment %}
+Section wrapper for cart-drawer
+This file exists so that AJAX requests like `?section_id=cart-drawer` return
+the expected HTML block. The theme previously provided cart-drawer as a
+snippet only, which causes the dev server to 404 when asked for that section.
+This wrapper simply renders the `snippets/cart-drawer.liquid` inside a
+shopify-section container so clients can safely request the section.
+{% endcomment %}
+
+<div id="shopify-section-cart-drawer" class="shopify-section">
+  {% render 'cart-drawer' %}
+</div>

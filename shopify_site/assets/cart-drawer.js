@@ -47,12 +47,17 @@ class CartDrawer extends HTMLElement {
     );
 
     document.body.classList.add('overflow-hidden');
+    // Also lock scrolling on the root element for browsers that scroll the
+    // documentElement (html) instead of body. This ensures the page behind
+    // the drawer cannot scroll on all platforms.
+    try { document.documentElement.classList.add('overflow-hidden'); } catch (e) { /* noop */ }
   }
 
   close() {
     this.classList.remove('active');
     removeTrapFocus(this.activeElement);
     document.body.classList.remove('overflow-hidden');
+    try { document.documentElement.classList.remove('overflow-hidden'); } catch (e) { /* noop */ }
   }
 
   setSummaryAccessibility(cartDrawerNote) {
@@ -80,17 +85,96 @@ class CartDrawer extends HTMLElement {
         : document.getElementById(section.id);
 
       if (!sectionElement) return;
-      sectionElement.innerHTML = this.getSectionInnerHTML(parsedState.sections[section.id], section.selector);
+
+      // Defensive: parsedState.sections may be missing or not include the
+      // requested section id (for example when the server returns a minimal
+      // cart JSON). Avoid calling .innerHTML on null; log a useful warning
+      // so developers can inspect the returned payload.
+      const sectionHtml = parsedState?.sections && parsedState.sections[section.id];
+      if (!sectionHtml) {
+        console.warn('cart-drawer: missing section HTML for', section.id, 'skipping update');
+        return;
+      }
+
+      const parsedInner = this.getSectionInnerHTML(sectionHtml, section.selector);
+      if (parsedInner !== null) {
+        sectionElement.innerHTML = parsedInner;
+      } else {
+        console.warn('cart-drawer: could not locate selector', section.selector, 'in returned section HTML for', section.id);
+      }
     });
 
     setTimeout(() => {
       this.querySelector('#CartDrawer-Overlay').addEventListener('click', this.close.bind(this));
       this.open();
     });
+    // Update header badge proactively when drawer contents are rendered.
+    try {
+      // Prefer explicit item_count if available
+      const countFromState = parsedState?.item_count || (parsedState?.cart && parsedState.cart.item_count);
+      if (typeof countFromState !== 'undefined' && countFromState !== null) {
+        if (typeof window.updateCartBadge === 'function') {
+          window.updateCartBadge(countFromState);
+        } else {
+          const el = document.getElementById('cart-count-bubble');
+          if (el) {
+            if (countFromState > 0) { el.textContent = countFromState; el.style.display = ''; } else { el.style.display = 'none'; }
+          }
+        }
+        return;
+      }
+
+      // If the server returned a cart-icon-bubble section, try to extract the count from it
+      const iconSectionHtml = parsedState?.sections && parsedState.sections['cart-icon-bubble'];
+      if (iconSectionHtml) {
+        const parsed = new DOMParser().parseFromString(iconSectionHtml, 'text/html');
+        const badge = parsed.querySelector('#cart-count-bubble') || parsed.querySelector('.cart-count-bubble');
+        if (badge) {
+          const badgeCount = parseInt(badge.textContent.trim()) || 0;
+          if (typeof window.updateCartBadge === 'function') window.updateCartBadge(badgeCount);
+          else {
+            const el = document.getElementById('cart-count-bubble');
+            if (el) { if (badgeCount > 0) { el.textContent = badgeCount; el.style.display = ''; } else { el.style.display = 'none'; } }
+          }
+          return;
+        }
+      }
+
+      // Last resort: fetch cart JSON and update the badge
+      (async () => {
+        try {
+          const cartJsonUrl = (window.routes && window.routes.cart_url) ? `${window.routes.cart_url}.js` : '/cart.js';
+          const resp = await fetch(cartJsonUrl, { headers: { Accept: 'application/json' } });
+          if (resp.ok) {
+            const cartJson = await resp.json();
+            const count = cartJson.item_count || (cartJson.items && cartJson.items.length) || 0;
+            if (typeof window.updateCartBadge === 'function') window.updateCartBadge(count);
+            else {
+              const el = document.getElementById('cart-count-bubble');
+              if (el) { if (count > 0) { el.textContent = count; el.style.display = ''; } else { el.style.display = 'none'; } }
+            }
+          }
+        } catch (e) {
+          console.warn('cart-drawer: fallback cart JSON fetch failed', e);
+        }
+      })();
+    } catch (e) {
+      console.warn('cart-drawer: could not proactively update badge', e);
+    }
   }
 
   getSectionInnerHTML(html, selector = '.shopify-section') {
-    return new DOMParser().parseFromString(html, 'text/html').querySelector(selector).innerHTML;
+    try {
+      const parsed = new DOMParser().parseFromString(html, 'text/html');
+      // Try the requested selector first, then fall back to a shopify-section
+      // wrapper, then the document body, and finally return null if nothing
+      // useful was found.
+      const node = parsed.querySelector(selector) || parsed.querySelector('.shopify-section') || parsed.body.firstElementChild;
+      return node ? node.innerHTML : parsed.body.innerHTML || null;
+    } catch (e) {
+      console.warn('getSectionInnerHTML parse failed', e);
+      return null;
+    }
   }
 
   getSectionsToRender() {

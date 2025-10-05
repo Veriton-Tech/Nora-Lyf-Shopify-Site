@@ -257,7 +257,7 @@
                     </div>
 
                     <div class="getsupp-new-arrivals-actions">
-                      <product-form data-section-id="{{ section.id }}" data-show-notification="true">
+                      <product-form data-section-id="{{ section.id }}">
                         <form action="/cart/add" method="post" enctype="multipart/form-data" class="getsupp-add-to-cart-form">
                           <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}">
                           <button type="submit" class="getsupp-add-to-cart-btn" {% unless p.available %}disabled{% endunless %}>
@@ -504,7 +504,8 @@
   .product-page__add-to-cart:hover { background: #035a3a; transform: translateY(-2px); }
 
   /* Related products */
-  .related-products { margin: 2rem 0 3rem; padding: 1rem 2rem; background: transparent; grid-column: 1 / -1; }
+  /* Add a bit more space above the related products to visually separate it from the product card */
+  .related-products { margin: 3rem 0 3rem; padding: 1rem 2rem; background: transparent; grid-column: 1 / -1; }
   .related-products__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding: 0 0.5rem; }
   .related-products__title { font-size: 1.25rem; font-weight: 700; color: #04683F; }
   /* When borrowing New Arrivals title class, remove its decorative underline in this context */
@@ -536,11 +537,28 @@
   }
   .related-products__btn { background: #f0f5f3; border: 1px solid #e5e5e5; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 18px; color: #04683F; }
   .related-products__track { display: flex; gap: 1rem; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 8px; -webkit-overflow-scrolling: touch; align-items: stretch; }
+  /* Better mobile scrolling: snap and touch handling */
+  .related-products__track {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    align-items: stretch;
+    /* use proximity so snapping is less aggressive and feels smoother on touch */
+    scroll-snap-type: x proximity;
+    -ms-overflow-style: none; /* hide scrollbar for IE/Edge */
+    scrollbar-width: none; /* hide scrollbar for Firefox */
+    touch-action: pan-x;
+  }
+  .related-products__track::-webkit-scrollbar { display: none; }
 
   /* Card: fixed card footprint for consistent layout across the slider */
   .related-products__card {
     width: 220px; /* fixed width for consistent sizing */
     flex: 0 0 220px;
+    scroll-snap-align: start;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -554,7 +572,7 @@
   /* Ensure New Arrivals-style cards used here match the canonical header card height
      and use flex layout so content/padding doesn't cause uneven card heights */
   .related-products__card.getsupp-new-arrivals-card {
-    height: 480px; /* desktop baseline — fixed height to enforce uniform cards */
+    height: 520px; /* increased desktop baseline so price and badges have space */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -563,10 +581,24 @@
   }
 
   .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image {
-    height: 220px;
-    min-height: 160px;
-    max-height: 320px;
+    height: 260px; /* larger image area for desktop */
+    min-height: 180px;
+    max-height: 360px;
     overflow: hidden;
+    flex-shrink: 0; /* ensure image area doesn't shrink on small screens */
+    display: flex; /* center images and ensure consistent sizing */
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  /* Ensure images inside the card fill the image area and keep object-fit behavior
+     Use a specific selector so global header styles don't override these rules */
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-content {
@@ -575,6 +607,89 @@
     flex-direction: column;
     flex-grow: 1;
     justify-content: space-between;
+    min-height: 0; /* allow children to truncate properly inside flex */
+  }
+
+  /* Desktop: reserve explicit space at bottom of the content area so the
+     Add to Cart action doesn't visually overlap the price when cards are
+     constrained to a fixed height. Keep actions in-flow (not absolute). */
+  @media (min-width: 901px) {
+    .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-content {
+      padding-bottom: 96px; /* larger reserve for button + padding so price isn't overlapped */
+      box-sizing: border-box;
+    }
+
+    .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-actions {
+      position: static !important; /* ensure actions stay in the normal flow */
+      margin-top: auto; /* push actions to the bottom of the content column */
+      align-self: stretch; /* make actions span the card width */
+      padding-top: 8px; /* small spacing above the button */
+      z-index: 2; /* keep above background but below price if necessary */
+    }
+
+    .related-products__card.getsupp-new-arrivals-card .getsupp-add-to-cart-btn {
+      display: block;
+      width: 100%;
+      margin-top: 6px; /* extra push so button sits lower inside reserved area */
+      position: relative; /* make it a positioned container for the absolute spinner */
+      overflow: visible; /* allow the spinner to be visible when positioned */
+      padding-right: 2.6rem; /* room for the spinner on the right */
+    }
+
+    /* Position the loading spinner inside the button so it appears next to the text
+       and centered vertically on desktop. This targets the spinner rendered by
+       the `loading-spinner` snippet which uses `.loading__spinner` by default. */
+    .related-products__card.getsupp-new-arrivals-card .getsupp-add-to-cart-btn .loading__spinner {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1.2rem; /* slightly smaller on buttons */
+      z-index: 3;
+      display: inline-block;
+    }
+
+    .related-products__card.getsupp-new-arrivals-card .getsupp-add-to-cart-btn .getsupp-btn-text {
+      display: inline-block;
+      vertical-align: middle;
+      padding-right: 0.25rem; /* small breathing room before spinner */
+    }
+
+    /* If a rare overlap still occurs due to third-party rules, make price
+       render above the button so it's readable. Use minimal styling change. */
+    .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-price {
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Prevent main content from clipping price/discount badges when cards
+       are constrained; let important price elements overflow into the
+       reserved bottom padding area so they're visible on desktop. */
+    .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-main-content {
+      overflow: visible;
+    }
+    /* Use mobile-like horizontal card UI on larger screens if desired: */
+    .related-products__track {
+      display: flex;
+      overflow-x: auto;
+      gap: 1rem;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 12px;
+    }
+
+    /* Make cards wider so desktop shows same UI as mobile (~1.5 cards per view) */
+    .related-products__card.getsupp-new-arrivals-card {
+      width: 30%;
+      flex: 0 0 30%;
+      height: auto; /* allow content-driven height now that image area is larger */
+    }
+
+    .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image {
+      height: 260px; /* keep the larger image height */
+    }
+
+    .related-products__track::-webkit-scrollbar { display: none; }
   }
 
   /* Prevent long titles or price blocks from expanding the card: clamp title and constrain main content */
@@ -660,14 +775,13 @@
       min-height: 260px; /* ensure visibility */
       height: auto;
       overflow: hidden;
+      margin-bottom: 10px; /* give product name breathing room on mobile */
     }
 
-    /* Make the info panel scrollable if there's too much content */
+    /* Let the page scroll naturally on mobile; remove inner scroller so users
+       can scroll the full page to see product details. */
     .product-page__info {
-      max-height: calc(100vh - 320px); /* leave room for image + padding + sticky actions */
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-right: 0.25rem; /* allow a little room for scrollbar */
+      padding-right: 0.25rem;
     }
 
     /* Reduce paddings in the content to fit screens without reducing image size */
@@ -690,9 +804,12 @@
     /* Inputs and selects must span full width */
     .product-page__option-select, .product-page__quantity-input { width: 100%; }
 
-    /* Keep add-to-cart visible on small screens by making actions sticky */
-    .product-page__actions { position: sticky; bottom: 0; background: white; padding: 0.75rem 0; z-index: 30; box-shadow: 0 -8px 20px rgba(0,0,0,0.06); }
-    /* Related products: shrink card width for narrower viewports */
+  /* Keep add-to-cart visible on small screens by making actions sticky */
+  .product-page__actions { position: sticky; bottom: 0; background: white; padding: 0.75rem 0; z-index: 30; box-shadow: 0 -8px 20px rgba(0,0,0,0.06); }
+  /* Related products spacing */
+  /* add a little more vertical breathing room on small screens */
+  .related-products { margin-top: 3.5rem; padding: 0.75rem 1rem; }
+  /* Related products: shrink card width for narrower viewports */
     .related-products__card { width: 180px; flex: 0 0 180px; }
     .related-products__image { aspect-ratio: 4 / 3; }
     .related-products__meta { padding: 0.6rem; }
@@ -717,7 +834,8 @@
       text-overflow: ellipsis;
       display: inline-block;
     }
-    .related-products { padding: 0 1rem; }
+  /* slightly larger gap for narrow screens */
+  .related-products { padding: 0 1rem; margin-top: 3rem; }
     .related-products__card { width: 160px; flex: 0 0 160px; }
     .related-products__image { aspect-ratio: 4 / 3; }
   .related-products__card.getsupp-new-arrivals-card { height: 360px; }
@@ -732,12 +850,48 @@
     .product-page__main-image { aspect-ratio: 1 / 1; max-height: none; min-height: 220px; }
     .product-page__image { width: 100%; height: auto; object-fit: contain; }
 
+  /* Extra spacing so the product title doesn't sit flush with the image */
+  .product-page__main-image { margin-bottom: 12px; }
+
     .product-page__add-to-cart { padding: 14px 12px; font-size: 15px; }
   .related-products__track { gap: 0.75rem; }
   .related-products__card { width: 140px; flex: 0 0 140px; }
+  /* extra small screens: ensure comfortable spacing between sections */
+  .related-products { margin-top: 2.5rem; }
   .related-products__image { aspect-ratio: 4 / 3; }
   .related-products__card.getsupp-new-arrivals-card { height: 320px; }
-  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image { height: 130px; }
+  /* Small screens: increase min-height slightly and ensure image fills area */
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image {
+    height: 140px;
+    min-height: 120px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  /* Ensure content has a small gap from the image so titles never overlap */
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-content {
+    padding-top: 10px;
+  }
+    /* Extra small screens: avoid title overlapping image by allowing card to grow
+       and reducing title lines to 1 to ensure it doesn't intrude into the image area */
+    .related-products__card.getsupp-new-arrivals-card {
+      height: auto; /* let content flow naturally */
+    }
+    .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image {
+      height: 130px;
+      flex-shrink: 0;
+    }
+    .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-name {
+      -webkit-line-clamp: 1; /* single-line title on tiny screens */
+      min-height: 1.2em;
+    }
     /* extra small phones: make discount badge compact */
     .product-page__discount {
       padding: 0.1rem 0.3rem;
@@ -783,37 +937,7 @@ document.addEventListener('DOMContentLoaded', function() {
   prev && prev.addEventListener('click', () => {
     track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
   });
-
-  // Drag to scroll
-  let isDown = false, startX, scrollLeft;
-
-  track.addEventListener('mousedown', (e) => {
-    isDown = true;
-    track.classList.add('is-dragging');
-    startX = e.pageX - track.offsetLeft;
-    scrollLeft = track.scrollLeft;
-  });
-  track.addEventListener('mouseleave', () => { isDown = false; track.classList.remove('is-dragging'); });
-  track.addEventListener('mouseup', () => { isDown = false; track.classList.remove('is-dragging'); });
-  track.addEventListener('mousemove', (e) => {
-    if (!isDown) return;
-    e.preventDefault();
-    const x = e.pageX - track.offsetLeft;
-    const walk = (x - startX) * 1; // scroll-fast
-    track.scrollLeft = scrollLeft - walk;
-  });
-
-  // Touch support
-  let touchStartX = 0, touchStartScroll = 0;
-  track.addEventListener('touchstart', (e) => {
-    touchStartX = e.touches[0].pageX;
-    touchStartScroll = track.scrollLeft;
-  }, { passive: true });
-  track.addEventListener('touchmove', (e) => {
-    const x = e.touches[0].pageX;
-    const walk = (x - touchStartX) * 1;
-    track.scrollLeft = touchStartScroll - walk;
-  }, { passive: true });
+  // Rely on native scrolling / momentum on touch devices for smoother behavior.
 });
 </script>
 
@@ -873,25 +997,31 @@ document.addEventListener('DOMContentLoaded', function() {
       box-shadow: 0 -6px 18px rgba(0,0,0,0.08) !important;
     }
 
-    /* Force related-products to stack responsively on mobile: override earlier fixed widths */
+    /* Mobile: keep the related products as a horizontal, touch-friendly slider
+       We'll use overflow-x with no wrapping so users can swipe through cards. */
     .related-products__track {
       display: flex !important;
-      flex-wrap: wrap !important;
+      flex-wrap: nowrap !important; /* prevent wrapping so horizontal scroll works */
       gap: 0.75rem !important;
-      overflow: visible !important;
-      padding-bottom: 0 !important;
+      overflow-x: auto !important;
+      overflow-y: hidden !important;
+      -webkit-overflow-scrolling: touch !important;
+      scroll-snap-type: x mandatory;
+      padding-bottom: 8px !important;
+      align-items: stretch !important;
     }
 
     .related-products__card {
-      width: calc(50% - 0.375rem) !important;
-      flex: 0 0 calc(50% - 0.375rem) !important;
+      width: 64% !important; /* show ~1.5 cards per viewport on small phones */
+      flex: 0 0 64% !important;
       box-sizing: border-box !important;
       margin: 0 !important;
+      scroll-snap-align: start; /* snap cards to start for nicer UX */
     }
 
     /* One-column fallback for very small devices */
     @media (max-width: 360px) {
-      .related-products__card { width: 100% !important; flex: 0 0 100% !important; }
+      .related-products__card { width: 80% !important; flex: 0 0 80% !important; }
     }
 
     /* Ensure thumbnails are scrollable and visible */

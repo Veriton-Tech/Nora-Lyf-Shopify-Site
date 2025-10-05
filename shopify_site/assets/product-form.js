@@ -77,6 +77,15 @@ if (!customElements.get('product-form')) {
               });
             this.error = false;
             const quickAddModal = this.closest('quick-add-modal');
+            const isProductPage = !!this.closest('.product-page');
+            try {
+              console.debug && console.debug('product-form:onSubmit success', {
+                isProductPage,
+                cartAssignedTag: this.cart && this.cart.tagName,
+                hasCartDrawer: !!document.querySelector('cart-drawer'),
+                hasCartNotification: !!document.querySelector('cart-notification'),
+              });
+            } catch (e) {}
             if (quickAddModal) {
               document.body.addEventListener(
                 'modalClosed',
@@ -94,7 +103,34 @@ if (!customElements.get('product-form')) {
               // Check if this form should show notification instead of opening cart drawer
               const showNotification = this.dataset.showNotification === 'true';
               
-              if (showNotification) {
+              if (isProductPage) {
+                // On full product pages, prefer opening the cart drawer so
+                // customers remain in the product context and see cart details.
+                const cartDrawer = document.querySelector('cart-drawer');
+                if (cartDrawer && typeof cartDrawer.renderContents === 'function') {
+                  try {
+                    console.debug && console.debug('product-form: rendering cartDrawer and opening');
+                    cartDrawer.renderContents(response);
+                    if (typeof cartDrawer.open === 'function') cartDrawer.open();
+                  } catch (e) {
+                    console.warn('cartDrawer.renderContents/open failed', e);
+                  }
+                } else if (this.cart && typeof this.cart.renderContents === 'function') {
+                  // Fallback to this.cart if it's already pointing to drawer-like component
+                  try {
+                    console.debug && console.debug('product-form: rendering this.cart as fallback');
+                    this.cart.renderContents(response);
+                    if (this.cart && typeof this.cart.open === 'function') this.cart.open();
+                  } catch (e) { console.warn('this.cart.renderContents failed', e); }
+                } else {
+                  console.debug && console.debug('product-form: no drawer component found to render');
+                }
+                // Ensure badge updated immediately
+                try {
+                  const count = response.item_count || (response.cart && response.cart.item_count) || (response.items && response.items.length);
+                  if (typeof window.updateCartBadge === 'function') window.updateCartBadge(count);
+                } catch (e) {}
+              } else if (showNotification) {
                 // Update cart sections without opening the drawer
                 CartPerformance.measure("add:paint-updated-sections", () => {
                   if (this.cart && this.cart.getSectionsToRender) {
@@ -109,21 +145,27 @@ if (!customElements.get('product-form')) {
                     });
                   }
                 });
-                
-                // Show notification if the function is available
+
+                // Show notification if the function is available and drawer isn't present
                 if (typeof window.showCartNotification === 'function' && response.product_title) {
-                  window.showCartNotification(`${response.product_title} added to cart!`);
+                  if (!document.querySelector('cart-drawer')) {
+                    window.showCartNotification(`${response.product_title} added to cart!`);
+                  }
                 }
                 // Fallback: ensure the header cart count bubble updates even if section replacement didn't target it
                 try {
-                  const cartCountBubble = document.getElementById('cart-count-bubble');
                   const count = response.item_count || (response.cart && response.cart.item_count) || (response.items && response.items.length);
-                  if (cartCountBubble && typeof count !== 'undefined' && count !== null) {
-                    if (count > 0) {
-                      cartCountBubble.textContent = count;
-                      cartCountBubble.style.display = '';
-                    } else {
-                      cartCountBubble.style.display = 'none';
+                  if (typeof window.updateCartBadge === 'function') {
+                    window.updateCartBadge(count);
+                  } else {
+                    const cartCountBubble = document.getElementById('cart-count-bubble');
+                    if (cartCountBubble && typeof count !== 'undefined' && count !== null) {
+                      if (count > 0) {
+                        cartCountBubble.textContent = count;
+                        cartCountBubble.style.display = '';
+                      } else {
+                        cartCountBubble.style.display = 'none';
+                      }
                     }
                   }
                 } catch (e) {
@@ -131,10 +173,25 @@ if (!customElements.get('product-form')) {
                   console.warn('Could not update cart count bubble', e);
                 }
               } else {
-                // Standard behavior: render cart drawer/notification
-                CartPerformance.measure("add:paint-updated-sections", () => {
-                  this.cart.renderContents(response);
-                });
+                // Standard behavior: render cart drawer/notification.
+                // Re-check whether a cart-notification component exists at
+                // runtime — `this.cart` may have been set to the drawer on
+                // construction but a notification component might be present
+                // (or added) and should take precedence.
+                const runtimeNotification = document.querySelector('cart-notification');
+                if (runtimeNotification && typeof runtimeNotification.renderContents === 'function') {
+                  try {
+                    runtimeNotification.renderContents(response);
+                  } catch (e) {
+                    console.warn('runtimeNotification.renderContents failed', e);
+                  }
+                } else {
+                  CartPerformance.measure("add:paint-updated-sections", () => {
+                    if (this.cart && typeof this.cart.renderContents === 'function') {
+                      this.cart.renderContents(response);
+                    }
+                  });
+                }
               }
             }
           })

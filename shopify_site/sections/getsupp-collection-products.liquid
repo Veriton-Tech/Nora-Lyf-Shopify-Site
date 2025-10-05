@@ -134,7 +134,7 @@
             <!-- Spacer to push buttons to bottom -->
             <div class="getsupp-card-spacer"></div>
             {% if product.available and section.settings.show_quick_add %}
-              <product-form data-section-id="{{ section.id }}" data-show-notification="true">
+              <product-form data-section-id="{{ section.id }}">
                 <form
                   action="{{ routes.cart_add_url }}"
                   method="post"

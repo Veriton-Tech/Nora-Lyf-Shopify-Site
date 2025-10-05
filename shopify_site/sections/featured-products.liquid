@@ -95,7 +95,7 @@
               </div>
 
               <div class="featured-products__actions">
-                <product-form data-section-id="{{ section.id }}" data-show-notification="true">
+                <product-form data-section-id="{{ section.id }}">
                   <form action="/cart/add" method="post" enctype="multipart/form-data" data-type="add-to-cart-form">
                     <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}" class="product-variant-id">
                     <button type="submit" class="featured-products__button" name="add">Add to Cart {%- render 'loading-spinner' -%}</button>

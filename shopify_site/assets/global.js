@@ -202,6 +202,171 @@ function removeTrapFocus(elementToFocus = null) {
   if (elementToFocus) elementToFocus.focus();
 }
 
+/*
+ * Shared helper: perform AJAX add-to-cart with retries, section rendering,
+ * and event publishing. Returns a Promise resolved with the parsed JSON.
+ */
+window.addToCartAjax = async function (url, formData, options = {}) {
+  const maxRetries = options.maxRetries || 3;
+  const startDelay = options.startDelay || 300;
+
+  const fetchOnce = (u, cfg) => fetch(u, cfg).then((r) => r.json());
+
+  const tryFetch = async (retriesLeft, delay) => {
+    try {
+      const result = await fetchOnce(url, { method: 'POST', body: formData, headers: cfgHeadersForFormData() });
+      // if server returned status-like error, treat as failure
+      if (result && result.status) throw new Error(result.description || 'add-to-cart failed');
+
+      // If sections are missing we'll treat as transient (hot reload) and retry
+      if ((!result.sections || Object.keys(result.sections).length === 0) && retriesLeft > 0) {
+        await new Promise((res) => setTimeout(res, delay));
+        return tryFetch(retriesLeft - 1, Math.min(delay * 2, 2000));
+      }
+
+      // Normal return
+      return result;
+    } catch (e) {
+      if (retriesLeft > 0) {
+        await new Promise((res) => setTimeout(res, delay));
+        return tryFetch(retriesLeft - 1, Math.min(delay * 2, 2000));
+      }
+      throw e;
+    }
+  };
+
+  // helpers
+  function cfgHeadersForFormData() {
+    return { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' };
+  }
+
+  // perform the fetch with retries
+  const parsed = await tryFetch(maxRetries, startDelay);
+
+  // After a successful response, update UI pieces if possible
+  try {
+    // Update cart icon bubble
+    if (parsed.sections && parsed.sections['cart-icon-bubble']) {
+      const bubble = document.getElementById('cart-icon-bubble');
+      if (bubble) {
+        const parsedHtml = new DOMParser().parseFromString(parsed.sections['cart-icon-bubble'], 'text/html');
+        const shopifySection = parsedHtml.querySelector('.shopify-section');
+        bubble.innerHTML = shopifySection ? shopifySection.innerHTML : parsedHtml.body.innerHTML || bubble.innerHTML;
+      }
+    } else {
+      // fallback: update/create the numeric badge inside the cart link so we don't replace the icon markup
+      const count = parsed.item_count || (parsed.cart && parsed.cart.item_count) || (parsed.items && parsed.items.length);
+      if (typeof window.updateCartBadge === 'function') {
+        try { window.updateCartBadge(count); } catch (e) { console.warn('updateCartBadge call failed', e); }
+      } else {
+        const countEl = document.getElementById('cart-count-bubble');
+        if (countEl && typeof count !== 'undefined') {
+          if (count > 0) {
+            countEl.textContent = count;
+            countEl.style.display = '';
+          } else {
+            countEl.style.display = 'none';
+          }
+        }
+      }
+    }
+
+    // Debug: log which sections were returned (helps diagnose missing updates)
+    try { console.debug && console.debug('addToCartAjax: returned sections', Object.keys(parsed.sections || {})); } catch (e) {}
+
+    // Publish cart update for other components and wait for subscribers (if publish returns a Promise)
+    try {
+      const publishResult = publish ? publish(PUB_SUB_EVENTS.cartUpdate, { source: 'add-to-cart-helper', cartData: parsed }) : null;
+      // Ensure we await a returned promise-like value; if publish is synchronous, Promise.resolve will normalize it.
+      await Promise.resolve(publishResult);
+    } catch (e) {
+      // swallow publish errors — should not block UI rendering
+      console.warn('addToCartAjax: publish failed', e);
+    }
+
+    // Render cart notification preferentially (if present) so themes that
+    // prefer notifications don't get a sidescreen auto-open. Only fall
+    // back to the cart drawer when a notification component is not present.
+    const cartDrawer = document.querySelector('cart-drawer');
+    const cartNotification = document.querySelector('cart-notification');
+    if (cartNotification && typeof cartNotification.renderContents === 'function') {
+      try { cartNotification.renderContents(parsed); } catch (e) { console.warn('cartNotification.renderContents failed', e); }
+    } else if (cartDrawer && typeof cartDrawer.renderContents === 'function') {
+      try { cartDrawer.renderContents(parsed); } catch (e) { console.warn('cartDrawer.renderContents failed', e); }
+    }
+  } catch (e) {
+    console.warn('addToCartAjax post-processing failed', e);
+  }
+
+  // If parsed exists but sections are missing, attempt a lightweight cart JSON fetch
+  if (parsed && (!parsed.sections || Object.keys(parsed.sections).length === 0)) {
+    try {
+      console.warn('addToCartAjax: sections missing, fetching cart JSON fallback');
+      const cartJsonUrl = (window.routes && window.routes.cart_url) ? `${window.routes.cart_url}.js` : '/cart.js';
+      const cartResp = await fetch(cartJsonUrl, { headers: { Accept: 'application/json' } });
+      if (cartResp.ok) {
+        const cartJson = await cartResp.json();
+        // update bubble
+        const count = cartJson.item_count || (cartJson.items && cartJson.items.length) || 0;
+        const countEl = document.getElementById('cart-count-bubble');
+        if (typeof window.updateCartBadge === 'function') {
+          try { window.updateCartBadge(count); } catch (e) { console.warn('updateCartBadge call failed', e); }
+        } else if (countEl) {
+          if (count > 0) {
+            countEl.textContent = count;
+            countEl.style.display = '';
+          } else {
+            countEl.style.display = 'none';
+          }
+        }
+        // publish a cartUpdate with minimal data
+        try { publish && publish(PUB_SUB_EVENTS.cartUpdate, { source: 'add-to-cart-fallback', cartData: cartJson }); } catch (e) {}
+      }
+    } catch (e) {
+      console.warn('addToCartAjax: fallback cart JSON fetch failed', e);
+    }
+  }
+
+  return parsed;
+};
+
+// Ensure cart count badge exists and update it reliably. Creates the
+// `#cart-count-bubble` element inside `#cart-icon-bubble` if missing and
+// updates its text/display. This prevents losing the numeric badge when
+// the cart icon anchor is replaced by section HTML that doesn't include
+// our expected span.
+window.updateCartBadge = function(count) {
+  try {
+    const anchor = document.getElementById('cart-icon-bubble');
+    let countEl = document.getElementById('cart-count-bubble');
+
+    if (!countEl && anchor) {
+      // Create a minimal badge element and append it to the anchor.
+      const span = document.createElement('span');
+      span.id = 'cart-count-bubble';
+      span.className = 'cart-count-bubble';
+      span.setAttribute('aria-hidden', 'true');
+      span.style.display = 'none';
+      anchor.appendChild(span);
+      countEl = span;
+    }
+
+    if (typeof count === 'undefined' || count === null) return;
+
+    if (countEl) {
+      if (count > 0) {
+        countEl.textContent = count;
+        countEl.style.display = '';
+      } else {
+        countEl.textContent = '';
+        countEl.style.display = 'none';
+      }
+    }
+  } catch (e) {
+    console.warn('updateCartBadge failed', e);
+  }
+};
+
 function onKeyUpEscape(event) {
   if (event.code.toUpperCase() !== 'ESCAPE') return;
 
@@ -1425,3 +1590,126 @@ window.showCartNotification = function(message) {
     }
   }, 5000);
 };
+
+// Delegated fallback: catch any cart add form submissions that weren't
+// handled by component-specific handlers and route them through the
+// resilient addToCartAjax helper so UI updates without reloading.
+document.addEventListener('submit', function (event) {
+  try {
+    const form = event.target;
+    if (!form || form.tagName !== 'FORM') return;
+
+    // Only intercept forms that post to cart add endpoint
+    const action = (form.getAttribute('action') || '').toString();
+    const postsToCartAdd = action.includes('/cart/add') || action.includes(window.routes?.cart_add_url || '/cart/add');
+    const hasQuickAddClass = form.classList && form.classList.contains('getsupp-add-to-cart-form');
+
+    if (!postsToCartAdd && !hasQuickAddClass) return;
+
+    // If another handler already prevented default, don't double-handle
+    if (event.defaultPrevented) return;
+
+    event.preventDefault();
+
+    // Build FormData and include requested sections like the other helpers
+    const formData = new FormData(form);
+    let sectionsToRequest = ['cart-icon-bubble'];
+    const cartComponent = document.querySelector('cart-notification') || document.querySelector('cart-drawer');
+    if (cartComponent && typeof cartComponent.getSectionsToRender === 'function') {
+      try {
+        const computed = cartComponent.getSectionsToRender().map(s => s.section || s.id || s);
+        if (computed && computed.length) sectionsToRequest = computed;
+      } catch (e) { /* ignore */ }
+    }
+    formData.append('sections', sectionsToRequest);
+    formData.append('sections_url', window.location.pathname);
+
+    // Find submit button (if any) for UI states
+    const submitButton = form.querySelector('[type=submit], button');
+    const originalText = submitButton && submitButton.querySelector ? (submitButton.querySelector('.getsupp-btn-text')?.textContent || submitButton.textContent) : '';
+    if (submitButton) {
+      submitButton.disabled = true;
+      const t = submitButton.querySelector('.getsupp-btn-text');
+      if (t) t.textContent = 'Adding...';
+    }
+
+    const finishWithSuccess = (data) => {
+      try {
+        // Ensure the cart badge is updated immediately when we show a
+        // notification. Extract a sensible count from the response data
+        // (supports both section-based responses and minimal cart JSON-like
+        // responses).
+        try {
+          const countFromData =
+            data?.item_count || (data?.cart && data.cart.item_count) || (data?.items && data.items.length);
+          if (typeof window.updateCartBadge === 'function' && typeof countFromData !== 'undefined') {
+            window.updateCartBadge(countFromData);
+          }
+        } catch (e) {
+          console.warn('Could not extract count for updateCartBadge', e);
+        }
+        if (submitButton) {
+          const t = submitButton.querySelector('.getsupp-btn-text');
+          if (t) t.textContent = 'Added!';
+          submitButton.style.background = 'linear-gradient(90deg, #28a745, #20c997)';
+        }
+            if (typeof window.showCartNotification === 'function' && data?.product_title) {
+              // If a cart-drawer exists, prefer showing the drawer instead of
+              // showing a transient notification. This prevents duplicate UI.
+              if (!document.querySelector('cart-drawer')) {
+                window.showCartNotification(`${data.product_title} added to cart!`);
+              }
+            }
+        setTimeout(() => {
+          if (submitButton) {
+            submitButton.disabled = false;
+            const t = submitButton.querySelector('.getsupp-btn-text');
+            if (t) t.textContent = originalText;
+            submitButton.style.background = 'linear-gradient(90deg, #04683F, #035a3a)';
+          }
+        }, 1600);
+
+        // Try to open cart drawer if present
+        setTimeout(() => {
+          // If a cart-notification component exists we prefer showing the
+          // notification instead of auto-opening the drawer.
+          const cartNotification = document.querySelector('cart-notification');
+          const cartDrawer = document.querySelector('cart-drawer');
+          if (!cartNotification && cartDrawer && typeof cartDrawer.open === 'function') cartDrawer.open();
+        }, 50);
+      } catch (e) { console.warn('finishWithSuccess failed', e); }
+    };
+
+    const finishWithError = (err) => {
+      console.error('Cart add failed (delegated handler)', err);
+      if (typeof window.showCartNotification === 'function') {
+        if (!document.querySelector('cart-drawer')) window.showCartNotification(window.cartStrings?.error || 'Error adding to cart');
+      }
+      if (submitButton) {
+        const t = submitButton.querySelector('.getsupp-btn-text');
+        if (t) t.textContent = 'Error';
+        submitButton.style.background = 'linear-gradient(90deg, #dc3545, #c82333)';
+      }
+      setTimeout(() => {
+        if (submitButton) {
+          submitButton.disabled = false;
+          const t = submitButton.querySelector('.getsupp-btn-text');
+          if (t) t.textContent = originalText;
+          submitButton.style.background = 'linear-gradient(90deg, #04683F, #035a3a)';
+        }
+      }, 1600);
+    };
+
+    // Use helper (with fallback to direct fetch)
+    if (typeof window.addToCartAjax === 'function') {
+      window.addToCartAjax(window.routes?.cart_add_url || '/cart/add.js', formData).then(finishWithSuccess).catch(finishWithError);
+    } else {
+      fetch(window.routes?.cart_add_url || '/cart/add.js', { method: 'POST', body: formData })
+        .then((r) => r.json())
+        .then((data) => finishWithSuccess(data))
+        .catch((err) => finishWithError(err));
+    }
+  } catch (err) {
+    console.error('Delegated cart add handler error', err);
+  }
+});

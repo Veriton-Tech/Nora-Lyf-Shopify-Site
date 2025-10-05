@@ -1,6 +1,7 @@
 .drawer {
   position: fixed;
-  z-index: 9999;
+  /* Raise above sticky product action bars and other high-z elements */
+  z-index: 11000;
   left: 0;
   top: 0;
   width: 100vw;
@@ -40,6 +41,18 @@
   right: 0;
   background: white;
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
+  /* Panel itself must be above page content but below the overlay */
+  z-index: 11005;
+  /* Ensure we never exceed viewport height and allow inner scrolling region to size accordingly */
+  max-height: 100vh;
+}
+
+/* High-specificity fallback: ensure locking overflow on html/body when drawer is open.
+   This helps on platforms where the root element handles scrolling or where
+   other rules might override a plain .overflow-hidden selector. */
+html.overflow-hidden, body.overflow-hidden {
+  overflow: hidden !important;
+  height: 100% !important;
 }
 
 /* Ensure the cart sidescreen uses the site's default body typography */
@@ -94,6 +107,7 @@ cart-drawer:not(.is-empty) .cart-drawer__collection {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex: 0 0 auto; /* header does not flex; remains visible */
 }
 
 .drawer__heading {
@@ -125,14 +139,18 @@ cart-drawer:not(.is-empty) .cart-drawer__collection {
 }
 
 .drawer__contents {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
+  /* Make contents the scrollable region while keeping header/footer fixed */
+  flex: 1 1 auto;
+  display: block;
+  overflow: auto; /* enable internal scrolling when content exceeds available height */
+  -webkit-overflow-scrolling: touch; /* momentum scrolling on iOS */
+  padding-right: 0.5rem; /* allow space for scrollbar without overlaying content */
 }
 
 .drawer__footer {
   border-top: 0.1rem solid rgba(var(--color-foreground), 0.2);
   padding: 1.5rem 0;
+  flex: 0 0 auto; /* footer remains fixed at bottom */
 }
 
 cart-drawer-items.is-empty + .drawer__footer {
@@ -165,7 +183,8 @@ cart-drawer {
   left: 0;
   width: 100vw;
   height: 100%;
-  z-index: 9999;
+  /* Ensure the custom element sits above most page UI */
+  z-index: 11000;
   overflow: visible;
 }
 
@@ -181,6 +200,10 @@ cart-drawer.active {
   right: 0;
   bottom: 0;
   left: 0;
+  /* Overlay should sit above page content but below the drawer panel so
+     clicks inside the drawer reach the panel's controls rather than the
+     overlay. Lower the z-index relative to .drawer__inner. */
+  z-index: 11000;
 }
 
 .cart-drawer__overlay:empty {
@@ -215,6 +238,27 @@ cart-drawer.active {
 cart-drawer-items {
   overflow: auto;
   flex: 1;
+}
+
+/* Ensure the custom element and form behave as flex containers so the
+   middle `.drawer__contents` area can flex and overflow correctly. Use
+   min-height: 0 to allow the flex children to shrink below their content
+   intrinsic height (important for Firefox and some mobile browsers). */
+cart-drawer-items,
+.cart-drawer__form,
+#CartDrawer-Form {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.drawer__contents {
+  /* ensure drawer contents participate in flex layout and scroll */
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media screen and (max-height: 650px) {

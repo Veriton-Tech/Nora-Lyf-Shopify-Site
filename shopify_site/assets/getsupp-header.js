@@ -52,7 +52,39 @@
       document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && accountDropdown.classList.contains('is-open')) closeAccountDropdown();
       });
+    } else {
+      // Fallback: delegated listener in case the header markup is injected later
+      document.addEventListener('click', function delegatedAccountClick(e) {
+        var trigger = e.target.closest && e.target.closest('.getsupp-account-trigger');
+        if (trigger) {
+          // Re-query dropdown in case it wasn't present at script execution time
+          var dropdown = document.querySelector('.getsupp-account-dropdown');
+          if (!dropdown) {
+            console.debug && console.debug('Account trigger clicked but dropdown missing from DOM');
+            return;
+          }
+          e.preventDefault();
+          e.stopPropagation();
+          dropdown.classList.toggle('is-open');
+          var isOpen = dropdown.classList.contains('is-open');
+          try { trigger.setAttribute('aria-expanded', isOpen); } catch (err) {}
+        }
+      });
+      // Ensure Escape will close the dropdown if it is open
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          var dropdown = document.querySelector('.getsupp-account-dropdown');
+          if (dropdown && dropdown.classList.contains('is-open')) {
+            dropdown.classList.remove('is-open');
+            var trig = document.querySelector('.getsupp-account-trigger');
+            try { if (trig) trig.setAttribute('aria-expanded', 'false'); } catch (err) {}
+          }
+        }
+      });
     }
+
+    // Position fixed dropdown under its trigger on large screens
+    
 
     function initBannerSlider() {
       const slider = document.querySelector('.banner-slider');
