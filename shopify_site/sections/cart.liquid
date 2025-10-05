@@ -232,18 +232,72 @@
                                   min-height: 400px;
                                 }
                               
-                          .cart-page__empty-content {
-                            text-align: center;
-                            background: white;
-                            padding: 3rem;
-                            border-radius: 12px;
-                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                          }
-                              
-                                .cart-page__empty-icon {
+                .cart-page__empty-content {
+                  text-align: center;
+                  background: white;
+                  padding: 3rem;
+                  border-radius: 12px;
+                  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                }
+
+                /* Mobile styles for empty cart */
+                @media (max-width: 768px) {
+                  .cart-page__empty-content {
+                    padding: 2rem 1.5rem;
+                    margin: 0 1rem;
+                  }
+
+                  .cart-page__empty-icon {
+                    margin-bottom: 1rem;
+                  }
+
+                  .cart-page__empty-icon svg {
+                    width: 60px;
+                    height: 60px;
+                  }
+
+                  .cart-page__empty-text {
+                    font-size: 1.3rem;
+                    margin-bottom: 0.75rem;
+                  }
+
+                  .cart-page__empty-description {
+                    font-size: 0.9rem;
+                    margin-bottom: 1.5rem;
+                    line-height: 1.4;
+                  }
+
+                  .cart-page__continue-shopping {
+                    padding: 1rem 1.5rem;
+                    font-size: 0.9rem;
+                    min-height: 48px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  }
+                }
+
+                @media (max-width: 480px) {
+                  .cart-page__empty-content {
+                    padding: 1.5rem 1rem;
+                  }
+
+                  .cart-page__empty-icon svg {
+                    width: 50px;
+                    height: 50px;
+                  }
+
+                  .cart-page__empty-text {
+                    font-size: 1.2rem;
+                  }
+
+                  .cart-page__empty-description {
+                    font-size: 0.85rem;
+                  }
+                }                                .cart-page__empty-icon {
                                   color: #04683F;
                                   margin-bottom: 1.5rem;
                                 }
@@ -449,29 +503,37 @@
                                   background: white;
                                 }
                               
-                                .cart-page__quantity-btn {
-                                  background: #F0F5F3;
-                                  border: none;
-                                        padding: 0.6rem;
-                                  cursor: pointer;
-                                  display: flex;
-                                  align-items: center;
-                                  justify-content: center;
-                                  min-width: 40px;
-                                  height: 40px;
-                                  transition: all 0.2s;
-                                  color: #04683F;
-                                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-                                  font-weight: 700;
-                                        font-size: 1rem;
-                                }
-                              
-                                .cart-page__quantity-btn:hover {
-                                  background: #04683F;
-                                  color: white;
-                                }
-                              
-                                .cart-page__quantity-btn .svg-wrapper {
+                .cart-page__quantity-btn {
+                  background: #F0F5F3;
+                  border: none;
+                        padding: 0.6rem;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  min-width: 40px;
+                  height: 40px;
+                  transition: all 0.2s;
+                  color: #04683F;
+                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                  font-weight: 700;
+                        font-size: 1rem;
+                  -webkit-tap-highlight-color: transparent;
+                  user-select: none;
+                  touch-action: manipulation;
+                }
+
+                .cart-page__quantity-btn:hover,
+                .cart-page__quantity-btn:focus {
+                  background: #04683F;
+                  color: white;
+                  outline: none;
+                }
+
+                .cart-page__quantity-btn:active {
+                  transform: scale(0.95);
+                  background: #035a3a;
+                }                                .cart-page__quantity-btn .svg-wrapper {
                                   width: 16px;
                                   height: 16px;
                                   display: flex;
@@ -504,28 +566,37 @@
                                   gap: 0.5rem;
                                 }
                               
-                                .cart-page__remove-btn {
-                                  background: #e74c3c;
-                                  color: white;
-                                  border: none;
-                                  padding: 0.5rem 1rem;
-                                  border-radius: 4px;
-                                  cursor: pointer;
-                                  font-size: 0.9rem;
-                                  font-weight: 600;
-                                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-                                  display: flex;
-                                  align-items: center;
-                                  gap: 0.5rem;
-                                  transition: all 0.3s ease;
-                                }
-                              
-                                .cart-page__remove-btn:hover {
-                                  background: #c0392b;
-                                  transform: translateY(-1px);
-                                }
-                              
-                                .cart-page__summary {
+                .cart-page__remove-btn {
+                  background: #e74c3c;
+                  color: white;
+                  border: none;
+                  padding: 0.5rem 1rem;
+                  border-radius: 4px;
+                  cursor: pointer;
+                  font-size: 0.9rem;
+                  font-weight: 600;
+                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5rem;
+                  transition: all 0.3s ease;
+                  -webkit-tap-highlight-color: transparent;
+                  user-select: none;
+                  touch-action: manipulation;
+                  min-height: 44px;
+                }
+              
+                .cart-page__remove-btn:hover,
+                .cart-page__remove-btn:focus {
+                  background: #c0392b;
+                  transform: translateY(-1px);
+                  outline: none;
+                }
+
+                .cart-page__remove-btn:active {
+                  transform: scale(0.95);
+                  background: #a93226;
+                }                                .cart-page__summary {
                                   background: white;
                                   border-radius: 12px;
                                   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -560,6 +631,8 @@
                                   align-items: center;
                                   padding: 0.75rem 0;
                                   border-bottom: 1px solid #e5e5e5;
+                                  gap: 1rem;
+                                  min-height: 2.5rem;
                                 }
                               
                                 .cart-page__summary-row:last-child {
@@ -576,16 +649,20 @@
                               
                                 .cart-page__summary-label {
                                   color: #666;
-                                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segue UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                                  flex: 0 0 auto;
+                                  white-space: nowrap;
                                 }
                               
                                 .cart-page__summary-value {
                                   color: #04683F;
                                   font-weight: 600;
-                                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-                                }
-                              
-                                .cart-page__summary-total .cart-page__summary-value {
+                                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segue UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                                  text-align: right;
+                                  flex: 1 1 auto;
+                                  word-wrap: break-word;
+                                  hyphens: auto;
+                                }                                .cart-page__summary-total .cart-page__summary-value {
                                   font-size: 1.3rem;
                                   font-weight: 700;
                                 }
@@ -597,46 +674,64 @@
                                   margin-bottom: 1.5rem;
                                 }
                               
-                                .cart-page__update-btn {
-                                  background: #f8f9fa;
-                                  color: #04683F;
-                                  border: 2px solid #04683F;
-                                  padding: 1rem;
-                                  border-radius: 6px;
-                                  font-weight: 700;
-                                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-                                  text-transform: uppercase;
-                                  letter-spacing: 0.05em;
-                                  cursor: pointer;
-                                  transition: all 0.3s ease;
-                                }
-                              
-                                .cart-page__update-btn:hover {
-                                  background: #04683F;
-                                  color: white;
-                                }
-                              
-                                .cart-page__checkout-btn {
-                                  background: #04683F;
-                                  color: white;
-                                  border: none;
-                                  padding: 1rem;
-                                  border-radius: 6px;
-                                  font-weight: 700;
-                                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-                                  text-transform: uppercase;
-                                  letter-spacing: 0.05em;
-                                  cursor: pointer;
-                                  transition: all 0.3s ease;
-                                }
-                              
-                                .cart-page__checkout-btn:hover {
-                                  background: #035a3a;
-                                  transform: translateY(-2px);
-                                  box-shadow: 0 4px 12px rgba(4, 104, 63, 0.3);
-                                                  }
-                                                
-                                            /* Use theme default fonts in product card area */
+                .cart-page__update-btn {
+                  background: #f8f9fa;
+                  color: #04683F;
+                  border: 2px solid #04683F;
+                  padding: 1rem;
+                  border-radius: 6px;
+                  font-weight: 700;
+                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                  text-transform: uppercase;
+                  letter-spacing: 0.05em;
+                  cursor: pointer;
+                  transition: all 0.3s ease;
+                  -webkit-tap-highlight-color: transparent;
+                  user-select: none;
+                  touch-action: manipulation;
+                  min-height: 48px;
+                }
+              
+                .cart-page__update-btn:hover,
+                .cart-page__update-btn:focus {
+                  background: #04683F;
+                  color: white;
+                  outline: none;
+                }
+
+                .cart-page__update-btn:active {
+                  transform: scale(0.98);
+                }
+              
+                .cart-page__checkout-btn {
+                  background: #04683F;
+                  color: white;
+                  border: none;
+                  padding: 1rem;
+                  border-radius: 6px;
+                  font-weight: 700;
+                  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+                  text-transform: uppercase;
+                  letter-spacing: 0.05em;
+                  cursor: pointer;
+                  transition: all 0.3s ease;
+                  -webkit-tap-highlight-color: transparent;
+                  user-select: none;
+                  touch-action: manipulation;
+                  min-height: 48px;
+                }
+              
+                .cart-page__checkout-btn:hover,
+                .cart-page__checkout-btn:focus {
+                  background: #035a3a;
+                  transform: translateY(-2px);
+                  box-shadow: 0 4px 12px rgba(4, 104, 63, 0.3);
+                  outline: none;
+                }
+
+                .cart-page__checkout-btn:active {
+                  transform: scale(0.98);
+                }                                            /* Use theme default fonts in product card area */
                                             .cart-page__item-name,
                                             .cart-page__item-brand,
                                             .cart-page__item-option,
@@ -652,54 +747,222 @@
                               
               /* Mobile Responsive */
               @media (max-width: 768px) {
+                .cart-page {
+                  padding: 1rem 0;
+                }
+
+                .cart-page__container {
+                  padding: 0 1rem;
+                }
+
                 .cart-page__content {
-                  gap: 6rem;
+                  gap: 2rem;
                 }
                               
-                                  .cart-page__item {
-                                    grid-template-columns: 1fr;
-                                    gap: 1rem;
-                                    text-align: center;
-                                  }
-                              
-                                  .cart-page__item-image {
-                                    width: 100px;
-                                    height: 100px;
-                                    margin: 0 auto;
-                                  }
-                              
-                                  .cart-page__item-quantity {
-                                    flex-direction: row;
-                                    justify-content: center;
-                                  }
-                              
-                                  .cart-page__item-actions {
-                                    flex-direction: row;
-                                    justify-content: center;
-                                  }
-                              
-                                  .cart-page__title {
-                                    font-size: 2rem;
-                                  }
-                                }
-                              
-                                @media (max-width: 480px) {
-                                  .cart-page__container {
-                                    padding: 0 1rem;
-                                  }
-                              
-                                  .cart-page__item {
-                                    padding: 1rem;
-                                  }
-                              
-                                  .cart-page__summary {
-                                    padding: 1.5rem;
-                                  }
-                              
-                                  .cart-page__title {
-                                    font-size: 1.5rem;
-                                  }
-                                }
+                .cart-page__item {
+                  grid-template-columns: 80px 1fr;
+                  grid-template-rows: auto auto auto;
+                  gap: 1rem;
+                  padding: 1.5rem;
+                  text-align: left;
+                }
+
+                .cart-page__item-image {
+                  grid-row: 1 / 3;
+                  width: 80px;
+                  height: 80px;
+                  margin: 0;
+                }
+
+                .cart-page__item-info {
+                  grid-column: 2;
+                  grid-row: 1;
+                }
+
+                .cart-page__item-price {
+                  grid-column: 2;
+                  grid-row: 2;
+                  text-align: left;
+                  margin-top: 0.5rem;
+                }
+              
+                .cart-page__item-quantity {
+                  grid-column: 1 / 3;
+                  grid-row: 3;
+                  flex-direction: row;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-top: 1rem;
+                  padding-top: 1rem;
+                  border-top: 1px solid #e5e5e5;
+                }
+
+                .cart-page__quantity-wrapper {
+                  flex: 0 0 auto;
+                }
+              
+                .cart-page__item-actions {
+                  flex-direction: row;
+                  justify-content: flex-end;
+                  margin-left: auto;
+                }
+
+                .cart-page__remove-btn {
+                  padding: 0.75rem 1rem;
+                  font-size: 0.8rem;
+                }
+              
+                .cart-page__title {
+                  font-size: 2rem;
+                  margin-bottom: 1.5rem;
+                }
+
+                .cart-page__summary {
+                  margin-top: 1rem;
+                  padding: 1.5rem;
+                }
+
+                .cart-page__summary-actions {
+                  gap: 0.75rem;
+                }
+
+                .cart-page__update-btn,
+                .cart-page__checkout-btn {
+                  padding: 0.875rem;
+                  font-size: 0.9rem;
+                }
+              }
+              
+              @media (max-width: 600px) {
+                .cart-page__container {
+                  padding: 0 0.75rem;
+                }
+
+                .cart-page__item {
+                  padding: 1rem;
+                  gap: 0.75rem;
+                }
+
+                .cart-page__item-image {
+                  width: 70px;
+                  height: 70px;
+                }
+
+                .cart-page__item-name {
+                  font-size: 1.1rem;
+                  line-height: 1.3;
+                }
+
+                .cart-page__item-current-price {
+                  font-size: 1.2rem;
+                }
+
+                .cart-page__quantity-controls {
+                  scale: 0.9;
+                }
+
+                .cart-page__quantity-btn {
+                  min-width: 36px;
+                  height: 36px;
+                  padding: 0.5rem;
+                }
+
+                .cart-page__quantity-input {
+                  width: 50px;
+                  height: 36px;
+                  font-size: 1rem;
+                }
+
+                .cart-page__title {
+                  font-size: 1.75rem;
+                }
+
+                .cart-page__summary-title {
+                  font-size: 1.3rem;
+                }
+
+                /* Mobile specific summary row spacing */
+                .cart-page__summary-row {
+                  gap: 0.75rem;
+                  padding: 0.875rem 0;
+                  flex-wrap: wrap;
+                }
+
+                .cart-page__summary-label {
+                  font-size: 0.9rem;
+                  min-width: fit-content;
+                }
+
+                .cart-page__summary-value {
+                  font-size: 0.9rem;
+                  min-width: fit-content;
+                }
+              }
+              
+              @media (max-width: 480px) {
+                .cart-page__container {
+                  padding: 0 0.5rem;
+                }
+
+                .cart-page__item {
+                  grid-template-columns: 60px 1fr;
+                  padding: 1rem;
+                  gap: 0.75rem;
+                }
+
+                .cart-page__item-image {
+                  width: 60px;
+                  height: 60px;
+                }
+
+                .cart-page__item-name {
+                  font-size: 1rem;
+                  line-height: 1.2;
+                }
+
+                .cart-page__item-current-price {
+                  font-size: 1.1rem;
+                }
+
+                .cart-page__quantity-label {
+                  font-size: 0.9rem;
+                }
+
+                .cart-page__remove-btn {
+                  font-size: 0.75rem;
+                  padding: 0.5rem 0.75rem;
+                }
+
+                .cart-page__summary {
+                  padding: 1rem;
+                }
+
+                .cart-page__title {
+                  font-size: 1.5rem;
+                }
+
+                /* Extra small mobile summary row spacing */
+                .cart-page__summary-row {
+                  gap: 0.5rem;
+                  padding: 1rem 0;
+                  align-items: flex-start;
+                }
+
+                .cart-page__summary-label {
+                  font-size: 0.85rem;
+                  line-height: 1.3;
+                }
+
+                .cart-page__summary-value {
+                  font-size: 0.85rem;
+                  line-height: 1.3;
+                }
+
+                .cart-page__summary-total .cart-page__summary-label,
+                .cart-page__summary-total .cart-page__summary-value {
+                  font-size: 1rem;
+                }
+              }
                               </style>
                               
                               <script>

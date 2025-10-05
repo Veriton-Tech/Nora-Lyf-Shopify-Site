@@ -1,11 +1,7 @@
 {% comment %} 
   GetSupp Collection Filters Section 
-  Displays filters and sorting options using Shopify's standard facets system
+  Custom filters and sorting options without default Shopify facets
 {% endcomment %}
-
-{{ 'component-facets.css' | asset_url | stylesheet_tag }}
-
-<script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
 
 <div class="getsupp-collection-filters">
   <div class="getsupp-collection-container">
@@ -73,11 +69,63 @@
           </div>
 
           <div class="getsupp-filters-body">
-            {% render 'facets'
-              , results: collection
-              , enable_filtering: true
-              , enable_sorting: false
-              , filter_type: 'drawer' %}
+            <form method="get" action="{{ collection.url }}" id="filter-form">
+              {% if collection.filters.size > 0 %}
+                {% for filter in collection.filters %}
+                  <div class="getsupp-filter-group">
+                    <h4 class="getsupp-filter-title">{{ filter.label }}</h4>
+                    
+                    {% case filter.type %}
+                      {% when 'list' %}
+                        <div class="getsupp-filter-options">
+                          {% for filter_value in filter.values %}
+                            <label class="getsupp-filter-option">
+                              <input 
+                                type="checkbox" 
+                                name="{{ filter_value.param_name }}" 
+                                value="{{ filter_value.value }}"
+                                {% if filter_value.active %}checked{% endif %}
+                              >
+                              <span class="checkmark"></span>
+                              {{ filter_value.label }}
+                              <span class="count">({{ filter_value.count }})</span>
+                            </label>
+                          {% endfor %}
+                        </div>
+                        
+                      {% when 'price_range' %}
+                        <div class="getsupp-price-range">
+                          <div class="price-inputs">
+                            <input 
+                              type="number" 
+                              name="{{ filter.min_value.param_name }}" 
+                              value="{{ filter.min_value.value | money_without_currency | remove: ',' }}"
+                              placeholder="Min price"
+                              min="0"
+                            >
+                            <span>to</span>
+                            <input 
+                              type="number" 
+                              name="{{ filter.max_value.param_name }}" 
+                              value="{{ filter.max_value.value | money_without_currency | remove: ',' }}"
+                              placeholder="Max price"
+                              min="0"
+                            >
+                          </div>
+                        </div>
+                    {% endcase %}
+                  </div>
+                {% endfor %}
+              {% else %}
+                <p class="no-filters">No filters available for this collection.</p>
+              {% endif %}
+              
+              <div class="getsupp-filter-actions">
+                <button type="submit" class="getsupp-apply-filters">Apply Filters</button>
+                <a href="{{ collection.url }}" class="getsupp-clear-filters">Clear All</a>
+              </div>
+            </form>
+          </div>
           </div>
         </div>
       </div>
@@ -111,23 +159,30 @@
     gap: 20px;
   }
 
-  .getsupp-filter-toggle {
+    .getsupp-filter-toggle {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #24BAAD;
+    background: #04683F;
     color: white;
     border: none;
     padding: 12px 20px;
     border-radius: 8px;
+    cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    cursor: pointer;
     transition: all 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .getsupp-filter-toggle:hover {
-    background: #1ea89a;
+    background: #035a3a;
+    transform: translateY(-1px);
+  }
+
+  .getsupp-filter-toggle:active {
+    transform: translateY(0);
   }
 
   .getsupp-results-count {
@@ -156,8 +211,9 @@
     width: 100%;
     height: 100vh;
     background: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+    z-index: 10001;
     transition: left 0.3s ease;
+    -webkit-overflow-scrolling: touch;
   }
 
   .getsupp-filters-panel.active {
@@ -173,6 +229,8 @@
     background: white;
     overflow-y: auto;
     padding: 0;
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
   }
 
   .getsupp-filters-header {
@@ -196,15 +254,189 @@
     cursor: pointer;
     padding: 8px;
     border-radius: 4px;
-    transition: background 0.3s ease;
+    transition: all 0.2s ease;
+    color: #666;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
   }
 
   .getsupp-filters-close:hover {
     background: #f8f9fa;
+    color: #333;
+  }
+
+  .getsupp-filters-close:active {
+    background: #eee;
+    transform: scale(0.95);
   }
 
   .getsupp-filters-body {
     padding: 20px;
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+  }
+
+  .getsupp-filter-group {
+    margin-bottom: 30px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 20px;
+  }
+
+  .getsupp-filter-group:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  .getsupp-filter-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+  }
+
+  .getsupp-filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .getsupp-filter-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #666;
+    transition: color 0.2s ease;
+    position: relative;
+    padding: 8px 0;
+  }
+
+  .getsupp-filter-option:hover {
+    color: #04683F;
+  }
+
+  .getsupp-filter-option input[type="checkbox"] {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    cursor: pointer;
+    opacity: 0;
+    z-index: 2;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .checkmark {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border: 2px solid #ddd;
+    border-radius: 3px;
+    background: white;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    margin-right: 2px;
+  }
+
+  .getsupp-filter-option input[type="checkbox"]:checked + .checkmark {
+    background: #04683F;
+    border-color: #04683F;
+  }
+
+  .getsupp-filter-option input[type="checkbox"]:checked + .checkmark:after {
+    content: '✓';
+    position: absolute;
+    left: 2px;
+    top: -1px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+  }
+
+  .count {
+    color: #999;
+    font-size: 12px;
+    margin-left: auto;
+  }
+
+  .getsupp-price-range {
+    margin-top: 10px;
+  }
+
+  .price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .price-inputs input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+
+  .price-inputs span {
+    color: #666;
+    font-size: 14px;
+  }
+
+  .getsupp-filter-actions {
+    margin-top: 30px;
+    display: flex;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+  }
+
+  .getsupp-apply-filters {
+    flex: 1;
+    background: #04683F;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  .getsupp-apply-filters:hover {
+    background: #035a3a;
+  }
+
+  .getsupp-clear-filters {
+    background: transparent;
+    color: #666;
+    border: 1px solid #ddd;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    text-align: center;
+  }
+
+  .getsupp-clear-filters:hover {
+    background: #f5f5f5;
+    color: #333;
+  }
+
+  .no-filters {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 40px 20px;
   }
 
   .getsupp-filters-body {
@@ -342,8 +574,8 @@
   }
 
   .getsupp-filter-option input[type="checkbox"]:checked + .getsupp-filter-checkbox {
-    background: #24BAAD;
-    border-color: #24BAAD;
+    background: #04683F;
+    border-color: #04683F;
   }
 
   .getsupp-filter-option input[type="checkbox"]:checked + .getsupp-filter-checkbox::after {
@@ -419,7 +651,7 @@
 
   .getsupp-apply-filters {
     flex: 1;
-    background: #24BAAD;
+    background: #04683F;
     color: white;
     border: none;
     padding: 12px 16px;
@@ -430,28 +662,242 @@
   }
 
   .getsupp-apply-filters:hover {
-    background: #1ea89a;
+    background: #035a3a;
   }
 
   /* Mobile Responsive */
   @media (max-width: 768px) {
     .getsupp-filters-content {
       width: 100%;
+      max-width: none;
     }
 
     .getsupp-filters-bar {
       flex-direction: column;
       gap: 16px;
       align-items: stretch;
+      padding: 15px 0;
     }
 
     .getsupp-filters-left {
       justify-content: space-between;
     }
 
+    .getsupp-filter-toggle {
+      padding: 14px 20px;
+      font-size: 16px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .getsupp-results-count {
+      font-size: 14px;
+      text-align: center;
+      margin-top: 8px;
+    }
+
     .getsupp-sort-select {
       min-width: auto;
       width: 100%;
+      padding: 14px 16px;
+      font-size: 16px;
+    }
+
+    .getsupp-filters-header {
+      padding: 20px 16px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .getsupp-filters-header h3 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .getsupp-filters-close {
+      padding: 8px;
+      width: 40px;
+      height: 40px;
+    }
+
+    .getsupp-filters-body {
+      padding: 16px;
+      max-height: calc(100vh - 120px);
+    }
+
+    .getsupp-filter-group {
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+    }
+
+    .getsupp-filter-title {
+      font-size: 18px;
+      margin-bottom: 16px;
+    }
+
+    .getsupp-filter-options {
+      gap: 16px;
+    }
+
+    .getsupp-filter-option {
+      font-size: 14px;
+      padding: 10px 0;
+      min-height: 40px;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .checkmark {
+      width: 18px;
+      height: 18px;
+      border-width: 2px;
+    }
+
+    .getsupp-filter-option input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+    }
+
+    .getsupp-filter-option input[type="checkbox"]:checked + .checkmark:after {
+      left: 2px;
+      top: -1px;
+      font-size: 12px;
+    }
+
+    .price-inputs {
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .price-inputs input {
+      padding: 12px 16px;
+      font-size: 16px;
+      min-height: 44px;
+    }
+
+    .getsupp-filter-actions {
+      margin-top: 25px;
+      padding-top: 20px;
+      flex-direction: column;
+      gap: 12px;
+      position: sticky;
+      bottom: 0;
+      background: white;
+      border-top: 2px solid #eee;
+    }
+
+    .getsupp-apply-filters,
+    .getsupp-clear-filters {
+      padding: 16px 20px;
+      font-size: 16px;
+      min-height: 48px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .getsupp-apply-filters {
+      order: 1;
+    }
+
+    .getsupp-clear-filters {
+      order: 2;
+    }
+  }
+
+  /* Small mobile devices */
+  @media (max-width: 480px) {
+    .getsupp-filters-header {
+      padding: 16px 12px;
+    }
+
+    .getsupp-filters-body {
+      padding: 12px;
+    }
+
+    .getsupp-filter-group {
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+    }
+
+    .getsupp-filter-title {
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+
+    .getsupp-filter-option {
+      font-size: 13px;
+      padding: 8px 0;
+      min-height: 36px;
+    }
+
+    .checkmark {
+      width: 16px;
+      height: 16px;
+    }
+
+    .getsupp-filter-option input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+    }
+
+    .getsupp-filter-option input[type="checkbox"]:checked + .checkmark:after {
+      left: 1px;
+      top: -2px;
+      font-size: 11px;
+    }
+
+    .getsupp-filter-actions {
+      padding: 16px 12px;
+      margin-top: 20px;
+    }
+
+    .getsupp-apply-filters,
+    .getsupp-clear-filters {
+      padding: 14px 16px;
+      font-size: 15px;
+    }
+  }
+
+  /* Loading states for better UX */
+  .getsupp-loading-spinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10002;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #04683F;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Performance optimizations */
+  .getsupp-products-grid {
+    transition: opacity 0.3s ease;
+  }
+
+  /* Mobile loading optimizations */
+  @media screen and (max-width: 768px) {
+    .getsupp-loading-spinner {
+      padding: 15px;
+    }
+    
+    .spinner {
+      width: 30px;
+      height: 30px;
     }
   }
 {% endstylesheet %}
@@ -462,26 +908,176 @@
     const filtersPanel = document.getElementById('filters-panel');
     const filtersClose = document.getElementById('filters-close');
     const sortSelect = document.getElementById('sort-select');
+    const filterForm = document.getElementById('filter-form');
 
-// Toggle filters panel
+    // Debounce function for performance
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+
+    // Show loading state
+    function showLoadingState() {
+      const productGrid = document.querySelector('.getsupp-products-grid');
+      if (productGrid) {
+        productGrid.style.opacity = '0.6';
+        productGrid.style.pointerEvents = 'none';
+      }
+      
+      // Add loading spinner if not exists
+      if (!document.querySelector('.getsupp-loading-spinner')) {
+        const spinner = document.createElement('div');
+        spinner.className = 'getsupp-loading-spinner';
+        spinner.innerHTML = '<div class="spinner"></div>';
+        const container = document.querySelector('.getsupp-collection-container');
+        if (container) container.appendChild(spinner);
+      }
+    }
+
+    // Hide loading state
+    function hideLoadingState() {
+      const productGrid = document.querySelector('.getsupp-products-grid');
+      if (productGrid) {
+        productGrid.style.opacity = '1';
+        productGrid.style.pointerEvents = 'auto';
+      }
+      
+      const spinner = document.querySelector('.getsupp-loading-spinner');
+      if (spinner) spinner.remove();
+    }
+
+    // Toggle filters panel
     if (filterToggle && filtersPanel) {
       filterToggle.addEventListener('click', function() {
         filtersPanel.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Prevent body scroll
+        
+        // Focus management for accessibility
+        const firstFocusable = filtersPanel.querySelector('button, input, select');
+        if (firstFocusable) {
+          setTimeout(() => firstFocusable.focus(), 300);
+        }
       });
     }
 
-// Close filters panel
+    // Close filters panel
     if (filtersClose && filtersPanel) {
       filtersClose.addEventListener('click', function() {
-        filtersPanel.classList.remove('active');
+        closeFiltersPanel();
+      });
+      
+      // Close on backdrop click
+      filtersPanel.addEventListener('click', function(e) {
+        if (e.target === filtersPanel) {
+          closeFiltersPanel();
+        }
+      });
+      
+      // Close on escape key
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && filtersPanel.classList.contains('active')) {
+          closeFiltersPanel();
+        }
+      });
+      
+      // Handle touch events for mobile
+      let startY = 0;
+      let currentY = 0;
+      let isDragging = false;
+      
+      const filtersContent = document.querySelector('.getsupp-filters-content');
+      
+      if (filtersContent) {
+        filtersContent.addEventListener('touchstart', function(e) {
+          startY = e.touches[0].clientY;
+          isDragging = false;
+        }, { passive: true });
+        
+        filtersContent.addEventListener('touchmove', function(e) {
+          currentY = e.touches[0].clientY;
+          const diffY = startY - currentY;
+          
+          // If user is at top of scroll and trying to scroll up further, allow panel close
+          if (filtersContent.scrollTop === 0 && diffY < -50) {
+            isDragging = true;
+          }
+        }, { passive: true });
+        
+        filtersContent.addEventListener('touchend', function(e) {
+          if (isDragging && currentY - startY > 100) {
+            closeFiltersPanel();
+          }
+          isDragging = false;
+        }, { passive: true });
+      }
+    }
+    
+    function closeFiltersPanel() {
+      filtersPanel.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      
+      // Return focus to filter toggle button
+      if (filterToggle) {
+        filterToggle.focus();
+      }
+    }
+
+    // Handle filter form submission
+    if (filterForm) {
+      filterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        showLoadingState();
+        
+        const formData = new FormData(filterForm);
+        const params = new URLSearchParams();
+        
+        // Add form data to URL params
+        for (let [key, value] of formData.entries()) {
+          if (value) {
+            params.append(key, value);
+          }
+        }
+        
+        // Preserve sort parameter if exists
+        const currentSort = new URLSearchParams(window.location.search).get('sort_by');
+        if (currentSort) {
+          params.set('sort_by', currentSort);
+        }
+        
+        // Navigate to filtered URL
+        const newUrl = window.location.pathname + '?' + params.toString();
+        window.location.href = newUrl;
+      });
+      
+      // Auto-submit on checkbox change (debounced)
+      const debouncedSubmit = debounce(function() {
+        filterForm.dispatchEvent(new Event('submit'));
+      }, 800);
+      
+      const checkboxes = filterForm.querySelectorAll('input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', debouncedSubmit);
+      });
+      
+      // Auto-submit on price range change (debounced)
+      const priceInputs = filterForm.querySelectorAll('input[type="number"]');
+      priceInputs.forEach(input => {
+        input.addEventListener('input', debouncedSubmit);
       });
     }
 
-// Handle sort dropdown change
+    // Optimized sort handling with debouncing
     if (sortSelect) {
-      sortSelect.addEventListener('change', function() {
+      const debouncedSort = debounce(function(sortValue) {
+        showLoadingState();
         const currentUrl = new URL(window.location);
-        const sortValue = this.value;
 
         if (sortValue) {
           currentUrl.searchParams.set('sort_by', sortValue);
@@ -489,17 +1085,60 @@
           currentUrl.searchParams.delete('sort_by');
         }
 
+        // Reset to first page when sorting
+        currentUrl.searchParams.delete('page');
+
         window.location.href = currentUrl.toString();
+      }, 300);
+
+      sortSelect.addEventListener('change', function() {
+        debouncedSort(this.value);
       });
     }
 
-// Set current sort value if present in URL
+    // Set current sort value if present in URL
     if (sortSelect) {
       const urlParams = new URLSearchParams(window.location.search);
       const currentSort = urlParams.get('sort_by');
       if (currentSort) {
         sortSelect.value = currentSort;
       }
+    }
+
+    // Add smooth scroll to top when paginating
+    const paginationLinks = document.querySelectorAll('.getsupp-pagination a');
+    paginationLinks.forEach(link => {
+      link.addEventListener('click', function(e) {
+        showLoadingState();
+        
+        // Smooth scroll to top of product grid
+        const productGrid = document.querySelector('.getsupp-products-grid');
+        if (productGrid) {
+          setTimeout(() => {
+            productGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+      });
+    });
+
+    // Performance optimization: Intersection Observer for pagination
+    const nextPageLink = document.querySelector('.getsupp-pagination-next');
+    if (nextPageLink && 'IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            // Preload next page in background for better UX
+            const nextUrl = nextPageLink.href;
+            const link = document.createElement('link');
+            link.rel = 'prefetch';
+            link.href = nextUrl;
+            document.head.appendChild(link);
+            observer.unobserve(entry.target);
+          }
+        });
+      });
+      
+      observer.observe(nextPageLink);
     }
   });
 {% endjavascript %}

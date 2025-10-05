@@ -10,7 +10,7 @@
 <div class="collection-products">
   {% paginate collection.products by 20 %}
     {% for product in collection.products %}
-      <div class="collection-product">
+        <div class="collection-product">
         {% if product.featured_image %}
           {% render 'image',
             class: 'collection-product__image',
@@ -22,6 +22,35 @@
           %}
         {% endif %}
         <div class="collection-product__content">
+          {%- comment -%}
+            Category pill above rating for collection (View All) pages
+          {%- endcomment -%}
+          {%- if product.type != blank -%}
+            <div class="card__category"><span class="card__category-tag">{{ product.type }}</span></div>
+          {%- else -%}
+            {%- assign _category_label = '' -%}
+            {%- for t in product.tags -%}
+              {%- assign t_down = t | downcase -%}
+              {%- if t_down == 'ayurvedic' or t_down == 'organic' or t_down == 'herbal' or t_down == 'ayurveda' -%}
+                {%- assign _category_label = t | capitalize -%}
+                {%- break -%}
+              {%- endif -%}
+            {%- endfor -%}
+            {%- if _category_label == '' and product.tags.size > 0 -%}
+              {%- assign _category_label = product.tags.first | capitalize -%}
+            {%- endif -%}
+            {%- if _category_label != '' -%}
+              <div class="card__category"><span class="card__category-tag">{{ _category_label }}</span></div>
+            {%- endif -%}
+          {%- endif -%}
+
+          {%- if product.metafields.reviews != nil and product.metafields.reviews.rating.value != blank -%}
+            <div class="collection-product__rating">
+              <span class="collection-rating-score">{{ product.metafields.reviews.rating.value }}</span>
+              <span class="collection-rating-count">({{ product.metafields.reviews.rating_count }})</span>
+            </div>
+          {%- endif -%}
+
           <p>{{ product.title | escape | link_to: product.url }}</p>
           <p>{{ product.price | money }}</p>
         </div>

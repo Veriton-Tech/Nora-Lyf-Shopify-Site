@@ -2,6 +2,8 @@
   Product details section with cart-style UI
 {% endcomment %}
 
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
 
 <div class="product-page">
   <div class="product-page__container">
@@ -41,6 +43,8 @@
               {% endfor %}
             </div>
           {% endif %}
+
+          <!-- Product reviews (snippet) removed for now -->
         </div>
 
         <div class="product-page__info">
@@ -87,13 +91,20 @@
             {{ product.description }}
           </div>
 
-          <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-page__form">
+          <product-form data-section-id="{{ section.id }}">
+            <form action="/cart/add" method="post" enctype="multipart/form-data" class="product-page__form" data-type="add-to-cart-form">
+            <input
+              type="hidden"
+              name="id"
+              value="{{ product.selected_or_first_available_variant.id }}"
+              class="product-variant-id">
             {% unless product.has_only_default_variant %}
               <div class="product-page__variants">
                 {% for option in product.options_with_values %}
                   <div class="product-page__option">
                     <label class="product-page__option-label">{{ option.name }}</label>
-                    <select name="id" class="product-page__option-select">
+                    {%- assign option_name_down = option.name | downcase -%}
+                    <select name="id" class="product-page__option-select {% if option_name_down contains 'size' %}product-page__option-select--size{% endif %}">
                       {% for value in option.values %}
                         <option value="{{ product.variants[forloop.index0].id }}">{{ value }}</option>
                       {% endfor %}
@@ -132,23 +143,144 @@
             </div>
             
             <div class="product-page__actions">
-              <button type="submit" class="product-page__add-to-cart">
+              <button type="submit" class="product-page__add-to-cart" name="add">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="9" cy="21" r="1"></circle>
                   <circle cx="20" cy="21" r="1"></circle>
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
                 Add to Cart
+                {%- render 'loading-spinner' -%}
               </button>
             </div>
           </form>
+          </product-form>
         </div>
+
+        {% comment %} Related products slider: uses the product's first collection as source, falls back to all products. {% endcomment %}
+        {% assign related_products = '' %}
+        {% if product.collections.size > 0 %}
+          {% assign collection_handle = product.collections.first.handle %}
+          {% assign related_products = collections[collection_handle].products %}
+        {% endif %}
+        {% if related_products == blank %}
+          {% assign related_products = collections.all.products %}
+        {% endif %}
+
+        {% if related_products.size > 1 %}
+          <div class="related-products">
+            <div class="related-products__header">
+              <h3 class="related-products__title getsupp-new-arrivals-title">You may also like</h3>
+              <div class="related-products__controls">
+                <button class="related-products__btn related-products__btn--prev" aria-label="Previous">‹</button>
+                <button class="related-products__btn related-products__btn--next" aria-label="Next">›</button>
+              </div>
+            </div>
+
+            <div class="related-products__track" data-related-track>
+              {% for p in related_products limit:8 %}
+                {% if p.id == product.id %}
+                  {% continue %}
+                {% endif %}
+                <div class="related-products__card getsupp-new-arrivals-card">
+                  <div class="getsupp-new-arrivals-image-wrapper">
+                    <div class="getsupp-new-arrivals-image">
+                      <a href="{{ p.url }}">
+                        {% if p.featured_image %}
+                          <img src="{{ p.featured_image | img_url: '400x400' }}" alt="{{ p.title }}" loading="lazy">
+                        {% else %}
+                          <div class="getsupp-new-arrivals-placeholder"></div>
+                        {% endif %}
+                      </a>
+
+                      <div class="getsupp-product-badges">
+                        <span class="getsupp-badge getsupp-new-badge">New</span>
+                        {% if p.compare_at_price > p.price %}
+                          <span class="getsupp-badge getsupp-sale-badge">Sale</span>
+                        {% endif %}
+                        {% if p.tags contains 'ayurvedic' or p.tags contains 'Ayurvedic' %}
+                          <span class="getsupp-badge getsupp-ayurvedic-badge">Ayurvedic</span>
+                        {% endif %}
+                        {% if p.tags contains 'organic' or p.tags contains 'Organic' %}
+                          <span class="getsupp-badge getsupp-organic-badge">Organic</span>
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="getsupp-new-arrivals-content">
+                    <div class="getsupp-new-arrivals-main-content">
+                      <div class="getsupp-new-arrivals-category">
+                        {% if p.type != blank %}
+                          <span class="getsupp-category-tag">{{ p.type }}</span>
+                        {% endif %}
+                      </div>
+
+                      <div class="getsupp-new-arrivals-rating-prominent">
+                        <div class="getsupp-stars-large">
+                          <span class="getsupp-star-large">★</span>
+                          <span class="getsupp-star-large">★</span>
+                          <span class="getsupp-star-large">★</span>
+                          <span class="getsupp-star-large">★</span>
+                          <span class="getsupp-star-large">★</span>
+                        </div>
+                        <div class="getsupp-rating-details">
+                          <span class="getsupp-rating-score">4.8</span>
+                          <span class="getsupp-review-count-prominent">({{ 50 | plus: forloop.index }} reviews)</span>
+                        </div>
+                      </div>
+
+                      <a href="{{ p.url }}" class="getsupp-product-link">
+                        <h3 class="getsupp-new-arrivals-name">{{ p.title | truncate: 50 }}</h3>
+                      </a>
+
+                      <div class="getsupp-new-arrivals-price">
+                        {% if p.compare_at_price > p.price %}
+                          {% assign discount_amount = p.compare_at_price | minus: p.price %}
+                          {% assign discount_percentage = discount_amount | times: 100 | divided_by: p.compare_at_price %}
+                          <div class="getsupp-price-with-discount">
+                            <div class="getsupp-discount-badges">
+                              <span class="getsupp-discount-percentage">-{{ discount_percentage }}%</span>
+                              <span class="getsupp-discount-savings">Save ₹{{ discount_amount | money_without_currency }}</span>
+                            </div>
+                            <div class="getsupp-price-comparison">
+                              <span class="getsupp-new-arrivals-compare-price">₹{{ p.compare_at_price | money_without_currency }}</span>
+                              <span class="getsupp-new-arrivals-current-price">₹{{ p.price | money_without_currency }}</span>
+                            </div>
+                          </div>
+                        {% else %}
+                          <div class="getsupp-price-regular">
+                            <span class="getsupp-new-arrivals-current-price">₹{{ p.price | money_without_currency }}</span>
+                          </div>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    <div class="getsupp-new-arrivals-actions">
+                      <product-form data-section-id="{{ section.id }}" data-show-notification="true">
+                        <form action="/cart/add" method="post" enctype="multipart/form-data" class="getsupp-add-to-cart-form">
+                          <input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}">
+                          <button type="submit" class="getsupp-add-to-cart-btn" {% unless p.available %}disabled{% endunless %}>
+                            <span class="getsupp-btn-text">{% if p.available %}Add to Cart{% else %}Sold Out{% endif %}</span>
+                            <span class="getsupp-btn-icon"><!-- icon --></span>
+                            {%- render 'loading-spinner' -%}
+                          </button>
+                        </form>
+                      </product-form>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>
 </div>
 
 <style>
+  /* Product page base styles (desktop-first) */
   .product-page {
     background: #f8f9fa;
     min-height: 100vh;
@@ -179,11 +311,12 @@
     overflow: hidden;
   }
 
+  /* Two-column layout: images | info */
   .product-page__main {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-    padding: 3rem;
+    grid-template-columns: 1fr minmax(280px, 520px);
+    gap: 2.5rem;
+    padding: 2.5rem;
   }
 
   .product-page__image-section {
@@ -194,7 +327,8 @@
 
   .product-page__main-image {
     width: 100%;
-    height: 400px;
+    aspect-ratio: 4 / 3;
+    max-height: 600px;
     border-radius: 8px;
     overflow: hidden;
     border: 2px solid #e5e5e5;
@@ -208,6 +342,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
 
   .product-page__placeholder {
@@ -219,31 +354,41 @@
     justify-content: center;
   }
 
+  /* Thumbnails: allow horizontal scrolling on small screens */
   .product-page__thumbnails {
     display: flex;
     gap: 0.5rem;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .product-page__thumbnail {
-    width: 80px;
-    height: 80px;
+    flex: 0 0 auto;
+    width: 64px;
+    height: 64px;
     border-radius: 6px;
     overflow: hidden;
     border: 2px solid #e5e5e5;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.18s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
+  .product-page__thumbnail:active,
+  .product-page__thumbnail:focus,
   .product-page__thumbnail:hover {
     border-color: #04683F;
-    transform: scale(1.05);
+    transform: translateY(-2px);
   }
 
   .product-page__thumbnail-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    display: block;
   }
 
   .product-page__info {
@@ -258,20 +403,20 @@
   }
 
   .product-page__name {
-    font-size: 2rem;
+    font-size: 24px;
     font-weight: 700;
     color: #04683F;
     margin-bottom: 0.75rem;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: 'Inter', sans-serif;
     line-height: 1.3;
   }
 
   .product-page__brand {
-    color: #24BAAD;
+    color: #04683F;
     font-weight: 600;
     margin-bottom: 1rem;
-    font-size: 1.1rem;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
   }
 
   .product-page__rating {
@@ -282,240 +427,326 @@
 
   .product-page__stars {
     display: flex;
-    color: #ffc107;
+    color: #FFD700;
+    gap: 2px;
   }
 
-  .product-page__rating-text {
-    color: #666;
-    font-size: 0.9rem;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
+  .product-page__stars svg { width: 18px; height: 18px; }
 
-  .product-page__price-section {
-    padding: 1.5rem 0;
-    border-bottom: 1px solid #e5e5e5;
-  }
+  .product-page__rating-text { color: #666; font-size: 14px; font-weight: 500; }
 
-  .product-page__discounted-prices {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .product-page__old-price {
-    color: #999;
-    font-size: 1.1rem;
-    text-decoration: line-through;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
-
-  .product-page__current-price {
-    color: #24BAAD;
-    font-weight: 700;
-    font-size: 2rem;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
-
+  .product-page__price-section { padding: 1.5rem 0; border-bottom: 1px solid #e5e5e5; }
+  .product-page__discounted-prices { display: flex; flex-direction: column; gap: 0.5rem; }
+  .product-page__old-price { color: #999; font-size: 16px; text-decoration: line-through; }
+  .product-page__current-price { color: #04683F; font-weight: 700; font-size: 24px; }
   .product-page__discount {
-    background: #e74c3c;
+    background: #04683F;
     color: white;
-    padding: 0.25rem 0.5rem;
+    padding: 0.18rem 0.4rem; /* slightly reduced padding for desktop */
     border-radius: 4px;
-    font-size: 0.8rem;
+    font-size: 11px; /* slightly smaller on desktop */
     font-weight: 600;
     display: inline-block;
-    width: fit-content;
+    white-space: nowrap; /* keep it on one line */
+    max-width: 160px; /* prevent it from growing too wide */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  .product-page__description {
-    line-height: 1.6;
-    color: #495057;
-    font-size: 1.2rem;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
+  .product-page__description { line-height: 1.6; color: #495057; font-size: 18px; }
 
-  .product-page__form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .product-page__variants {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .product-page__option {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
+  .product-page__form { display: flex; flex-direction: column; gap: 1.5rem; }
+  .product-page__variants { display: flex; flex-direction: column; gap: 1rem; }
+  .product-page__option { display: flex; flex-direction: column; gap: 0.5rem; }
 
   .product-page__option-label {
-    font-weight: 600;
+    font-family: var(--font-body-family);
+    font-style: var(--font-body-style);
+    font-weight: var(--font-body-weight);
     color: #2c3e50;
-    font-size: 1rem;
-    font-family: "Playfair Display", serif;
+    font-size: 1.1rem;
   }
-
   .product-page__option-select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid #ced4da;
     border-radius: 4px;
     background: white;
-    font-size: 1rem;
-    font-family: "Playfair Display", serif;
+    font-size: 1.05rem;
+    color: #333;
+    line-height: 1.4;
+    font-family: var(--font-body-family);
+    font-style: var(--font-body-style);
+    font-weight: var(--font-body-weight);
   }
 
-  .product-page__quantity {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
+  .product-page__quantity { display: flex; flex-direction: column; gap: 0.5rem; }
   .product-page__quantity-label {
-    font-weight: 600;
+    font-family: var(--font-body-family);
+    font-style: var(--font-body-style);
+    font-weight: var(--font-body-weight);
     color: #495057;
-    font-size: 1.2rem;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
-
-  .product-page__quantity-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-  }
-
-  .product-page__quantity-controls {
-    display: flex;
-    align-items: center;
-    border: 1px solid #e5e5e5;
-    border-radius: 4px;
-    overflow: hidden;
-    background: white;
-  }
-
-  .product-page__quantity-btn {
-    background: #F0F5F3;
-    border: none;
-    padding: 0.5rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 45px;
-    height: 45px;
-    transition: all 0.2s;
-    color: #04683F;
-    font-family: "Playfair Display", serif;
-    font-weight: 700;
     font-size: 1.1rem;
   }
+  .product-page__quantity-wrapper { display: flex; align-items: center; gap: 1rem; }
+  .product-page__quantity-controls { display: flex; align-items: center; border: 1px solid #e5e5e5; border-radius: 4px; overflow: hidden; background: white; }
 
-  .product-page__quantity-btn:hover {
-    background: #04683F;
-    color: white;
-  }
+  .product-page__quantity-btn { background: #F0F5F3; border: none; padding: 0.5rem; cursor: pointer; display: flex; align-items: center; justify-content: center; min-width: 45px; height: 45px; transition: all 0.2s; color: #04683F; font-family: "Playfair Display", serif; font-weight: 700; font-size: 1.1rem; }
+  .product-page__quantity-btn:hover { background: #04683F; color: white; }
+  .product-page__quantity-btn .svg-wrapper { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; }
+  .product-page__quantity-btn .svg-wrapper svg { width: 100%; height: 100%; fill: currentColor; }
 
-  .product-page__quantity-btn .svg-wrapper {
-    width: 16px;
-    height: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+  .product-page__quantity-input { border: none; text-align: center; width: 70px; height: 45px; font-size: 1.2rem; outline: none; background: white; font-weight: 600; color: #04683F; }
 
-  .product-page__quantity-btn .svg-wrapper svg {
-    width: 100%;
-    height: 100%;
-    fill: currentColor;
-  }
+  /* Actions and add-to-cart */
+  .product-page__actions { margin-top: 1rem; }
+  .product-page__add-to-cart { background: #04683F; color: white; border: none; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.22s ease; display: flex; align-items: center; gap: 8px; width: 100%; justify-content: center; }
+  .product-page__add-to-cart:hover { background: #035a3a; transform: translateY(-2px); }
 
-  .product-page__quantity-input {
-    border: none;
-    text-align: center;
-    width: 70px;
-    height: 45px;
-    font-size: 1.2rem;
-    outline: none;
-    background: white;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    font-weight: 600;
+  /* Related products */
+  .related-products { margin: 2rem 0 3rem; padding: 1rem 2rem; background: transparent; grid-column: 1 / -1; }
+  .related-products__header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; padding: 0 0.5rem; }
+  .related-products__title { font-size: 1.25rem; font-weight: 700; color: #04683F; }
+  /* When borrowing New Arrivals title class, remove its decorative underline in this context */
+  .related-products__header .getsupp-new-arrivals-title::after { display: none; }
+  /* Apply New Arrivals heading styles locally so the class is effective on the product page */
+  .related-products__header .getsupp-new-arrivals-title {
+    font-size: 4rem;
+    font-weight: 800;
     color: #04683F;
-  }
-
-  .product-page__actions {
-    margin-top: 1rem;
-  }
-
-  .product-page__add-to-cart {
-    background: #04683F;
-    color: white;
-    border: none;
-    padding: 1rem 2rem;
-    border-radius: 6px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    margin-bottom: 1.5rem;
     font-family: "Playfair Display", serif;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
-    width: 100%;
-    justify-content: center;
+    letter-spacing: 0.15em;
+    position: relative;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    line-height: 1;
   }
 
-  .product-page__add-to-cart:hover {
-    background: #035a3a;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(4, 104, 63, 0.3);
-  }
-
-  /* Mobile Responsive */
   @media (max-width: 768px) {
-    .product-page__main {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-      padding: 2rem;
-    }
-
-    .product-page__title {
+    .related-products__header .getsupp-new-arrivals-title {
       font-size: 2rem;
-    }
-
-    .product-page__name {
-      font-size: 1.5rem;
-    }
-
-    .product-page__current-price {
-      font-size: 1.5rem;
-    }
-
-    .product-page__main-image {
-      height: 300px;
+      margin-bottom: 1rem;
     }
   }
+  .related-products__controls { display: flex; gap: 0.5rem; }
+  /* Hide left/right arrow controls in the related products slider */
+  .related-products__controls {
+    display: none !important;
+  }
+  .related-products__btn { background: #f0f5f3; border: 1px solid #e5e5e5; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 18px; color: #04683F; }
+  .related-products__track { display: flex; gap: 1rem; overflow-x: auto; scroll-behavior: smooth; padding-bottom: 8px; -webkit-overflow-scrolling: touch; align-items: stretch; }
 
-  @media (max-width: 480px) {
-    .product-page__container {
-      padding: 0 1rem;
-    }
+  /* Card: fixed card footprint for consistent layout across the slider */
+  .related-products__card {
+    width: 220px; /* fixed width for consistent sizing */
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: white;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
 
+  /* Ensure New Arrivals-style cards used here match the canonical header card height
+     and use flex layout so content/padding doesn't cause uneven card heights */
+  .related-products__card.getsupp-new-arrivals-card {
+    height: 480px; /* desktop baseline — fixed height to enforce uniform cards */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image {
+    height: 220px;
+    min-height: 160px;
+    max-height: 320px;
+    overflow: hidden;
+  }
+
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-content {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+  }
+
+  /* Prevent long titles or price blocks from expanding the card: clamp title and constrain main content */
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1 1 auto;
+    overflow: hidden; /* ensures internal overflow is clipped so card height stays fixed */
+  }
+
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-name {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin: 0 0 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.4em; /* reserve space for 2 lines */
+  }
+
+  /* Ensure pricing area compresses before pushing overall card height */
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-price {
+    flex-shrink: 0;
+  }
+
+  .related-products__link { display: block; color: inherit; text-decoration: none; }
+
+  /* Image wrapper keeps consistent aspect ratio so all cards align */
+  .related-products__image {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    height: auto;
+    object-fit: cover;
+    display: block;
+    background: #f8f9fa;
+  }
+
+  .related-products__meta { padding: 0.75rem; display: flex; flex-direction: column; gap: 0.35rem; }
+
+  /* Title: two-line clamp with ellipsis to keep card heights consistent */
+  .related-products__name {
+    font-size: 14px;
+    color: #333;
+    margin: 0;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-height: 2.4em; /* reserve space for up to 2 lines */
+  }
+
+  /* Make sure link text isn't being hidden by parent link rules */
+  .related-products__link { color: inherit !important; }
+  .related-products__price { font-weight: 700; color: #04683F; }
+
+  /* ---------- Responsive tweaks ---------- */
+  @media (max-width: 900px) {
+    .product-page__main { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.75rem; }
+    .product-page__main-image { max-height: 520px; }
+  }
+
+  /* Mobile behavior: keep image size intact, make details scrollable if content is long */
+  @media (max-width: 820px) {
     .product-page__main {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr; /* image first, details second */
+      gap: 1rem;
       padding: 1rem;
     }
 
-    .product-page__title {
-      font-size: 1.5rem;
+    /* Prevent the main image from shrinking — ensure it remains prominent */
+    .product-page__main-image {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      max-height: none;
+      min-height: 260px; /* ensure visibility */
+      height: auto;
+      overflow: hidden;
     }
 
-    .product-page__name {
-      font-size: 1.25rem;
+    /* Make the info panel scrollable if there's too much content */
+    .product-page__info {
+      max-height: calc(100vh - 320px); /* leave room for image + padding + sticky actions */
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+      padding-right: 0.25rem; /* allow a little room for scrollbar */
+    }
+
+    /* Reduce paddings in the content to fit screens without reducing image size */
+    .product-page__content { padding: 0; }
+    .product-page__container { padding: 0 0.75rem; }
+  }
+
+  @media (max-width: 768px) {
+    /* Make layout single-column */
+    .product-page__main { grid-template-columns: 1fr; gap: 1.5rem; padding: 1.5rem; }
+
+    /* Slightly smaller headings */
+    .product-page__title { font-size: 2rem; }
+    .product-page__name { font-size: 1.5rem; }
+    .product-page__current-price { font-size: 1.5rem; }
+
+    /* Thumbnails: easier to scroll and tap */
+    .product-page__thumbnail { width: 56px; height: 56px; }
+
+    /* Inputs and selects must span full width */
+    .product-page__option-select, .product-page__quantity-input { width: 100%; }
+
+    /* Keep add-to-cart visible on small screens by making actions sticky */
+    .product-page__actions { position: sticky; bottom: 0; background: white; padding: 0.75rem 0; z-index: 30; box-shadow: 0 -8px 20px rgba(0,0,0,0.06); }
+    /* Related products: shrink card width for narrower viewports */
+    .related-products__card { width: 180px; flex: 0 0 180px; }
+    .related-products__image { aspect-ratio: 4 / 3; }
+    .related-products__meta { padding: 0.6rem; }
+  .related-products__card.getsupp-new-arrivals-card { height: 420px; }
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image { height: 180px; }
+  }
+
+  @media (max-width: 480px) {
+    .product-page__container { padding: 0 1rem; }
+    .product-page__main { padding: 1rem; }
+    .product-page__title { font-size: 1.5rem; }
+    .product-page__name { font-size: 1.25rem; }
+    .product-page__thumbnail { width: 48px; height: 48px; }
+    /* Make save/discount badge smaller and prevent it from pushing layout */
+    .product-page__discount {
+      padding: 0.125rem 0.35rem;
+      font-size: 11px;
+      border-radius: 3px;
+      white-space: nowrap;
+      max-width: 110px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+    }
+    .related-products { padding: 0 1rem; }
+    .related-products__card { width: 160px; flex: 0 0 160px; }
+    .related-products__image { aspect-ratio: 4 / 3; }
+  .related-products__card.getsupp-new-arrivals-card { height: 360px; }
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image { height: 150px; }
+  }
+
+  @media (max-width: 420px) {
+    .product-page { padding: 1rem 0; }
+    .product-page__main { padding: 0.75rem; gap: 1rem; }
+
+    /* Make sure small screens show images without heavy cropping */
+    .product-page__main-image { aspect-ratio: 1 / 1; max-height: none; min-height: 220px; }
+    .product-page__image { width: 100%; height: auto; object-fit: contain; }
+
+    .product-page__add-to-cart { padding: 14px 12px; font-size: 15px; }
+  .related-products__track { gap: 0.75rem; }
+  .related-products__card { width: 140px; flex: 0 0 140px; }
+  .related-products__image { aspect-ratio: 4 / 3; }
+  .related-products__card.getsupp-new-arrivals-card { height: 320px; }
+  .related-products__card.getsupp-new-arrivals-card .getsupp-new-arrivals-image { height: 130px; }
+    /* extra small phones: make discount badge compact */
+    .product-page__discount {
+      padding: 0.1rem 0.3rem;
+      font-size: 10px;
+      max-width: 90px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
     }
   }
 </style>
@@ -534,7 +765,140 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+
+// Related products slider behavior
+document.addEventListener('DOMContentLoaded', function() {
+  const track = document.querySelector('[data-related-track]');
+  if (!track) return;
+
+  const prev = document.querySelector('.related-products__btn--prev');
+  const next = document.querySelector('.related-products__btn--next');
+
+  const scrollAmount = 240; // pixels per click (approx one card)
+
+  next && next.addEventListener('click', () => {
+    track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  });
+
+  prev && prev.addEventListener('click', () => {
+    track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  });
+
+  // Drag to scroll
+  let isDown = false, startX, scrollLeft;
+
+  track.addEventListener('mousedown', (e) => {
+    isDown = true;
+    track.classList.add('is-dragging');
+    startX = e.pageX - track.offsetLeft;
+    scrollLeft = track.scrollLeft;
+  });
+  track.addEventListener('mouseleave', () => { isDown = false; track.classList.remove('is-dragging'); });
+  track.addEventListener('mouseup', () => { isDown = false; track.classList.remove('is-dragging'); });
+  track.addEventListener('mousemove', (e) => {
+    if (!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - track.offsetLeft;
+    const walk = (x - startX) * 1; // scroll-fast
+    track.scrollLeft = scrollLeft - walk;
+  });
+
+  // Touch support
+  let touchStartX = 0, touchStartScroll = 0;
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.touches[0].pageX;
+    touchStartScroll = track.scrollLeft;
+  }, { passive: true });
+  track.addEventListener('touchmove', (e) => {
+    const x = e.touches[0].pageX;
+    const walk = (x - touchStartX) * 1;
+    track.scrollLeft = touchStartScroll - walk;
+  }, { passive: true });
+});
 </script>
+
+<!-- Mobile visibility overrides: ensure nothing hides the product card on narrow screens -->
+<style>
+  @media (max-width: 820px) {
+    /* Force the content to be visible in case global CSS hides or collapses it */
+    .product-page__content,
+    .product-page__main,
+    .product-page__image-section,
+    .product-page__info {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      box-sizing: border-box !important;
+    }
+
+    /* Make layout a single column for mobile; ensure it wins over other rules */
+    .product-page__main {
+      display: block !important;
+      grid-template-columns: none !important;
+      padding: 1rem !important;
+      gap: 1rem !important;
+      align-items: start !important;
+    }
+
+    .product-page__main-image {
+      aspect-ratio: 1/1 !important;
+      max-height: none !important;
+      min-height: 220px !important;
+      overflow: visible !important;
+    }
+
+    .product-page__image {
+      display: block !important;
+      width: 100% !important;
+      height: auto !important;
+      object-fit: contain !important;
+    }
+
+    /* Ensure form inputs are readable and tappable */
+    .product-page__option-select,
+    .product-page__quantity-input {
+      width: 100% !important;
+      min-width: 0 !important;
+    }
+
+    /* Keep Add to Cart accessible: sticky and above everything */
+    .product-page__actions {
+      position: sticky !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      z-index: 9999 !important;
+      background: linear-gradient(#ffffff, #ffffff) !important; /* avoid transparency */
+      padding: 0.6rem 1rem !important;
+      box-shadow: 0 -6px 18px rgba(0,0,0,0.08) !important;
+    }
+
+    /* Force related-products to stack responsively on mobile: override earlier fixed widths */
+    .related-products__track {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.75rem !important;
+      overflow: visible !important;
+      padding-bottom: 0 !important;
+    }
+
+    .related-products__card {
+      width: calc(50% - 0.375rem) !important;
+      flex: 0 0 calc(50% - 0.375rem) !important;
+      box-sizing: border-box !important;
+      margin: 0 !important;
+    }
+
+    /* One-column fallback for very small devices */
+    @media (max-width: 360px) {
+      .related-products__card { width: 100% !important; flex: 0 0 100% !important; }
+    }
+
+    /* Ensure thumbnails are scrollable and visible */
+    .product-page__thumbnails { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+    .product-page__thumbnail { flex: 0 0 auto !important; }
+  }
+</style>
 
 {% schema %}
 {

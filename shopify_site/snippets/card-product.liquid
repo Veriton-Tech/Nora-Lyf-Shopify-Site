@@ -141,6 +141,9 @@
               </span>
             {%- endif -%}
           </div>
+            {%- comment -%}
+              Category pill will be rendered later (placed above rating block) so it appears visually above rating.
+            {%- endcomment -%}
         </div>
       </div>
       <div class="card__content">
@@ -169,6 +172,31 @@
             <span class="caption-large light">{{ block.settings.description | escape }}</span>
 
             {%- if show_rating and card_product.metafields.reviews.rating.value != blank -%}
+              {%- comment -%}
+                Show product category/tag pill (above rating)
+              {%- endcomment -%}
+              {%- if card_product.type != blank -%}
+                <div class="card__category">
+                  <span class="card__category-tag">{{ card_product.type }}</span>
+                </div>
+              {%- else -%}
+                {%- assign _category_label = '' -%}
+                {%- for t in card_product.tags -%}
+                  {%- assign t_down = t | downcase -%}
+                  {%- if t_down == 'ayurvedic' or t_down == 'organic' or t_down == 'herbal' or t_down == 'ayurveda' -%}
+                    {%- assign _category_label = t | capitalize -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- if _category_label == '' and card_product.tags.size > 0 -%}
+                  {%- assign _category_label = card_product.tags.first | capitalize -%}
+                {%- endif -%}
+                {%- if _category_label != '' -%}
+                  <div class="card__category">
+                    <span class="card__category-tag">{{ _category_label }}</span>
+                  </div>
+                {%- endif -%}
+              {%- endif -%}
               {% liquid
                 assign rating_decimal = 0
                 assign decimal = card_product.metafields.reviews.rating.value.rating | modulo: 1

@@ -76,6 +76,25 @@
   --text-alignment: var(--product-card-text-alignment);
 }
 
+/* Card category tag (small pill shown above product title) */
+.card__category {
+  display: block;
+  margin-bottom: 6px;
+}
+.card__category .card__category-tag {
+  display: inline-block;
+  background: rgba(4, 104, 63, 0.1); /* matches New Arrivals pill */
+  color: #04683F; /* theme green */
+  font-family: var(--font-body-family);
+  font-weight: 600;
+  font-size: 0.8rem;
+  line-height: 1;
+  padding: 0.3rem 0.8rem;
+  border-radius: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .collection-card-wrapper .card,
 .contains-card--collection {
   --border-radius: var(--collection-card-corner-radius);

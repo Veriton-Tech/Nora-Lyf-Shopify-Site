@@ -52,6 +52,30 @@
             {% endif %}
           </div>
           <div class="product-info">
+            {% comment %} Category pill - prefer product.type, fallback to known tags or first tag {% endcomment %}
+            {% assign category_text = product.type | default: '' %}
+            {% if category_text == blank and product.tags.size > 0 %}
+              {% assign found = '' %}
+              {% for t in product.tags %}
+                {% assign tl = t | downcase %}
+                {% if tl contains 'ayur' or tl contains 'herbal' or tl contains 'organic' or tl contains 'supplement' %}
+                  {% assign found = t %}
+                  {% break %}
+                {% endif %}
+              {% endfor %}
+              {% if found != '' %}
+                {% assign category_text = found %}
+              {% else %}
+                {% assign category_text = product.tags.first %}
+              {% endif %}
+            {% endif %}
+
+            {% if category_text != blank %}
+              <div class="card__category">
+                <span class="card__category-tag">{{ category_text }}</span>
+              </div>
+            {% endif %}
+
             <h3 class="product-title">{{ product.title }}</h3>
             <div class="product-price">
               {% if product.compare_at_price > product.price %}

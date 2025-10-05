@@ -1,0 +1,201 @@
+{% comment %}
+  Inline Content Links Snippet
+  Creates contextual product/collection links that can be embedded in article content
+  
+  Usage in article content (HTML):
+  {% render 'inline-content-link', type: 'product', handle: 'product-handle', text: 'Check out this product' %}
+  {% render 'inline-content-link', type: 'collection', handle: 'collection-handle', text: 'Browse our collection' %}
+{% endcomment %}
+
+{% assign link_type = type | default: 'product' %}
+{% assign link_text = text | default: 'Learn More' %}
+{% assign link_handle = handle %}
+
+{% if link_type == 'product' and link_handle %}
+  {% assign target_product = all_products[link_handle] %}
+  {% if target_product.id %}
+    <div class="inline-content-link product-inline-link">
+      <a href="{{ target_product.url }}" class="inline-link-card">
+        <div class="inline-link-image">
+          {% if target_product.featured_image %}
+            <img src="{{ target_product.featured_image | img_url: '100x100' }}" 
+                 alt="{{ target_product.title | escape }}" 
+                 loading="lazy">
+          {% else %}
+            <div class="inline-placeholder">{{ target_product.title | slice: 0, 2 | upcase }}</div>
+          {% endif %}
+        </div>
+        <div class="inline-link-content">
+          <h5 class="inline-link-title">{{ target_product.title }}</h5>
+          <p class="inline-link-price">{{ target_product.price | money }}</p>
+          {% if target_product.compare_at_price > target_product.price %}
+            <span class="inline-link-sale">{{ target_product.compare_at_price | minus: target_product.price | money }} off</span>
+          {% endif %}
+          <span class="inline-link-cta">{{ link_text }}</span>
+        </div>
+      </a>
+    </div>
+  {% endif %}
+
+{% elsif link_type == 'collection' and link_handle %}
+  {% assign target_collection = collections[link_handle] %}
+  {% if target_collection.id %}
+    <div class="inline-content-link collection-inline-link">
+      <a href="{{ target_collection.url }}" class="inline-link-card">
+        <div class="inline-link-image">
+          {% if target_collection.featured_image %}
+            <img src="{{ target_collection.featured_image | img_url: '100x100' }}" 
+                 alt="{{ target_collection.title | escape }}" 
+                 loading="lazy">
+          {% elsif target_collection.products.first.featured_image %}
+            <img src="{{ target_collection.products.first.featured_image | img_url: '100x100' }}" 
+                 alt="{{ target_collection.title | escape }}" 
+                 loading="lazy">
+          {% else %}
+            <div class="inline-placeholder">{{ target_collection.title | slice: 0, 2 | upcase }}</div>
+          {% endif %}
+        </div>
+        <div class="inline-link-content">
+          <h5 class="inline-link-title">{{ target_collection.title }}</h5>
+          <p class="inline-link-count">{{ target_collection.products_count }} products</p>
+          {% if target_collection.description != blank %}
+            <p class="inline-link-description">{{ target_collection.description | strip_html | truncate: 60 }}</p>
+          {% endif %}
+          <span class="inline-link-cta">{{ link_text }}</span>
+        </div>
+      </a>
+    </div>
+  {% endif %}
+{% endif %}
+
+<style>
+  .inline-content-link {
+    margin: 20px 0;
+    display: inline-block;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .inline-link-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    text-decoration: none;
+    color: inherit;
+    background: #fafafa;
+    transition: all 0.3s ease;
+  }
+
+  .inline-link-card:hover {
+    background: white;
+    border-color: #04683F;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(4, 104, 63, 0.1);
+  }
+
+  .inline-link-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    overflow: hidden;
+    background: #f0f0f0;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .inline-link-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .inline-placeholder {
+    font-size: 14px;
+    font-weight: 600;
+    color: #666;
+  }
+
+  .inline-link-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .inline-link-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 5px 0;
+    line-height: 1.3;
+  }
+
+  .inline-link-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #04683F;
+    margin: 0 0 5px 0;
+  }
+
+  .inline-link-sale {
+    font-size: 12px;
+    color: #e74c3c;
+    background: #ffe6e6;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-right: 8px;
+  }
+
+  .inline-link-count {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 5px 0;
+  }
+
+  .inline-link-description {
+    font-size: 13px;
+    color: #777;
+    margin: 0 0 8px 0;
+    line-height: 1.3;
+  }
+
+  .inline-link-cta {
+    font-size: 14px;
+    font-weight: 500;
+    color: #04683F;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .inline-link-card:hover .inline-link-cta {
+    border-bottom-color: #04683F;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .inline-content-link {
+      max-width: 100%;
+    }
+
+    .inline-link-card {
+      padding: 12px;
+      gap: 12px;
+    }
+
+    .inline-link-image {
+      width: 50px;
+      height: 50px;
+    }
+
+    .inline-link-title {
+      font-size: 15px;
+    }
+
+    .inline-link-price {
+      font-size: 15px;
+    }
+  }
+</style>

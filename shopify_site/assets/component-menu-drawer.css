@@ -72,6 +72,28 @@ details[open] > .menu-drawer__submenu {
   }
 }
 
+/* Mobile: remove border and heavy shadow for full-bleed experience */
+@media screen and (max-width: 767px) {
+  .menu-drawer {
+    width: 100vw;
+    max-width: 100vw;
+    left: 0;
+    transform: translateX(0);
+    border: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    background-color: rgb(var(--color-background));
+  }
+
+  /* also remove inner separators for a cleaner look on mobile */
+  .menu-drawer__menu-item,
+  .menu-drawer__utility-links,
+  .menu-drawer__inner-submenu {
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
 .menu-drawer__inner-container {
   position: relative;
   height: 100%;

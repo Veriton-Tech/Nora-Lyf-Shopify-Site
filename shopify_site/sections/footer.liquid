@@ -1,4 +1,7 @@
-{% render 'getsupp-benefits' %}
+{% comment %} Only show benefits banner on home page {% endcomment %}
+{% if template.name == 'index' %}
+  {% render 'getsupp-benefits' %}
+{% endif %}
 <!-- Nora Lyf Footer -->
 <footer class="getsupp-footer">
   <div class="getsupp-footer-container">

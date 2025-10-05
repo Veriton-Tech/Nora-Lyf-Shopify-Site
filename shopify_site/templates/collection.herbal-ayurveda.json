@@ -1,11 +1,17 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "getsupp-collection-header": {
       "type": "getsupp-collection-header",
-      "settings": {
-        "title": "Herbal & Ayurveda",
-        "description": "Explore our traditional herbal and Ayurvedic supplements for natural health and wellness."
-      }
+      "settings": {}
     },
     "getsupp-collection-filters": {
       "type": "getsupp-collection-filters",

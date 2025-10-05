@@ -91,9 +91,51 @@ if (!customElements.get('product-form')) {
               );
               quickAddModal.hide(true);
             } else {
-              CartPerformance.measure("add:paint-updated-sections", () => {
-                this.cart.renderContents(response);
-              });
+              // Check if this form should show notification instead of opening cart drawer
+              const showNotification = this.dataset.showNotification === 'true';
+              
+              if (showNotification) {
+                // Update cart sections without opening the drawer
+                CartPerformance.measure("add:paint-updated-sections", () => {
+                  if (this.cart && this.cart.getSectionsToRender) {
+                    this.cart.getSectionsToRender().forEach((section) => {
+                      const sectionElement = section.selector
+                        ? document.querySelector(section.selector)
+                        : document.getElementById(section.id);
+
+                      if (sectionElement && response.sections && response.sections[section.id]) {
+                        sectionElement.innerHTML = this.cart.getSectionInnerHTML(response.sections[section.id], section.selector);
+                      }
+                    });
+                  }
+                });
+                
+                // Show notification if the function is available
+                if (typeof window.showCartNotification === 'function' && response.product_title) {
+                  window.showCartNotification(`${response.product_title} added to cart!`);
+                }
+                // Fallback: ensure the header cart count bubble updates even if section replacement didn't target it
+                try {
+                  const cartCountBubble = document.getElementById('cart-count-bubble');
+                  const count = response.item_count || (response.cart && response.cart.item_count) || (response.items && response.items.length);
+                  if (cartCountBubble && typeof count !== 'undefined' && count !== null) {
+                    if (count > 0) {
+                      cartCountBubble.textContent = count;
+                      cartCountBubble.style.display = '';
+                    } else {
+                      cartCountBubble.style.display = 'none';
+                    }
+                  }
+                } catch (e) {
+                  // silent fallback; do not break the add-to-cart flow
+                  console.warn('Could not update cart count bubble', e);
+                }
+              } else {
+                // Standard behavior: render cart drawer/notification
+                CartPerformance.measure("add:paint-updated-sections", () => {
+                  this.cart.renderContents(response);
+                });
+              }
             }
           })
           .catch((e) => {

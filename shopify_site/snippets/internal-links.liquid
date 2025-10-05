@@ -1,0 +1,335 @@
+{% comment %}
+  Internal Links Snippet
+  Displays related products and collections based on article tags and content
+  
+  Usage:
+  {% render 'internal-links', article: article, type: 'products', limit: 4 %}
+  {% render 'internal-links', article: article, type: 'collections', limit: 3 %}
+{% endcomment %}
+
+{% assign link_type = type | default: 'products' %}
+{% assign link_limit = limit | default: 4 %}
+{% assign article_tags = article.tags | join: ',' | downcase %}
+{% assign article_content = article.content | strip_html | downcase %}
+
+<div class="internal-links-section">
+  {% if link_type == 'products' %}
+    <h3 class="internal-links-title">Related Products</h3>
+    <div class="internal-links-grid products-grid">
+      {% assign found_products = 0 %}
+      {% assign related_products = '' %}
+      
+      {% comment %} First, try to find products matching article tags {% endcomment %}
+      {% for product in collections.all.products limit: 50 %}
+        {% if found_products >= link_limit %}{% break %}{% endif %}
+        
+        {% assign product_tags = product.tags | join: ',' | downcase %}
+        {% assign product_title = product.title | downcase %}
+        {% assign has_match = false %}
+        
+        {% comment %} Check for tag matches {% endcomment %}
+        {% for tag in article.tags %}
+          {% assign tag_lower = tag | downcase %}
+          {% if product_tags contains tag_lower or product_title contains tag_lower %}
+            {% assign has_match = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        
+        {% comment %} Check for keyword matches in article content {% endcomment %}
+        {% unless has_match %}
+          {% if article_content contains product_title %}
+            {% assign has_match = true %}
+          {% endif %}
+        {% endunless %}
+        
+        {% if has_match %}
+          {% unless related_products contains product.id %}
+            {% assign related_products = related_products | append: product.id | append: ',' %}
+            <div class="internal-link-item product-link">
+              <a href="{{ product.url }}" class="internal-link">
+                <div class="link-image">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: '200x200' }}" 
+                         alt="{{ product.title | escape }}" 
+                         loading="lazy">
+                  {% else %}
+                    <div class="placeholder-image">No Image</div>
+                  {% endif %}
+                </div>
+                <div class="link-content">
+                  <h4 class="link-title">{{ product.title }}</h4>
+                  <p class="link-price">{{ product.price | money }}</p>
+                  {% if product.compare_at_price > product.price %}
+                    <span class="link-sale">Save {{ product.compare_at_price | minus: product.price | money }}</span>
+                  {% endif %}
+                </div>
+              </a>
+            </div>
+            {% assign found_products = found_products | plus: 1 %}
+          {% endunless %}
+        {% endif %}
+      {% endfor %}
+      
+      {% comment %} If not enough products found, add some featured products {% endcomment %}
+      {% if found_products < link_limit %}
+        {% for product in collections.featured.products limit: link_limit %}
+          {% if found_products >= link_limit %}{% break %}{% endif %}
+          {% unless related_products contains product.id %}
+            <div class="internal-link-item product-link">
+              <a href="{{ product.url }}" class="internal-link">
+                <div class="link-image">
+                  {% if product.featured_image %}
+                    <img src="{{ product.featured_image | img_url: '200x200' }}" 
+                         alt="{{ product.title | escape }}" 
+                         loading="lazy">
+                  {% else %}
+                    <div class="placeholder-image">No Image</div>
+                  {% endif %}
+                </div>
+                <div class="link-content">
+                  <h4 class="link-title">{{ product.title }}</h4>
+                  <p class="link-price">{{ product.price | money }}</p>
+                </div>
+              </a>
+            </div>
+            {% assign found_products = found_products | plus: 1 %}
+          {% endunless %}
+        {% endfor %}
+      {% endif %}
+    </div>
+    
+  {% elsif link_type == 'collections' %}
+    <h3 class="internal-links-title">Related Collections</h3>
+    <div class="internal-links-grid collections-grid">
+      {% assign found_collections = 0 %}
+      {% assign related_collections = '' %}
+      
+      {% for collection in collections %}
+        {% if found_collections >= link_limit %}{% break %}{% endif %}
+        {% if collection.id == blank or collection.handle == 'all' %}{% continue %}{% endif %}
+        
+        {% assign collection_title = collection.title | downcase %}
+        {% assign collection_handle = collection.handle | downcase %}
+        {% assign has_match = false %}
+        
+        {% comment %} Check for tag matches {% endcomment %}
+        {% for tag in article.tags %}
+          {% assign tag_lower = tag | downcase %}
+          {% if collection_title contains tag_lower or collection_handle contains tag_lower or tag_lower contains collection_handle %}
+            {% assign has_match = true %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        
+        {% comment %} Check for content matches {% endcomment %}
+        {% unless has_match %}
+          {% if article_content contains collection_title or article_content contains collection_handle %}
+            {% assign has_match = true %}
+          {% endif %}
+        {% endunless %}
+        
+        {% if has_match and collection.products_count > 0 %}
+          {% unless related_collections contains collection.id %}
+            {% assign related_collections = related_collections | append: collection.id | append: ',' %}
+            <div class="internal-link-item collection-link">
+              <a href="{{ collection.url }}" class="internal-link">
+                <div class="link-image">
+                  {% if collection.featured_image %}
+                    <img src="{{ collection.featured_image | img_url: '300x200' }}" 
+                         alt="{{ collection.title | escape }}" 
+                         loading="lazy">
+                  {% elsif collection.products.first.featured_image %}
+                    <img src="{{ collection.products.first.featured_image | img_url: '300x200' }}" 
+                         alt="{{ collection.title | escape }}" 
+                         loading="lazy">
+                  {% else %}
+                    <div class="placeholder-image">{{ collection.title | slice: 0, 2 | upcase }}</div>
+                  {% endif %}
+                </div>
+                <div class="link-content">
+                  <h4 class="link-title">{{ collection.title }}</h4>
+                  <p class="link-count">{{ collection.products_count }} products</p>
+                  {% if collection.description != blank %}
+                    <p class="link-description">{{ collection.description | strip_html | truncate: 80 }}</p>
+                  {% endif %}
+                </div>
+              </a>
+            </div>
+            {% assign found_collections = found_collections | plus: 1 %}
+          {% endunless %}
+        {% endif %}
+      {% endfor %}
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .internal-links-section {
+    margin: 40px 0;
+    padding: 30px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+
+  .internal-links-title {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .internal-links-grid {
+    display: grid;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .collections-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .internal-link-item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    background: white;
+  }
+
+  .internal-link-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-color: #04683F;
+  }
+
+  .internal-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    height: 100%;
+  }
+
+  .link-image {
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .collections-grid .link-image {
+    height: 120px;
+  }
+
+  .link-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .placeholder-image {
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+  }
+
+  .link-content {
+    padding: 15px;
+  }
+
+  .link-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .link-price {
+    font-size: 18px;
+    font-weight: 700;
+    color: #04683F;
+    margin-bottom: 5px;
+  }
+
+  .link-sale {
+    font-size: 12px;
+    color: #e74c3c;
+    background: #ffe6e6;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .link-count {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+  }
+
+  .link-description {
+    font-size: 13px;
+    color: #777;
+    line-height: 1.4;
+  }
+
+  /* Mobile Responsive */
+  @media (max-width: 768px) {
+    .internal-links-section {
+      margin: 30px 0;
+      padding: 20px 0;
+    }
+
+    .internal-links-title {
+      font-size: 20px;
+    }
+
+    .internal-links-grid {
+      gap: 15px;
+    }
+
+    .products-grid,
+    .collections-grid {
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    }
+
+    .link-image {
+      height: 120px;
+    }
+
+    .collections-grid .link-image {
+      height: 100px;
+    }
+
+    .link-content {
+      padding: 12px;
+    }
+
+    .link-title {
+      font-size: 14px;
+    }
+
+    .link-price {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .products-grid,
+    .collections-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

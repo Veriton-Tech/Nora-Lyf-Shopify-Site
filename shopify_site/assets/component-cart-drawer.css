@@ -42,6 +42,16 @@
   box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Ensure the cart sidescreen uses the site's default body typography */
+.cart-drawer,
+cart-drawer,
+.drawer__inner,
+.cart-drawer__form {
+  font-family: var(--font-body-family);
+  font-style: var(--font-body-style);
+  font-weight: var(--font-body-weight);
+}
+
 .drawer__inner-empty {
   height: 100%;
   padding: 0 1.5rem;

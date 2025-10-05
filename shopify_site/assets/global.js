@@ -1330,3 +1330,98 @@ class CartPerformance {
     );
   }
 }
+
+// Global Cart Notification Function
+window.showCartNotification = function(message) {
+  // Remove existing notification if any
+  const existingNotification = document.querySelector('.getsupp-cart-notification');
+  if (existingNotification) {
+    existingNotification.remove();
+  }
+  
+  // Create notification element
+  const notification = document.createElement('div');
+  notification.className = 'getsupp-cart-notification';
+  notification.innerHTML = `
+    <div class="getsupp-notification-content">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke="#28a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>${message}</span>
+      <button class="getsupp-notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+    </div>
+  `;
+  
+  // Add styles
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: white;
+    color: #333;
+    border: 1px solid #28a745;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 10000;
+    animation: slideInRight 0.3s ease;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    max-width: 300px;
+  `;
+  
+  // Add CSS animations to the document if they don't exist
+  if (!document.querySelector('#cart-notification-styles')) {
+    const style = document.createElement('style');
+    style.id = 'cart-notification-styles';
+    style.textContent = `
+      @keyframes slideInRight {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOutRight {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+      .getsupp-notification-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .getsupp-notification-close {
+        background: none;
+        border: none;
+        font-size: 18px;
+        cursor: pointer;
+        margin-left: auto;
+        color: #666;
+      }
+      .getsupp-notification-close:hover {
+        color: #333;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  // Add to page
+  document.body.appendChild(notification);
+  
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.style.animation = 'slideOutRight 0.3s ease';
+      setTimeout(() => notification.remove(), 300);
+    }
+  }, 5000);
+};

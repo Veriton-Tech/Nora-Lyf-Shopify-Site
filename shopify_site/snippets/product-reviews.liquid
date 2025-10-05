@@ -1,0 +1,63 @@
+{% comment %} Product reviews snippet: shows average rating and review count, with a CTA to write a review. Uses product metafields if present. {% endcomment %}
+
+{%- assign avg = product.metafields.reviews.average_rating | default: product.average_rating | default: 0 -%}
+{%- assign count = product.metafields.reviews.review_count | default: product.review_count | default: 0 -%}
+{%- comment -%} Precompute rounded average to avoid using filters directly inside comparison expressions {% endcomment -%}
+{%- assign avg_rounded = avg | plus: 0 | round -%}
+
+{%- comment -%}
+  product-reviews container
+  To connect ratings to Shopify you must provide a backend endpoint (Shopify app or app-proxy) that accepts POST { product_id, rating }
+  and returns JSON: { avg: <number>, count: <number> } after updating product metafields. If no endpoint is configured, client-side localStorage will be used as a fallback.
+{%- endcomment -%}
+
+<div class="product-reviews" id="product-reviews-{{ product.id }}" data-product-id="{{ product.id }}" data-initial-avg="{{ avg }}" data-initial-count="{{ count }}" data-review-endpoint="/apps/product-reviews">
+  <div class="product-reviews__inner">
+    <div class="product-reviews__rating" aria-hidden="false">
+      {% for i in (1..5) %}
+        {% if i <= avg_rounded %}
+          <span class="product-reviews__star product-reviews__star--filled">★</span>
+        {% else %}
+          <span class="product-reviews__star">☆</span>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="product-reviews__summary">
+      <span class="product-reviews__score">{{ avg | round: 1 }}</span>
+      <span class="product-reviews__count">({{ count }} reviews)</span>
+    </div>
+
+    <div class="product-reviews__cta">
+      <span class="product-reviews__note">Tap a star to submit your rating</span>
+    </div>
+  </div>
+
+  <!-- Inline star controls: clicking a star submits the rating -->
+  <div class="pr-stars-inline" style="margin-top:8px;">
+    {% for i in (1..5) reversed %}
+      <button type="button" class="pr-star-btn" data-pr-star-value="{{ i }}" aria-label="Give {{ i }} stars">★</button>
+    {% endfor %}
+  </div>
+</div>
+
+<style>
+  .product-reviews__inner { display:flex; align-items:center; gap:0.75rem; font-family: var(--font-body-family); }
+  .product-reviews__star { color:#d0d0d0; font-size:22px; line-height:1; }
+  .product-reviews__star--filled { color:#FFD700; }
+  .product-reviews__score { font-weight:800; color:#04683F; margin-left:4px; font-size:1.2rem; }
+  .product-reviews__count { color:#666; font-size:1rem; margin-left:6px; }
+  .product-reviews__cta .button { padding:8px 12px; font-size:1rem; margin-left:8px; }
+  .product-reviews__form { border:1px solid #eee; padding:12px; border-radius:8px; background:#fff; }
+  .pr-stars { display:flex; flex-direction:row-reverse; gap:6px; }
+  .pr-stars input { display:none; }
+  .pr-stars label { cursor:pointer; font-size:26px; color:#d0d0d0; }
+  .pr-stars input:checked ~ label,
+  .pr-stars label:hover, .pr-stars label:hover ~ label { color:#FFD700; }
+  .pr-field { display:flex; flex-direction:column; gap:6px; margin-top:8px; }
+  .pr-field input, .pr-field textarea { padding:8px; border:1px solid #ddd; border-radius:6px; font-size:1rem; }
+  .product-reviews__list .pr-item { border-top:1px dashed #eee; padding:10px 0; }
+  .pr-item .pr-item-title { font-weight:700; color:#333; }
+  .pr-item .pr-item-meta { color:#666; font-size:0.9rem; margin-bottom:6px; }
+  .pr-item .pr-item-body { color:#444; font-size:0.98rem; }
+</style>

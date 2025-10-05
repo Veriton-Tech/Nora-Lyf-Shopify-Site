@@ -3,8 +3,10 @@
                     Displays featured products in a grid layout
 {% endcomment %}
 
+<script src="{{ 'product-form.js' | asset_url }}" defer="defer"></script>
+
 {% assign collection = collections[section.settings.collection] | default: collections.all %}
-{% assign products_to_show = section.settings.products_to_show | default: 8 %}
+{% assign products_to_show = section.settings.products_to_show | default: 4 %}
 
 <div class="getsupp-featured-products">
   <div class="getsupp-featured-container">
@@ -48,52 +50,110 @@
                   </svg>
                 </div>
               {% endif %}
-              {% if product.compare_at_price > product.price %}
-                <div class="getsupp-product-badge">Sale</div>
-              {% endif %}
+              <!-- Corner overlay badges -->
+              <div class="getsupp-product-badges">
+                {% comment %} Featured badge {% endcomment %}
+                <span class="getsupp-badge getsupp-featured-badge">Featured</span>
+                
+                {% if product.compare_at_price > product.price %}
+                  {% assign discount_percentage = product.compare_at_price | minus: product.price | times: 100 | divided_by: product.compare_at_price %}
+                  <span class="getsupp-badge getsupp-sale-badge">{{ discount_percentage | round }}% OFF</span>
+                {% endif %}
+                
+                {% comment %} Add Ayurvedic badge if product has specific tag {% endcomment %}
+                {% if product.tags contains 'ayurvedic' or product.tags contains 'Ayurvedic' %}
+                  <span class="getsupp-badge getsupp-ayurvedic-badge">Ayurvedic</span>
+                {% endif %}
+                
+                {% if product.tags contains 'organic' or product.tags contains 'Organic' %}
+                  <span class="getsupp-badge getsupp-organic-badge">Organic</span>
+                {% endif %}
+                
+                {% comment %} Check if product is marked as new {% endcomment %}
+                {% if product.tags contains 'new' or product.tags contains 'New' %}
+                  <span class="getsupp-badge getsupp-new-badge">New</span>
+                {% endif %}
+              </div>
             </div>
             <div class="getsupp-product-info">
+              <!-- Enhanced Rating Display for Social Proof -->
+              {%- comment -%}
+                Show product category/tag pill similar to card-product snippet (placed above ratings)
+              {%- endcomment -%}
+              {%- if product.type != blank -%}
+                <div class="card__category">
+                  <span class="card__category-tag">{{ product.type }}</span>
+                </div>
+              {%- else -%}
+                {%- assign _category_label = '' -%}
+                {%- for t in product.tags -%}
+                  {%- assign t_down = t | downcase -%}
+                  {%- if t_down == 'ayurvedic' or t_down == 'organic' or t_down == 'herbal' or t_down == 'ayurveda' -%}
+                    {%- assign _category_label = t | capitalize -%}
+                    {%- break -%}
+                  {%- endif -%}
+                {%- endfor -%}
+                {%- if _category_label == '' and product.tags.size > 0 -%}
+                  {%- assign _category_label = product.tags.first | capitalize -%}
+                {%- endif -%}
+                {%- if _category_label != '' -%}
+                  <div class="card__category">
+                    <span class="card__category-tag">{{ _category_label }}</span>
+                  </div>
+                {%- endif -%}
+              {%- endif -%}
+
+              <div class="getsupp-product-rating-prominent">
+                <div class="getsupp-stars-large">
+                  <span class="getsupp-star-large">★</span>
+                  <span class="getsupp-star-large">★</span>
+                  <span class="getsupp-star-large">★</span>
+                  <span class="getsupp-star-large">★</span>
+                  <span class="getsupp-star-large">★</span>
+                </div>
+                <div class="getsupp-rating-details">
+                  <span class="getsupp-rating-score">4.7</span>
+                  <span class="getsupp-review-count-prominent">({{ 180 | plus: forloop.index | times: 5 }} reviews)</span>
+                </div>
+              </div>
+
               <h3 class="getsupp-product-title">{{ product.title }}</h3>
               <p class="getsupp-product-vendor">{{ product.vendor }}</p>
               <div class="getsupp-product-price">
                 {% if product.compare_at_price > product.price %}
-                  <span class="getsupp-price-compare">₹{{ product.compare_at_price | money_without_currency }}</span>
-                  <span class="getsupp-price-current">₹{{ product.price | money_without_currency }}</span>
+                  <div class="getsupp-price-with-discount">
+                    <div class="getsupp-price-comparison">
+                      <span class="getsupp-price-compare">₹{{ product.compare_at_price | money_without_currency }}</span>
+                      <span class="getsupp-price-current">₹{{ product.price | money_without_currency }}</span>
+                    </div>
+                  </div>
                 {% else %}
-                  <span class="getsupp-price-current">₹{{ product.price | money_without_currency }}</span>
+                  <div class="getsupp-price-regular">
+                    <span class="getsupp-price-current">₹{{ product.price | money_without_currency }}</span>
+                  </div>
                 {% endif %}
               </div>
-              {% if product.available %}
-                <div class="getsupp-product-rating">
-                  <div class="getsupp-stars">
-                    <span class="getsupp-star">★</span>
-                    <span class="getsupp-star">★</span>
-                    <span class="getsupp-star">★</span>
-                    <span class="getsupp-star">★</span>
-                    <span class="getsupp-star">★</span>
-                  </div>
-                  <span class="getsupp-rating-text">(4.5)</span>
-                </div>
-              {% else %}
+              {% unless product.available %}
                 <div class="getsupp-product-sold-out">Sold Out</div>
-              {% endif %}
+              {% endunless %}
             </div>
           </a>
+          <!-- Spacer to push buttons to bottom -->
+          <div class="getsupp-card-spacer"></div>
           {% if product.available %}
-            <form
-              action="{{ routes.cart_add_url }}"
-              method="post"
-              enctype="multipart/form-data"
-              class="getsupp-product-form">
-              <input
-                type="hidden"
-                name="id"
-                value="{{ product.selected_or_first_available_variant.id }}">
-              <input
-                type="hidden"
-                name="return_to"
-                value="{{ routes.cart_url }}">
-              <button type="submit" class="getsupp-add-to-cart">
+            <product-form data-section-id="{{ section.id }}" data-show-notification="true">
+              <form
+                action="{{ routes.cart_add_url }}"
+                method="post"
+                enctype="multipart/form-data"
+                class="getsupp-product-form"
+                data-type="add-to-cart-form">
+                <input
+                  type="hidden"
+                  name="id"
+                  value="{{ product.selected_or_first_available_variant.id }}"
+                  class="product-variant-id">
+                <button type="submit" class="getsupp-add-to-cart" name="add">
                 <svg
                   width="16"
                   height="16"
@@ -108,8 +168,10 @@
                     stroke-linejoin="round" />
                 </svg>
                 Add to Cart
+                {%- render 'loading-spinner' -%}
               </button>
             </form>
+            </product-form>
           {% endif %}
         </div>
       {% endfor %}
@@ -158,40 +220,118 @@
   }
 
   .getsupp-featured-container {
-    max-width: 1200px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 2rem;
     position: relative;
     z-index: 2;
   }
 
+  /* Mobile responsive padding for featured container - matching new arrivals */
+  @media (max-width: 480px) {
+    .getsupp-featured-container {
+      padding: 0 1rem;
+    }
+  }
+
   .getsupp-featured-header {
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 5rem;
+    position: relative;
+    z-index: 2;
   }
 
   .getsupp-featured-title {
-    font-size: 36px;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 16px;
-    font-family: 'Inter'
-    , sans-serif;
+    font-size: 4rem;
+    font-weight: 800;
+    color: #04683F;
+    margin-bottom: 1.5rem;
+    font-family: "Playfair Display", serif;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    position: relative;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    animation: slideInDown 1s ease-out;
+  }
+
+  .getsupp-featured-title::after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #04683F, #B88B34);
+    border-radius: 2px;
   }
 
   .getsupp-featured-description {
-    font-size: 18px;
-    color: #666;
+    font-size: 1.4rem;
+    color: #555;
+    margin-bottom: 2.5rem;
+    font-family: "Playfair Display", serif;
+    font-style: italic;
+    font-weight: 400;
+    animation: slideInUp 1s ease-out 0.3s both;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     max-width: 600px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
     line-height: 1.6;
+  }
+
+  @keyframes slideInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .getsupp-featured-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
     gap: 30px;
     margin-bottom: 60px;
+  }
+
+  /* Responsive adjustments for featured grid */
+  @media (max-width: 1200px) {
+    .getsupp-featured-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .getsupp-featured-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      padding: 0 10px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .getsupp-featured-grid {
+      grid-template-columns: 1fr;
+      gap: 35px;
+      padding: 0 5px;
+    }
   }
 
   .getsupp-product-card {
@@ -201,6 +341,11 @@
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
     border: 1px solid #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 500px; /* Match new arrivals height */
+    position: relative;
   }
 
   .getsupp-product-card:hover {
@@ -212,7 +357,9 @@
   .getsupp-product-link {
     text-decoration: none;
     color: inherit;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
 
   .getsupp-product-image {
@@ -243,20 +390,77 @@
     background: #f0fdfc;
   }
 
-  .getsupp-product-badge {
+  /* Corner overlay badge system - matching new arrivals */
+  .getsupp-product-badges {
     position: absolute;
-    top: 12px;
-    left: 12px;
-    background: #ff4757;
+    top: 8px;
+    left: 8px;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    pointer-events: none;
+  }
+
+  .getsupp-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     color: white;
-    padding: 4px 8px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  .getsupp-featured-badge {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  }
+
+  .getsupp-sale-badge {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    animation: pulse-glow 2s ease-in-out infinite alternate;
+  }
+
+  .getsupp-ayurvedic-badge {
+    background: linear-gradient(135deg, #2ed573 0%, #1e90ff 100%);
+  }
+
+  .getsupp-organic-badge {
+    background: linear-gradient(135deg, #26de81 0%, #20bf6b 100%);
+  }
+
+  .getsupp-new-badge {
+    background: linear-gradient(135deg, #feca57 0%, #ff9ff3 100%);
+  }
+
+  @keyframes pulse-glow {
+    0% {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(255, 107, 107, 0.7);
+    }
+    100% {
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2), 0 0 0 8px rgba(255, 107, 107, 0);
+    }
   }
 
   .getsupp-product-info {
     padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .getsupp-card-spacer {
+    flex-grow: 1;
+    min-height: 10px;
   }
 
   .getsupp-product-title {
@@ -285,13 +489,132 @@
     color: #04683F;
   }
 
+  /* Enhanced Pricing Display Styles for GetSupp Featured Products */
+  .getsupp-product-price {
+    margin-bottom: 16px;
+  }
+
+  .getsupp-price-with-discount {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Old discount badge styles removed - now using corner overlay badges */
+
+  .getsupp-price-comparison {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
   .getsupp-price-compare {
     font-size: 14px;
     color: #999;
     text-decoration: line-through;
-    margin-right: 8px;
+    font-weight: 500;
+    position: relative;
+    margin-right: 0;
   }
 
+  .getsupp-price-compare::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -2px;
+    right: -2px;
+    height: 2px;
+    background: #e53e3e;
+    transform: translateY(-50%);
+    opacity: 0.8;
+  }
+
+  .getsupp-price-current {
+    font-size: 18px;
+    font-weight: 700;
+    color: #04683F;
+    text-shadow: 0 1px 2px rgba(4, 104, 63, 0.1);
+  }
+
+  .getsupp-price-regular .getsupp-price-current {
+    font-size: 16px;
+  }
+
+  /* Enhanced Prominent Rating Styles for GetSupp Featured Products */
+  .getsupp-product-rating-prominent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-bottom: 16px;
+    padding: 12px 0;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .getsupp-product-card:hover .getsupp-product-rating-prominent {
+    transform: translateY(-2px);
+  }
+
+  .getsupp-stars-large {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 4px;
+  }
+
+  .getsupp-star-large {
+    color: #ffc107;
+    font-size: 18px;
+    text-shadow: 0 1px 2px rgba(255, 193, 7, 0.3);
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.1));
+    transition: transform 0.2s ease;
+  }
+
+  .getsupp-product-card:hover .getsupp-star-large {
+    transform: scale(1.1);
+  }
+
+  .getsupp-rating-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .getsupp-rating-score {
+    font-size: 16px;
+    font-weight: 700;
+    color: #f57c00;
+    background: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-product-card:hover .getsupp-rating-score {
+    background: #f5f5f5;
+    transform: scale(1.05);
+  }
+
+  .getsupp-review-count-prominent {
+    font-size: 13px;
+    color: #5d4037;
+    font-weight: 600;
+    background: rgba(245, 245, 245, 0.8);
+    padding: 2px 6px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .getsupp-product-card:hover .getsupp-review-count-prominent {
+    background: rgba(245, 245, 245, 0.95);
+    color: #4e342e;
+  }
+
+  /* Legacy rating styles - kept for backwards compatibility */
   .getsupp-product-rating {
     display: flex;
     align-items: center;
@@ -319,8 +642,13 @@
     font-weight: 500;
   }
 
+  .getsupp-card-spacer {
+    flex-grow: 1;
+  }
+
   .getsupp-product-form {
     padding: 0 20px 20px;
+    margin-top: auto;
   }
 
   .getsupp-add-to-cart {
@@ -338,6 +666,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    margin-top: auto;
   }
 
   .getsupp-add-to-cart:hover {
@@ -392,11 +721,139 @@
     .getsupp-product-image {
       height: 180px;
     }
+
+    /* Mobile responsive badge styles */
+    .getsupp-product-badges {
+      top: 6px;
+      left: 6px;
+      gap: 4px;
+    }
+
+    .getsupp-badge {
+      padding: 4px 8px;
+      font-size: 9px;
+      border-radius: 16px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Mobile responsive for enhanced ratings */
+    .getsupp-product-rating-prominent {
+      padding: 10px 0;
+      margin-bottom: 14px;
+    }
+
+    .getsupp-star-large {
+      font-size: 16px;
+    }
+
+    .getsupp-rating-score {
+      font-size: 14px;
+      padding: 2px 6px;
+    }
+
+    .getsupp-review-count-prominent {
+      font-size: 12px;
+    }
+
+    /* Mobile responsive pricing styles */
+    .getsupp-price-comparison {
+      gap: 8px;
+    }
+
+    .getsupp-price-current {
+      font-size: 16px;
+    }
   }
 
   @media (max-width: 480px) {
     .getsupp-featured-grid {
       grid-template-columns: 1fr;
+    }
+
+    /* Enhanced mobile styles for ratings */
+    .getsupp-product-rating-prominent {
+      padding: 8px 0;
+      margin-bottom: 12px;
+    }
+
+    .getsupp-stars-large {
+      gap: 2px;
+    }
+
+    .getsupp-star-large {
+      font-size: 15px;
+    }
+
+    .getsupp-rating-details {
+      gap: 6px;
+    }
+
+    .getsupp-rating-score {
+      font-size: 13px;
+      padding: 1px 5px;
+    }
+
+    .getsupp-review-count-prominent {
+      font-size: 11px;
+    }
+
+    /* Extra small mobile badge styles */
+    .getsupp-product-badges {
+      top: 4px;
+      left: 4px;
+      gap: 3px;
+    }
+
+    .getsupp-badge {
+      padding: 3px 6px;
+      font-size: 8px;
+      border-radius: 12px;
+      letter-spacing: 0.2px;
+    }
+
+    .getsupp-price-current {
+      font-size: 14px;
+    }
+
+    .getsupp-price-compare {
+      font-size: 12px;
+    }
+
+    .getsupp-price-comparison {
+      gap: 6px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .getsupp-featured-grid {
+      grid-template-columns: 1fr;
+    }
+
+    /* Enhanced mobile styles for ratings */
+    .getsupp-product-rating-prominent {
+      padding: 8px 0;
+      margin-bottom: 12px;
+    }
+
+    .getsupp-stars-large {
+      gap: 2px;
+    }
+
+    .getsupp-star-large {
+      font-size: 15px;
+    }
+
+    .getsupp-rating-details {
+      gap: 6px;
+    }
+
+    .getsupp-rating-score {
+      font-size: 13px;
+      padding: 1px 5px;
+    }
+
+    .getsupp-review-count-prominent {
+      font-size: 11px;
     }
   }
 {% endstylesheet %}
@@ -431,7 +888,7 @@
         "min": 4,
         "max": 16,
         "step": 2,
-        "default": 8
+        "default": 4
       }, {
         "type": "checkbox",
         "id": "show_view_all",
